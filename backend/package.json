@@ -1,0 +1,10 @@
+{
+  "name": "hopeland-backend",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Supabase Edge Functions, SQL, and Stripe secret sync",
+  "scripts": {
+    "stripe:sync": "node scripts/sync-stripe-secrets.mjs",
+    "functions:deploy": "npx supabase functions deploy create-checkout-session && npx supabase functions deploy finalize-paid-registration && npx supabase functions deploy stripe-webhook && npx supabase functions deploy get-registration-by-session && npx supabase functions deploy get-registration && npx supabase functions deploy get-my-registration && npx supabase functions deploy update-registration-profile && npx supabase functions deploy admin-upload-media"
+  }
+}

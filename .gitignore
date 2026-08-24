@@ -1,0 +1,35 @@
+# dependencies / build
+node_modules/
+**/node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+
+# archives / local delivery zips
+*.zip
+
+# local env & secrets — never commit
+.env
+.env.*
+!.env.example
+frontend/.env
+backend/.env
+!frontend/.env.example
+!backend/.env.example
+
+# logs / OS / editor
+*.log
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+# Vercel / Supabase local
+.vercel
+backend/supabase/.temp
+backend/supabase/.branches
+
+.vercel
+.env*
+
+.vercel

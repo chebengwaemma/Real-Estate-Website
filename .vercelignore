@@ -1,0 +1,12 @@
+# Keep CLI uploads lean (Vercel also respects .gitignore)
+node_modules
+**/node_modules
+.vercel
+.env
+.env.*
+!.env.example
+frontend/.env
+backend/.env
+*.zip
+dist
+frontend/dist

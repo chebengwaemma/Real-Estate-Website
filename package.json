@@ -1,0 +1,19 @@
+{
+  "name": "hopeland-global-checkers",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Hopeland Global Checkers — frontend (Vite/React) + backend (Supabase)",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "preview": "npm run preview --prefix frontend",
+    "lint": "npm run lint --prefix frontend",
+    "generate:nav-cube": "npm run generate:nav-cube --prefix frontend",
+    "stripe:sync": "node backend/scripts/sync-stripe-secrets.mjs",
+    "functions:deploy": "npm run functions:deploy --prefix backend",
+    "postinstall": "npm install --prefix frontend"
+  }
+}

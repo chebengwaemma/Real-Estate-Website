@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="hopeland-ring" x1="8" y1="4" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FBBF24"/>
+      <stop offset="0.35" stop-color="#22D3EE"/>
+      <stop offset="0.7" stop-color="#A78BFA"/>
+      <stop offset="1" stop-color="#FB7185"/>
+    </linearGradient>
+    <linearGradient id="hopeland-glow" x1="16" y1="12" x2="48" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#6366F1"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="30" fill="url(#hopeland-ring)"/>
+  <circle cx="32" cy="32" r="24" fill="#071040"/>
+  <rect x="14" y="14" width="12" height="12" rx="2.5" fill="#FBBF24"/>
+  <rect x="26" y="14" width="12" height="12" rx="2.5" fill="#22D3EE"/>
+  <rect x="38" y="14" width="12" height="12" rx="2.5" fill="#A78BFA"/>
+  <rect x="14" y="26" width="12" height="12" rx="2.5" fill="#FB7185"/>
+  <rect x="26" y="26" width="12" height="12" rx="2.5" fill="url(#hopeland-glow)"/>
+  <rect x="38" y="26" width="12" height="12" rx="2.5" fill="#34D399"/>
+  <rect x="14" y="38" width="12" height="12" rx="2.5" fill="#38BDF8"/>
+  <rect x="26" y="38" width="12" height="12" rx="2.5" fill="#F472B6"/>
+  <rect x="38" y="38" width="12" height="12" rx="2.5" fill="#FBBF24"/>
+  <circle cx="32" cy="32" r="7.5" fill="#F8FAFC" stroke="#071040" stroke-width="1.5"/>
+  <circle cx="32" cy="30.5" r="3.2" fill="#0EA5E9"/>
+</svg>

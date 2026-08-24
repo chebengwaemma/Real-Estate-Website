@@ -1,0 +1,16 @@
+{
+  "name": "Hopeland Global Checkers (Draughts) Federation",
+  "short_name": "HCheckers",
+  "description": "Global Checkers / Draughts Championship — Atlanta, Georgia, USA, July 19–25, 2027.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#071040",
+  "theme_color": "#0EA5E9",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
