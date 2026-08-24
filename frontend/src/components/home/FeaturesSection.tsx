@@ -27,7 +27,7 @@ export function FeaturesSection() {
         <SectionHeading eyebrow="WHY COMPETE" title="Core Attributes Of The Championship" />
 
         {/* Dual-side image showcase — settles toward center */}
-        <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <div className="mt-8 grid min-w-0 grid-cols-2 gap-2 sm:mt-12 sm:gap-4 lg:grid-cols-4">
           {showcase.map((item, i) => (
             <motion.div
               key={item.src}
@@ -44,8 +44,8 @@ export function FeaturesSection() {
                   loading="lazy"
                   draggable={false}
                 />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/80 to-transparent p-3">
-                  <p className="text-[11px] font-bold tracking-wide text-white uppercase">{item.label}</p>
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/80 to-transparent p-2 sm:p-3">
+                  <p className="truncate text-[10px] font-bold tracking-wide text-white uppercase sm:text-[11px]">{item.label}</p>
                 </div>
               </motion.div>
             </motion.div>

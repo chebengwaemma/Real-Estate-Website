@@ -114,40 +114,27 @@ function toResult(data: CheckoutApiResponse, allowEmbedded: boolean): CheckoutSt
 }
 
 /**
- * Starts Stripe Checkout the same way locally and on any deployed host:
- * - Localhost: Vite `/api` plugin first, then Edge Function
- * - Live/deploy: Edge Function only (hosted Checkout — works on any domain)
- * - Production never uses embedded Checkout (unregistered domains fail)
+ * Starts Stripe Checkout the same way locally and on live:
+ * hosted Checkout session (redirect to Stripe), never embedded.
+ * Localhost tries the Vite `/api` plugin first, then the Edge Function.
  */
 export async function startRegistrationCheckout(
   fields: CheckoutRegistrationFields,
 ): Promise<CheckoutStartResult> {
   const siteUrl = typeof window !== 'undefined' ? window.location.origin.replace(/\/$/, '') : ''
-  const allowEmbedded = isLocalHost()
-  const base = { ...fields, siteUrl }
+  const payload = { ...fields, siteUrl, uiMode: 'hosted' as const }
 
-  const tryMode = async (uiMode: 'embedded' | 'hosted'): Promise<CheckoutStartResult | null> => {
-    const payload = { ...base, uiMode }
-    const local = await createViaLocalDevApi(payload)
-    if (local) {
-      const fromLocal = toResult(local, allowEmbedded)
-      if (fromLocal) return fromLocal
-      if (local.error) throw new Error(local.error)
-    }
-    const remote = await invokeCreateCheckout(payload)
-    const fromRemote = toResult(remote, allowEmbedded)
-    if (fromRemote) return fromRemote
-    if (remote.error) throw new Error(remote.error)
-    return null
+  const local = await createViaLocalDevApi(payload)
+  if (local) {
+    const fromLocal = toResult(local, false)
+    if (fromLocal) return fromLocal
+    if (local.error) throw new Error(local.error)
   }
 
-  const hosted = await tryMode('hosted')
-  if (hosted) return hosted
-
-  if (allowEmbedded) {
-    const embedded = await tryMode('embedded')
-    if (embedded) return embedded
-  }
+  const remote = await invokeCreateCheckout(payload)
+  const fromRemote = toResult(remote, false)
+  if (fromRemote) return fromRemote
+  if (remote.error) throw new Error(remote.error)
 
   throw new Error('Could not start Stripe Checkout. Please try again.')
 }

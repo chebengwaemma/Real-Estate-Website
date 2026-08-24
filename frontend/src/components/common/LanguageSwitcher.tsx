@@ -15,7 +15,7 @@ export function LanguageSwitcher({ tone = 'light' }: { tone?: 'light' | 'dark' }
         onClick={toggleLanguageMenu}
         aria-label={t('language.label')}
         className={cn(
-          'flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition-colors',
+          'flex items-center gap-1.5 rounded-full px-1.5 py-1.5 text-sm font-semibold transition-colors sm:px-3 sm:py-2',
           tone === 'dark' ? 'text-white hover:bg-white/10' : 'text-ink hover:bg-black/5',
         )}
       >

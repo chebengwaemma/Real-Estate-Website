@@ -17,8 +17,8 @@ export function HeroSection() {
   const primaryTo = isRegistered ? '/account' : '/register'
 
   return (
-    <section className="relative overflow-x-clip bg-navy pt-[6.5rem] text-white max-lg:pb-4">
-      <div className="pointer-events-none absolute inset-0">
+    <section className="relative w-full max-w-full overflow-x-clip bg-navy text-white max-lg:pb-4">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <img
           src="/home/home-hero-board.png"
           alt=""
@@ -66,13 +66,13 @@ export function HeroSection() {
           </motion.span>
           <motion.h1
             variants={slideFromLeft}
-            className="max-w-4xl font-display font-extrabold tracking-tight text-white text-[clamp(1.45rem,5.4vw,2.35rem)] leading-[1.08] sm:text-display"
+            className="max-w-4xl text-balance font-display font-extrabold tracking-tight text-white text-[clamp(1.5rem,7vw,3.5rem)] leading-[1.12]"
           >
             {t('hero.title')}
           </motion.h1>
           <motion.p
             variants={fadeUp}
-            className="mx-auto mt-3 inline-flex max-w-xl flex-col items-center gap-0.5 rounded-2xl border border-white/20 bg-white/10 px-4 py-2.5 text-center backdrop-blur-sm sm:mt-5 sm:max-w-none sm:px-5 lg:mx-0 lg:items-start lg:text-left"
+            className="mx-auto mt-3 flex w-full max-w-lg flex-col items-center gap-0.5 rounded-2xl border border-white/20 bg-white/10 px-3 py-2.5 text-center backdrop-blur-sm sm:mt-5 sm:px-5 lg:mx-0 lg:items-start lg:text-left"
           >
             <span className="text-[10px] font-bold tracking-[0.18em] text-primary-light uppercase sm:text-[11px]">
               Global Checkers / Draughts Competition
@@ -94,7 +94,7 @@ export function HeroSection() {
             variants={slideFromLeft}
             className="mt-4 flex w-full max-w-md flex-col items-stretch gap-2 sm:mt-7 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 lg:justify-start"
           >
-            <Link to={primaryTo} className="min-w-0 sm:flex-none">
+            <Link to={primaryTo} className="w-full min-w-0 sm:w-auto sm:flex-none">
               <Button
                 size="md"
                 icon={isRegistered ? <UserRound size={16} /> : <ArrowRight size={16} />}
@@ -104,7 +104,7 @@ export function HeroSection() {
                 {isRegistered ? t('hero.ctaProfile') : t('hero.ctaPrimary')}
               </Button>
             </Link>
-            <Link to="/videos" className="min-w-0 sm:flex-none">
+            <Link to="/videos" className="w-full min-w-0 sm:w-auto sm:flex-none">
               <Button
                 size="md"
                 variant="outline"
@@ -134,10 +134,10 @@ export function HeroSection() {
         <p className="mb-2 text-center text-[10px] font-semibold tracking-[0.18em] text-white/50 uppercase sm:mb-3 sm:text-[11px] sm:tracking-[0.2em]">
           Official partners
         </p>
-        <div className="overflow-hidden">
+        <div className="max-w-full overflow-hidden">
           <SponsorsMarquee variant="dark" compact />
         </div>
-        <div className="mt-6 sm:mt-8">
+        <div className="mt-6 hidden sm:mt-8 md:block">
           <SponsorsStaticGrid tone="navy" />
         </div>
       </div>

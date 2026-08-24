@@ -157,13 +157,6 @@ export function RegistrationForm() {
         return
       }
 
-      if (isLocalHost() && 'clientSecret' in checkout && checkout.clientSecret) {
-        const { saveCheckoutClientSecret } = await import('@/pages/public/RegisterCheckout')
-        saveCheckoutClientSecret(checkout.clientSecret)
-        navigate('/register/checkout')
-        return
-      }
-
       clearPendingAuth()
       throw new Error('Could not start checkout. Please try again.')
     } catch (err) {

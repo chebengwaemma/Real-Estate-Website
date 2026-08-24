@@ -37,14 +37,14 @@ export function Header() {
         scrolled ? 'bg-[#2563eb]/75' : 'bg-[#3b82f6]/45',
       )}
     >
-      <div className="container-page flex min-h-[3.75rem] min-w-0 items-center justify-between gap-3 py-2.5 sm:min-h-[4.25rem] sm:py-3">
+      <div className="container-page flex min-h-[3.25rem] min-w-0 items-center justify-between gap-2 py-2 sm:min-h-[4.25rem] sm:gap-3 sm:py-3">
         <Link
           to="/"
-          className="relative flex min-w-0 shrink items-center py-0.5 text-lg font-display font-extrabold tracking-tight text-white drop-shadow-sm sm:text-xl md:text-2xl"
+          className="relative flex min-w-0 shrink items-center py-0.5 text-base font-display font-extrabold tracking-tight text-white drop-shadow-sm sm:text-xl md:text-2xl"
         >
           <span
             aria-hidden
-            className="pointer-events-none absolute -left-1 top-1/2 z-0 h-11 w-11 -translate-y-1/2 sm:-left-1.5 sm:h-12 sm:w-12 md:h-14 md:w-14"
+            className="pointer-events-none absolute left-0 top-1/2 z-0 h-8 w-8 -translate-y-1/2 sm:h-12 sm:w-12 md:h-14 md:w-14"
           >
             <img
               src="/brand/hopeland-mark.svg"
@@ -53,7 +53,7 @@ export function Header() {
               draggable={false}
             />
           </span>
-          <span className="relative z-10 truncate pl-8 sm:pl-9 md:pl-11">
+          <span className="relative z-10 truncate pl-9 sm:pl-10 md:pl-12">
             Hopeland
             <span className="hidden font-semibold tracking-normal sm:inline"> Global Checkers</span>
           </span>
@@ -76,7 +76,7 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+        <div className="flex shrink-0 items-center gap-0.5 sm:gap-2">
           <LanguageSwitcher tone="dark" />
           {isAdmin && (
             <Link
@@ -88,14 +88,14 @@ export function Header() {
           )}
           <Link
             to={ctaTo}
-            className="inline-flex items-center justify-center rounded-xl bg-[#60a5fa] px-4 py-2 text-sm font-display font-bold text-white shadow-[0_4px_16px_rgba(37,99,235,0.35)] transition-colors hover:bg-[#93c5fd] sm:rounded-2xl sm:px-6 sm:py-2.5 sm:text-base"
+            className="inline-flex items-center justify-center rounded-lg bg-[#60a5fa] px-2.5 py-1.5 text-[11px] font-display font-bold text-white shadow-[0_4px_16px_rgba(37,99,235,0.35)] transition-colors hover:bg-[#93c5fd] sm:rounded-2xl sm:px-6 sm:py-2.5 sm:text-base"
           >
             Dashboard
           </Link>
           <button
             onClick={toggleMobileMenu}
             aria-label="Open menu"
-            className="rounded-full p-2 text-white hover:bg-white/10 lg:hidden"
+            className="rounded-full p-1.5 text-white hover:bg-white/10 sm:p-2 lg:hidden"
           >
             <Menu size={22} />
           </button>

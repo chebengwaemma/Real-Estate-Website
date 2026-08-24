@@ -86,12 +86,17 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    width: 100%;
+    max-width: 100%;
     overflow-x: clip;
   }
 
-  body {
-    overflow-x: clip;
+  body,
+  #root {
+    width: 100%;
     min-width: 0;
+    max-width: 100%;
+    overflow-x: clip;
   }
 
   body {

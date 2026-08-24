@@ -31,7 +31,7 @@ export function Footer() {
     <footer className="bg-navy pb-[calc(5rem+env(safe-area-inset-bottom))] text-white/70 lg:pb-0">
       <div className="container-page section-y flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
         <div className="max-w-sm min-w-0">
-          <p className="text-h2 font-display font-extrabold text-white">
+          <p className="text-h2 break-words font-display font-extrabold text-white">
             Hopeland Global Checkers<span className="text-primary">.</span>
           </p>
           <p className="text-body-lg mt-5 text-white/60">{t('footer.tagline')}</p>

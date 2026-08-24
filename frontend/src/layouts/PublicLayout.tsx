@@ -5,21 +5,18 @@ import { Header } from '@/components/layout/Header'
 import { MobileDrawerMenu } from '@/components/layout/MobileDrawerMenu'
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
 import { Footer } from '@/components/layout/Footer'
-import { cn } from '@/lib/utils'
-
 export function PublicLayout() {
   const location = useLocation()
-  const isHome = location.pathname === '/'
 
   return (
-    <div className="flex min-h-screen min-w-0 flex-col bg-surface-white">
+    <div className="flex min-h-dvh min-w-0 max-w-full flex-col overflow-x-clip bg-surface-white">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
       >
         Skip to main content
       </a>
-      <div className="fixed inset-x-0 top-0 z-40">
+      <div className="sticky top-0 z-40 w-full min-w-0">
         <AnnouncementBar />
         <Header />
       </div>
@@ -32,7 +29,7 @@ export function PublicLayout() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2 }}
-          className={cn('min-w-0 flex-1 pb-4 lg:pb-0', !isHome && 'pt-[6.5rem]')}
+          className="min-w-0 flex-1 pb-[calc(4.25rem+env(safe-area-inset-bottom))] lg:pb-0"
         >
           <Outlet />
         </motion.main>
