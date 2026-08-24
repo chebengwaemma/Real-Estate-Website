@@ -35,7 +35,7 @@ export function SponsorsStaticGrid({ className, tone = 'navy' }: SponsorsStaticG
           <img
             src={sponsor.logo_url}
             alt={sponsor.name}
-            className="block h-full w-full object-contain p-2 object-center"
+            className="block h-full w-full object-cover object-center"
           />
         ) : (
           <span className="max-w-[90%] truncate px-2 text-center text-sm font-display font-bold text-ink/70">

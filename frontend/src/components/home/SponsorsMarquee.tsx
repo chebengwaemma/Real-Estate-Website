@@ -20,7 +20,7 @@ function MarqueeLogo({
     <img
       src={sponsor.logo_url}
       alt={sponsor.name}
-      className="absolute inset-0 h-full w-full object-contain p-1.5"
+      className="absolute inset-0 h-full w-full object-cover"
     />
   ) : (
     <span
@@ -36,7 +36,7 @@ function MarqueeLogo({
 
   const className = cn(
     'relative flex shrink-0 items-center justify-center overflow-hidden bg-white',
-    size === 'compact' && 'h-14 w-[9.5rem] rounded-xl sm:h-16 sm:w-[160px]',
+    size === 'compact' && 'h-10 w-[110px] rounded-xl sm:h-16 sm:w-[160px]',
     size === 'default' && 'h-14 w-[140px] rounded-xl sm:h-20 sm:w-[180px]',
     size === 'feature' && 'h-[4.75rem] w-[10.5rem] rounded-2xl sm:h-24 sm:w-[13.5rem] sm:rounded-3xl',
     variant === 'dark'
