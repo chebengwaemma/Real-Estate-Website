@@ -1,6 +1,6 @@
 import { FunctionsHttpError } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabaseClient'
-import { isLocalHost } from '@/lib/env'
+import { getSupabaseAnonKey, getSupabaseUrl, isLocalHost } from '@/lib/env'
 import { clearPendingAuth, readPendingAuth } from '@/lib/pendingAuth'
 import type { Registration } from '@/types'
 
@@ -47,8 +47,8 @@ async function finalizeViaRawFetch(
   sessionId: string,
   password: string,
 ): Promise<FinalizeResponse | null> {
-  const base = (import.meta.env.VITE_SUPABASE_URL || '').replace(/\/$/, '')
-  const key = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+  const base = getSupabaseUrl().replace(/\/$/, '')
+  const key = getSupabaseAnonKey()
   if (!base || !key) return null
   const res = await fetch(`${base}/functions/v1/finalize-paid-registration`, {
     method: 'POST',

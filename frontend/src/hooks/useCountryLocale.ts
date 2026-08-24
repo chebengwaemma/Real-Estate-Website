@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { countryToLanguage, setDocumentDirection } from '@/lib/i18n'
+import { publicEnv } from '@/config/publicEnv'
 
 const STORAGE_KEY = 'hopeland_lang'
 const GEO_ATTEMPTED_KEY = 'hopeland_geo_attempted'
@@ -27,7 +28,7 @@ export function useCountryLocale() {
 
     localStorage.setItem(GEO_ATTEMPTED_KEY, '1')
 
-    const geoUrl = import.meta.env.VITE_GEO_LOOKUP_URL
+    const geoUrl = import.meta.env.VITE_GEO_LOOKUP_URL || publicEnv.geoLookupUrl
     if (!geoUrl) return
 
     const controller = new AbortController()

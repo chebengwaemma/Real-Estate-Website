@@ -1,6 +1,6 @@
 import { FunctionsFetchError, FunctionsHttpError, FunctionsRelayError } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabaseClient'
-import { isLocalHost } from '@/lib/env'
+import { getSupabaseAnonKey, getSupabaseUrl, isLocalHost } from '@/lib/env'
 
 export type CheckoutStartResult =
   | { clientSecret: string; url?: undefined }
@@ -41,8 +41,8 @@ async function readFunctionError(err: unknown): Promise<string | null> {
 async function invokeViaRawFetch(
   body: CheckoutRegistrationFields & { uiMode: 'embedded' | 'hosted'; siteUrl: string },
 ): Promise<CheckoutApiResponse | null> {
-  const base = (import.meta.env.VITE_SUPABASE_URL || '').replace(/\/$/, '')
-  const key = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+  const base = getSupabaseUrl().replace(/\/$/, '')
+  const key = getSupabaseAnonKey()
   if (!base || !key) return null
   const res = await fetch(`${base}/functions/v1/create-checkout-session`, {
     method: 'POST',

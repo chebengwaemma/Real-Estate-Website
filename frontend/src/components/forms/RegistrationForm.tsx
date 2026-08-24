@@ -13,6 +13,7 @@ import { registrationFee } from '@/lib/stripeClient'
 import { formatCurrency } from '@/lib/utils'
 import { savePendingAuth, clearPendingAuth } from '@/lib/pendingAuth'
 import { isLocalHost, isLocalPaymentMode } from '@/lib/env'
+import { publicEnv } from '@/config/publicEnv'
 import { saveLocalPaidRegistration, clearLocalPaidRegistration } from '@/lib/localPaidRegistration'
 import { startRegistrationCheckout } from '@/lib/startCheckout'
 import { useCreateDemoRegistration } from '@/hooks/useRegistrations'
@@ -136,7 +137,9 @@ export function RegistrationForm() {
       }
 
       // Live Stripe — hosted Checkout on every deploy domain (Dashboard payment methods).
-      const publishableKey = (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '').trim()
+      const publishableKey = (
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || publicEnv.stripePublishableKey
+      ).trim()
       if (!publishableKey || /your_|change_me|xxxxxxxx/i.test(publishableKey) || !/^pk_(test|live)_/.test(publishableKey)) {
         throw new Error(
           'Stripe publishable key is missing. Set VITE_STRIPE_PUBLISHABLE_KEY (pk_test_… or pk_live_…) for this build.',

@@ -16,6 +16,8 @@ frontend/.env
 backend/.env
 !frontend/.env.example
 !backend/.env.example
+# Public VITE_* only — baked into client builds (anon/publishable keys)
+!frontend/.env.production
 
 # logs / OS / editor
 *.log
@@ -31,5 +33,6 @@ backend/supabase/.branches
 
 .vercel
 .env*
+!frontend/.env.production
 
 .vercel

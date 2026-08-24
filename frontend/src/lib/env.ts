@@ -1,3 +1,5 @@
+import { publicEnv } from '@/config/publicEnv'
+
 /** True only during `vite` / `vite preview` local tooling — false on Vercel builds. */
 export const isDevRuntime = import.meta.env.DEV
 
@@ -22,10 +24,24 @@ function looksLikePlaceholder(value: string | undefined): boolean {
   )
 }
 
+/** Resolved public Supabase URL (build env, else shipped fallback). */
+export function getSupabaseUrl(): string {
+  const fromEnv = import.meta.env.VITE_SUPABASE_URL
+  if (fromEnv && !looksLikePlaceholder(fromEnv)) return fromEnv.trim()
+  return publicEnv.supabaseUrl
+}
+
+/** Resolved public Supabase anon key (build env, else shipped fallback). */
+export function getSupabaseAnonKey(): string {
+  const fromEnv = import.meta.env.VITE_SUPABASE_ANON_KEY
+  if (fromEnv && !looksLikePlaceholder(fromEnv)) return fromEnv.trim()
+  return publicEnv.supabaseAnonKey
+}
+
 /** Real Supabase project credentials (not placeholders / demo). */
 export function hasSupabaseEnv(): boolean {
-  const url = import.meta.env.VITE_SUPABASE_URL
-  const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+  const url = getSupabaseUrl()
+  const key = getSupabaseAnonKey()
   if (!url || !key) return false
   if (looksLikePlaceholder(url) || looksLikePlaceholder(key)) return false
   try {
