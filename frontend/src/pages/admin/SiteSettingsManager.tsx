@@ -110,7 +110,7 @@ export default function SiteSettingsManager() {
 
       <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
         First-time setup: Supabase → SQL Editor → run{' '}
-        <code className="font-mono text-xs">backend/supabase/SITE_SETTINGS.sql</code>, then Save here.
+        <code className="font-mono text-xs">backend/supabase/FIX_ADMIN_SAVE.sql</code>, then Save here.
       </div>
 
       <form onSubmit={(e) => void onSubmit(e)} className="mt-8 flex max-w-3xl flex-col gap-8">

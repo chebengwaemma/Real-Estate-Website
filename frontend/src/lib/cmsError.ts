@@ -21,7 +21,7 @@ export function cmsErrorMessage(err: unknown, fallback = 'Something went wrong.'
     lower.includes('could not find the table')
 
   if (missingTable) {
-    return 'CMS tables missing in Supabase. Open SQL Editor and run backend/supabase/SITE_SETTINGS.sql, then try Save again.'
+    return 'CMS tables missing. Run backend/supabase/FIX_ADMIN_SAVE.sql in Supabase SQL Editor, then try again.'
   }
 
   const missingRpc =
@@ -30,11 +30,15 @@ export function cmsErrorMessage(err: unknown, fallback = 'Something went wrong.'
     lower.includes('save_site_settings')
 
   if (missingRpc) {
-    return 'Settings API missing. Run backend/supabase/SITE_SETTINGS.sql in Supabase SQL Editor, then Save again.'
+    return 'Settings API missing. Run backend/supabase/FIX_ADMIN_SAVE.sql in Supabase SQL Editor, then Save again.'
   }
 
   if (lower.includes('row-level security') || code === '42501' || lower.includes('only admins')) {
-    return 'Save blocked by permissions. Your account must be admin (profiles.role = admin or superadmin).'
+    return 'Save blocked: account must be admin. Run FIX_ADMIN_SAVE.sql (promotes sheikhsayeed0002@gmail.com) or set profiles.role = admin.'
+  }
+
+  if (lower.includes('invalid api key')) {
+    return 'Invalid API key — rebuild with matching project URL + anon key, then redeploy public_html on Hostinger.'
   }
 
   return message.trim() || fallback

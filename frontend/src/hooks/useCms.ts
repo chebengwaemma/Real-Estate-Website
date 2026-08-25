@@ -107,7 +107,7 @@ export function useUpdateSiteSettings() {
       if (error) {
         if (isCmsTableMissing(error) || isMissingRpc(rpc.error)) {
           throw new Error(
-            'Settings API missing. Run backend/supabase/SITE_SETTINGS.sql in Supabase SQL Editor, then Save again.',
+            'Settings API missing. Run backend/supabase/FIX_ADMIN_SAVE.sql in Supabase SQL Editor, then Save again.',
           )
         }
         throwCms(error, 'Could not save settings.')
@@ -153,7 +153,10 @@ function useOrderedCollection<T extends { id: string; display_order?: number }>(
         return opts.mapRows ? opts.mapRows(rows) : rows
       }
       const { data, error } = await supabase.from(opts.table).select('*').order('display_order', { ascending: true })
-      if (error) throw error
+      if (error) {
+        if (isCmsTableMissing(error)) return []
+        throwCms(error, `Could not load ${opts.table}.`)
+      }
       let rows = (data ?? []) as T[]
       if (opts.mapRows) rows = opts.mapRows(rows)
       return rows
@@ -181,7 +184,7 @@ function useOrderedCollection<T extends { id: string; display_order?: number }>(
         ...input,
         display_order: (input as { display_order?: number }).display_order ?? (count ?? 0) + 1,
       } as never)
-      if (error) throw error
+      if (error) throwCms(error, `Could not create ${opts.table} row.`)
     },
     onSuccess: invalidate,
   })
@@ -197,7 +200,7 @@ function useOrderedCollection<T extends { id: string; display_order?: number }>(
         return
       }
       const { error } = await supabase.from(opts.table).update(input as never).eq('id', id)
-      if (error) throw error
+      if (error) throwCms(error, `Could not update ${opts.table} row.`)
     },
     onSuccess: invalidate,
   })
@@ -213,7 +216,7 @@ function useOrderedCollection<T extends { id: string; display_order?: number }>(
         return
       }
       const { error } = await supabase.from(opts.table).delete().eq('id', id)
-      if (error) throw error
+      if (error) throwCms(error, `Could not delete ${opts.table} row.`)
     },
     onSuccess: invalidate,
   })
@@ -281,7 +284,7 @@ export function useCmsPages() {
     queryFn: async (): Promise<CmsPage[]> => {
       if (!isSupabaseConfigured) return [...mockCmsPages]
       const { data, error } = await supabase.from('cms_pages').select('*').order('slug')
-      if (error) throw error
+      if (error) throwCms(error, 'Database operation failed.')
       return data ?? []
     },
   })
@@ -294,7 +297,7 @@ export function useCmsPage(slug: string) {
     queryFn: async (): Promise<CmsPage | null> => {
       if (!isSupabaseConfigured) return mockCmsPages.find((p) => p.slug === slug) ?? null
       const { data, error } = await supabase.from('cms_pages').select('*').eq('slug', slug).maybeSingle()
-      if (error) throw error
+      if (error) throwCms(error, 'Database operation failed.')
       return data
     },
   })
@@ -322,7 +325,7 @@ export function useCmsPageMutations() {
         .from('cms_pages')
         .update({ ...input, updated_at: new Date().toISOString() } as never)
         .eq('id', id)
-      if (error) throw error
+      if (error) throwCms(error, 'Database operation failed.')
     },
     onSuccess: invalidate,
   })
@@ -337,7 +340,7 @@ export function useSportsGames(admin = false) {
     queryFn: async (): Promise<SportsGameRow[]> => {
       if (!isSupabaseConfigured) return [...mockSportsGames].sort((a, b) => a.display_order - b.display_order)
       const { data, error } = await supabase.from('sports_games').select('*').order('display_order', { ascending: true })
-      if (error) throw error
+      if (error) throwCms(error, 'Database operation failed.')
       return data ?? []
     },
   })
@@ -366,7 +369,7 @@ export function useSportsGames(admin = false) {
         return
       }
       const { error } = await supabase.from('sports_games').insert(input as never)
-      if (error) throw error
+      if (error) throwCms(error, 'Database operation failed.')
     },
     onSuccess: invalidate,
   })
@@ -382,7 +385,7 @@ export function useSportsGames(admin = false) {
         return
       }
       const { error } = await supabase.from('sports_games').update(input as never).eq('id', id)
-      if (error) throw error
+      if (error) throwCms(error, 'Database operation failed.')
     },
     onSuccess: invalidate,
   })
@@ -398,7 +401,7 @@ export function useSportsGames(admin = false) {
         return
       }
       const { error } = await supabase.from('sports_games').delete().eq('id', id)
-      if (error) throw error
+      if (error) throwCms(error, 'Database operation failed.')
     },
     onSuccess: invalidate,
   })
@@ -418,7 +421,7 @@ export function useContactMessages() {
         .from('contact_messages')
         .select('*')
         .order('created_at', { ascending: false })
-      if (error) throw error
+      if (error) throwCms(error, 'Database operation failed.')
       return data ?? []
     },
   })
@@ -437,7 +440,7 @@ export function useContactMessages() {
         return
       }
       const { error } = await supabase.from('contact_messages').update({ read } as never).eq('id', id)
-      if (error) throw error
+      if (error) throwCms(error, 'Database operation failed.')
     },
     onSuccess: invalidate,
   })
@@ -453,7 +456,7 @@ export function useContactMessages() {
         return
       }
       const { error } = await supabase.from('contact_messages').delete().eq('id', id)
-      if (error) throw error
+      if (error) throwCms(error, 'Database operation failed.')
     },
     onSuccess: invalidate,
   })
@@ -475,7 +478,7 @@ export function useSubmitContactMessage() {
         return
       }
       const { error } = await supabase.from('contact_messages').insert(input as never)
-      if (error) throw error
+      if (error) throwCms(error, 'Database operation failed.')
     },
   })
 }
