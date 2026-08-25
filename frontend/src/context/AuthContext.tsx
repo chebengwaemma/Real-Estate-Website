@@ -251,7 +251,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (/invalid api key/i.test(msg)) {
             return {
               error:
-                'Invalid API key — live site Supabase key is wrong. Update VITE_SUPABASE_ANON_KEY (Publishable/anon from the same project), rebuild, and redeploy Hostinger.',
+                'Invalid API key — live build still has the old Supabase key. Upload a fresh public_html/ from this project (npm run build), then hard-refresh.',
             }
           }
           return { error: msg }

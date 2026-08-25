@@ -24,18 +24,64 @@ function looksLikePlaceholder(value: string | undefined): boolean {
   )
 }
 
-/** Resolved public Supabase URL (build env, else shipped fallback). */
-export function getSupabaseUrl(): string {
-  const fromEnv = import.meta.env.VITE_SUPABASE_URL
-  if (fromEnv && !looksLikePlaceholder(fromEnv)) return fromEnv.trim()
-  return publicEnv.supabaseUrl
+/**
+ * Project ref from https://REF.supabase.co
+ */
+function projectRefFromUrl(url: string): string | null {
+  try {
+    const host = new URL(url).hostname
+    const m = /^([a-z0-9]+)\.supabase\.co$/i.exec(host)
+    return m?.[1] ?? null
+  } catch {
+    return null
+  }
 }
 
-/** Resolved public Supabase anon key (build env, else shipped fallback). */
+/** Decode JWT payload ref claim without verifying signature (client-side sanity check). */
+function projectRefFromJwt(token: string): string | null {
+  if (!token.startsWith('eyJ')) return null
+  try {
+    const payload = token.split('.')[1]
+    if (!payload) return null
+    const normalized = payload.replace(/-/g, '+').replace(/_/g, '/')
+    const pad = normalized + '='.repeat((4 - (normalized.length % 4)) % 4)
+    const json = JSON.parse(atob(pad)) as { ref?: string }
+    return typeof json.ref === 'string' ? json.ref : null
+  } catch {
+    return null
+  }
+}
+
+function resolveSupabasePair(): { url: string; key: string } {
+  // Production / Hostinger: always ship the paired publicEnv values so a stale
+  // CI or leftover VITE_* cannot mix old anon key + new project URL.
+  if (import.meta.env.PROD) {
+    return { url: publicEnv.supabaseUrl, key: publicEnv.supabaseAnonKey }
+  }
+
+  const urlEnv = import.meta.env.VITE_SUPABASE_URL
+  const keyEnv = import.meta.env.VITE_SUPABASE_ANON_KEY
+  const url = urlEnv && !looksLikePlaceholder(urlEnv) ? urlEnv.trim() : publicEnv.supabaseUrl
+  let key = keyEnv && !looksLikePlaceholder(keyEnv) ? keyEnv.trim() : publicEnv.supabaseAnonKey
+
+  const urlRef = projectRefFromUrl(url)
+  const keyRef = projectRefFromJwt(key)
+  if (urlRef && keyRef && urlRef !== keyRef) {
+    // Mismatched pair → fall back to known-good publicEnv
+    return { url: publicEnv.supabaseUrl, key: publicEnv.supabaseAnonKey }
+  }
+
+  return { url, key }
+}
+
+/** Resolved public Supabase URL (build env, else shipped fallback). */
+export function getSupabaseUrl(): string {
+  return resolveSupabasePair().url
+}
+
+/** Resolved public Supabase anon/publishable key (build env, else shipped fallback). */
 export function getSupabaseAnonKey(): string {
-  const fromEnv = import.meta.env.VITE_SUPABASE_ANON_KEY
-  if (fromEnv && !looksLikePlaceholder(fromEnv)) return fromEnv.trim()
-  return publicEnv.supabaseAnonKey
+  return resolveSupabasePair().key
 }
 
 /** Real Supabase project credentials (not placeholders / demo). */
