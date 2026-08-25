@@ -19,21 +19,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   exit;
 }
 
-$configFile = __DIR__ . '/stripe-config.php';
-if (!is_file($configFile)) {
-  http_response_code(503);
-  echo json_encode(['error' => 'Payments config missing on server.']);
-  exit;
-}
-
-$config = require $configFile;
+require_once __DIR__ . '/load-payment-config.php';
+$config = hopeland_load_payment_config();
 $secret = trim((string) ($config['stripe_secret_key'] ?? ''));
 $supabaseUrl = rtrim(trim((string) ($config['supabase_url'] ?? '')), '/');
 $serviceKey = trim((string) ($config['supabase_service_role_key'] ?? ''));
 
 if ($secret === '' || !preg_match('/^sk_(live|test)_/', $secret)) {
   http_response_code(503);
-  echo json_encode(['error' => 'STRIPE_SECRET_KEY is not configured.', 'paid' => false]);
+  echo json_encode([
+    'error' => 'STRIPE_SECRET_KEY is not configured on the server. Upload public_html/api/stripe-config.php and public_html/api/.env from your latest local npm run build.',
+    'paid' => false,
+  ]);
   exit;
 }
 

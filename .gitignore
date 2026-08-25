@@ -22,7 +22,11 @@ backend/.env
 
 # Hostinger PHP payment secrets (generated at build — never commit)
 frontend/public/api/stripe-config.php
+frontend/public/api/stripe-config.local.php
+frontend/public/api/.env
 **/api/stripe-config.php
+**/api/stripe-config.local.php
+**/api/.env
 
 # logs / OS / editor
 *.log
