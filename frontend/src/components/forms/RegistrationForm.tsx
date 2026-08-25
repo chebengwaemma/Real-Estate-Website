@@ -10,10 +10,10 @@ import { Button } from '@/components/common/Button'
 import { registrationSchema, type RegistrationSchema } from '@/lib/validators'
 import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient'
 import { registrationFee } from '@/lib/stripeClient'
+import { getStripePublishableKey } from '@/lib/stripePublishableKey'
 import { formatCurrency } from '@/lib/utils'
 import { savePendingAuth, clearPendingAuth } from '@/lib/pendingAuth'
 import { isLocalHost, isLocalPaymentMode } from '@/lib/env'
-import { publicEnv } from '@/config/publicEnv'
 import { saveLocalPaidRegistration, clearLocalPaidRegistration } from '@/lib/localPaidRegistration'
 import { startRegistrationCheckout } from '@/lib/startCheckout'
 import { useCreateDemoRegistration } from '@/hooks/useRegistrations'
@@ -136,13 +136,11 @@ export function RegistrationForm() {
         return
       }
 
-      // Live Stripe — hosted Checkout on every deploy domain (Dashboard payment methods).
-      const publishableKey = (
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || publicEnv.stripePublishableKey
-      ).trim()
-      if (!publishableKey || /your_|change_me|xxxxxxxx/i.test(publishableKey) || !/^pk_(test|live)_/.test(publishableKey)) {
+      // Live Stripe — hosted Checkout (redirect to Stripe). Secret key never touches the browser.
+      const publishableKey = getStripePublishableKey()
+      if (!publishableKey) {
         throw new Error(
-          'Stripe publishable key is missing. Set VITE_STRIPE_PUBLISHABLE_KEY (pk_test_… or pk_live_…) for this build.',
+          'Stripe publishable key is missing. Set VITE_STRIPE_PUBLIC_KEY (pk_live_…) for this build.',
         )
       }
 

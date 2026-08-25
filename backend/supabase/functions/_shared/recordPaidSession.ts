@@ -134,6 +134,76 @@ export async function recordPaidRegistration(
   return { registration: existing as RegistrationRow }
 }
 
+/** Insert (or fetch) a failed/abandoned checkout so admin can see unpaid attempts. */
+export async function recordFailedRegistration(
+  supabase: SupabaseClient,
+  session: PaidCheckoutSession,
+  status: 'failed' | 'pending' = 'failed',
+): Promise<{ registration: RegistrationRow } | { error: string; status: number }> {
+  const metadata = session.metadata ?? {}
+  const missingField = REQUIRED_METADATA_FIELDS.find((field) => !metadata[field])
+  if (missingField) {
+    return { error: `Checkout session is missing ${missingField}.`, status: 422 }
+  }
+
+  // Never downgrade an already-paid row.
+  const { data: existingPaid } = await supabase
+    .from('registrations')
+    .select('*')
+    .eq('stripe_session_id', session.id)
+    .maybeSingle()
+  if (existingPaid && (existingPaid as RegistrationRow).status === 'paid') {
+    return { registration: existingPaid as RegistrationRow }
+  }
+
+  const row = {
+    first_name: metadata.first_name,
+    last_name: metadata.last_name,
+    date_of_birth: metadata.date_of_birth,
+    city: metadata.city,
+    country: metadata.country,
+    phone: metadata.phone,
+    email: String(metadata.email).trim().toLowerCase(),
+    status,
+    fee_amount: session.amount_total ?? 0,
+    fee_currency: (session.currency ?? 'usd').toLowerCase(),
+    stripe_session_id: session.id,
+    stripe_payment_intent: paymentIntentId(session),
+  }
+
+  if (existingPaid) {
+    const { data: updated, error } = await supabase
+      .from('registrations')
+      .update({ status, updated_at: new Date().toISOString() } as never)
+      .eq('id', (existingPaid as RegistrationRow).id)
+      .select('*')
+      .maybeSingle()
+    if (error) return { error: error.message, status: 500 }
+    if (updated) return { registration: updated as RegistrationRow }
+    return { registration: existingPaid as RegistrationRow }
+  }
+
+  const { data: inserted, error: insertError } = await supabase
+    .from('registrations')
+    .insert(row as never)
+    .select('*')
+    .maybeSingle()
+
+  if (insertError && insertError.code !== '23505') {
+    return { error: insertError.message, status: 500 }
+  }
+  if (inserted) return { registration: inserted as RegistrationRow }
+
+  const { data: existing, error: fetchError } = await supabase
+    .from('registrations')
+    .select('*')
+    .eq('stripe_session_id', session.id)
+    .maybeSingle()
+  if (fetchError) return { error: fetchError.message, status: 500 }
+  if (!existing) return { error: 'Could not save failed registration.', status: 500 }
+  return { registration: existing as RegistrationRow }
+}
+
 /** Create Auth user only after payment — never before. */
 export async function createAuthForPaidRegistration(
   supabase: SupabaseClient,

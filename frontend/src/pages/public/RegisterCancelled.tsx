@@ -32,8 +32,8 @@ export default function RegisterCancelled() {
           </motion.div>
           <h1 className="text-h1 mt-8 text-ink">Payment not completed</h1>
           <p className="text-body-lg mt-4 text-muted">
-            You were not registered. Nothing was saved to our database and you were not charged. Please register again
-            and finish payment to join the championship.
+            Payment was cancelled or not finished. You were not charged for a completed registration. Use Register
+            Again to open Stripe Checkout and complete payment.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link to="/register">

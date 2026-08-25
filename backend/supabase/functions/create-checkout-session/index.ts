@@ -1,6 +1,6 @@
 // Supabase Edge Function (Deno runtime).
-// Creates a Stripe Checkout Session via Stripe REST API (fetch).
-// Prefer embedded Checkout (client_secret) so payment stays on the site.
+// Creates a Stripe Checkout Session (hosted redirect) via Stripe REST API.
+// Secret key: STRIPE_SECRET_KEY Edge secret only — never sent to the browser.
 import { corsHeaders } from '../_shared/cors.ts'
 
 interface RegistrationPayload {
@@ -43,50 +43,61 @@ function cleanSecret(raw: string): string {
     .replace(/^["']|["']$/g, '')
 }
 
+function json(status: number, body: Record<string, unknown>) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  })
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
+  if (req.method !== 'POST') {
+    return json(405, { error: 'Method not allowed' })
+  }
+
   try {
-    const raw = await req.json()
-    const uiMode =
-      raw && typeof raw === 'object' && (raw as { uiMode?: string }).uiMode === 'hosted'
-        ? 'hosted'
-        : 'embedded'
+    let raw: unknown
+    try {
+      raw = await req.json()
+    } catch {
+      return json(400, { error: 'Invalid JSON body.' })
+    }
+
+    // Production registration always uses hosted Checkout (redirect to Stripe).
+    const requested =
+      raw && typeof raw === 'object' ? (raw as { uiMode?: string }).uiMode : undefined
+    const uiMode = requested === 'embedded' ? 'embedded' : 'hosted'
 
     if (!isValidPayload(raw)) {
-      return new Response(JSON.stringify({ error: 'Invalid registration payload.' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return json(400, { error: 'Invalid registration payload.' })
     }
     const body = raw as RegistrationPayload & { siteUrl?: string; uiMode?: string }
 
     const stripeSecretKey = cleanSecret(Deno.env.get('STRIPE_SECRET_KEY') ?? '')
     if (!stripeSecretKey || !/^sk_(test|live)_/.test(stripeSecretKey)) {
-      return new Response(
-        JSON.stringify({
-          error:
-            'Payments are not configured yet. Set a valid STRIPE_SECRET_KEY (sk_test_… or sk_live_…) in Edge Function Secrets.',
-        }),
-        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      )
+      return json(503, {
+        error:
+          'Payments are not configured. Set STRIPE_SECRET_KEY (sk_live_…) in Supabase Edge Function secrets.',
+      })
     }
 
     const feeAmount = Number(Deno.env.get('REGISTRATION_FEE_AMOUNT') ?? '1000')
     const feeCurrency = (Deno.env.get('REGISTRATION_FEE_CURRENCY') ?? 'usd').toLowerCase()
+    if (!Number.isFinite(feeAmount) || feeAmount < 50) {
+      return json(500, { error: 'Invalid registration fee configuration.' })
+    }
 
-    // Prefer the live browser origin from the client so Vercel/custom domains
-    // never redirect back to a stale localhost SITE_URL secret.
     const configured = (Deno.env.get('SITE_URL') ?? '').trim().replace(/\/$/, '')
     const origin = (req.headers.get('origin') ?? '').trim().replace(/\/$/, '')
     const fromClient =
       typeof body.siteUrl === 'string' ? body.siteUrl.trim().replace(/\/$/, '') : ''
     const isHttpUrl = (u: string) => /^https?:\/\//i.test(u)
     const isLocal = (u: string) => /localhost|127\.0\.0\.1/i.test(u)
-    const pick = (...candidates: string[]) =>
-      candidates.find((u) => u && isHttpUrl(u)) ?? ''
+    const pick = (...candidates: string[]) => candidates.find((u) => u && isHttpUrl(u)) ?? ''
 
     const siteUrl =
       pick(
@@ -94,8 +105,16 @@ Deno.serve(async (req) => {
         origin,
         !isLocal(configured) ? configured : '',
         configured,
-        'http://127.0.0.1:5173',
-      ) || 'http://127.0.0.1:5173'
+        'https://hcheckers.org',
+      ) || 'https://hcheckers.org'
+
+    // Avoid accidentally charging live cards against a test secret (or the reverse).
+    if (stripeSecretKey.startsWith('sk_test_') && !isLocal(siteUrl)) {
+      return json(503, {
+        error:
+          'Stripe test secret is set, but this request is for a live site. Set STRIPE_SECRET_KEY=sk_live_… in Edge secrets.',
+      })
+    }
 
     const firstName = body.firstName.trim()
     const lastName = body.lastName.trim()
@@ -105,7 +124,6 @@ Deno.serve(async (req) => {
     params.set('mode', 'payment')
     params.append('payment_method_types[]', 'card')
     params.set('customer_email', email)
-    // Override the Stripe account business name (e.g. AfriHopeland) on Checkout.
     params.set('branding_settings[display_name]', 'Hopeland Global Checkers (Draughts) Federation')
     params.set('line_items[0][quantity]', '1')
     params.set('line_items[0][price_data][currency]', feeCurrency)
@@ -131,7 +149,7 @@ Deno.serve(async (req) => {
       params.set('return_url', `${siteUrl}/register/success?session_id={CHECKOUT_SESSION_ID}`)
     } else {
       params.set('success_url', `${siteUrl}/register/success?session_id={CHECKOUT_SESSION_ID}`)
-      params.set('cancel_url', `${siteUrl}/register/cancelled`)
+      params.set('cancel_url', `${siteUrl}/register/cancelled?session_id={CHECKOUT_SESSION_ID}`)
     }
 
     const stripeRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -148,46 +166,31 @@ Deno.serve(async (req) => {
       id?: string
       url?: string
       client_secret?: string
-      error?: { message?: string }
+      error?: { message?: string; type?: string }
     }
+
     if (!stripeRes.ok) {
-      return new Response(
-        JSON.stringify({ error: data.error?.message ?? 'Unexpected error creating checkout session.' }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        },
-      )
+      console.error('Stripe checkout.sessions error', stripeRes.status, data.error)
+      return json(502, {
+        error: data.error?.message ?? 'Stripe rejected checkout session creation.',
+      })
     }
 
     if (uiMode === 'embedded') {
       if (!data.client_secret) {
-        return new Response(JSON.stringify({ error: 'Stripe did not return an embedded checkout client secret.' }), {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        })
+        return json(500, { error: 'Stripe did not return an embedded checkout client secret.' })
       }
-      return new Response(JSON.stringify({ clientSecret: data.client_secret, sessionId: data.id }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return json(200, { clientSecret: data.client_secret, sessionId: data.id })
     }
 
     if (!data.url) {
-      return new Response(JSON.stringify({ error: 'Stripe did not return a checkout URL.' }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return json(500, { error: 'Stripe did not return a checkout URL.' })
     }
 
-    return new Response(JSON.stringify({ url: data.url, sessionId: data.id }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
+    return json(200, { url: data.url, sessionId: data.id })
   } catch (error) {
     console.error('create-checkout-session error', error)
     const message = error instanceof Error ? error.message : 'Unexpected error creating checkout session.'
-    return new Response(JSON.stringify({ error: message }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
+    return json(500, { error: message })
   }
 })

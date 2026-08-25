@@ -1,12 +1,13 @@
 import { loadStripe, type Stripe } from '@stripe/stripe-js'
 import { publicEnv } from '@/config/publicEnv'
+import { getStripePublishableKey } from '@/lib/stripePublishableKey'
 
 let stripePromise: Promise<Stripe | null> | null = null
 
-/** Lazily loads and memoizes the Stripe.js client. */
+/** Lazily loads and memoizes the Stripe.js client (publishable key only). */
 export function getStripe() {
   if (!stripePromise) {
-    const key = (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || publicEnv.stripePublishableKey).trim()
+    const key = getStripePublishableKey()
     stripePromise = key ? loadStripe(key) : Promise.resolve(null)
   }
   return stripePromise

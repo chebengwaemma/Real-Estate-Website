@@ -88,9 +88,17 @@ async function invokeCreateCheckout(
   throw new Error(message ?? 'Could not start checkout. Please try again.')
 }
 
+function isSameOriginConfigMiss(status: number, error?: string): boolean {
+  if (status === 503 || status === 501) return true
+  return /STRIPE_SECRET_KEY|Payment secret missing|not configured on the server|missing_stripe_secret/i.test(
+    error ?? '',
+  )
+}
+
 /**
  * Same path on localhost (Vite plugin) and live (Hostinger PHP via .htaccess).
  * Also tries the explicit .php URL if the extensionless route is missing.
+ * Misconfigured Hostinger PHP must NOT block Supabase Edge Function fallback.
  */
 async function createViaSameOriginApi(
   body: CheckoutRegistrationFields & { uiMode: 'embedded' | 'hosted'; siteUrl: string },
@@ -108,6 +116,7 @@ async function createViaSameOriginApi(
       if (!contentType.includes('application/json')) continue
       const data = (await res.json()) as CheckoutApiResponse
       if (!res.ok) {
+        if (isSameOriginConfigMiss(res.status, data.error)) continue
         throw new Error(data.error ?? 'Could not start checkout.')
       }
       return data
@@ -129,25 +138,40 @@ function toResult(data: CheckoutApiResponse, allowEmbedded: boolean): CheckoutSt
 /**
  * Starts Stripe Checkout the same way locally and on live:
  * hosted Checkout session (redirect to Stripe), never embedded.
- * Order: same-origin /api (Vite or Hostinger PHP) → Supabase Edge Function.
+ * Local: Vite /api first. Live: Supabase Edge Function first (no Hostinger secrets needed).
  */
 export async function startRegistrationCheckout(
   fields: CheckoutRegistrationFields,
 ): Promise<CheckoutStartResult> {
   const siteUrl = typeof window !== 'undefined' ? window.location.origin.replace(/\/$/, '') : ''
   const payload = { ...fields, siteUrl, uiMode: 'hosted' as const }
+  const host = typeof window !== 'undefined' ? window.location.hostname : ''
+  const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '[::1]' || host === '::1'
 
-  const sameOrigin = await createViaSameOriginApi(payload)
-  if (sameOrigin) {
-    const fromSame = toResult(sameOrigin, false)
-    if (fromSame) return fromSame
-    if (sameOrigin.error) throw new Error(sameOrigin.error)
+  if (isLocal) {
+    const sameOrigin = await createViaSameOriginApi(payload)
+    if (sameOrigin) {
+      const fromSame = toResult(sameOrigin, false)
+      if (fromSame) return fromSame
+      if (sameOrigin.error) throw new Error(sameOrigin.error)
+    }
   }
 
-  const remote = await invokeCreateCheckout(payload)
-  const fromRemote = toResult(remote, false)
-  if (fromRemote) return fromRemote
-  if (remote.error) throw new Error(remote.error)
+  try {
+    const remote = await invokeCreateCheckout(payload)
+    const fromRemote = toResult(remote, false)
+    if (fromRemote) return fromRemote
+    if (remote.error) throw new Error(remote.error)
+  } catch (edgeErr) {
+    if (!isLocal) {
+      const php = await createViaSameOriginApi(payload)
+      if (php) {
+        const fromPhp = toResult(php, false)
+        if (fromPhp) return fromPhp
+      }
+    }
+    throw edgeErr instanceof Error ? edgeErr : new Error('Could not start Stripe Checkout. Please try again.')
+  }
 
   throw new Error('Could not start Stripe Checkout. Please try again.')
 }

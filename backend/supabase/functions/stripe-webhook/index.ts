@@ -1,14 +1,19 @@
-// Verifies the Stripe webhook signature and creates the `registrations` row
-// ONLY when Checkout completes with payment_status === 'paid'.
-// Auth accounts are created on the success page via finalize-paid-registration
-// (never before payment succeeds).
+// Verifies the Stripe webhook signature and updates `registrations`:
+// - checkout.session.completed + paid → status paid
+// - checkout.session.expired / async_payment_failed → status failed
+// Auth accounts are created on the success page via finalize-paid-registration.
 //
 // Required secrets: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
-// Listen for: checkout.session.completed
+// Listen for: checkout.session.completed, checkout.session.expired,
+//             checkout.session.async_payment_failed
 
 import Stripe from 'npm:stripe@17'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
-import { recordPaidRegistration, type PaidCheckoutSession } from '../_shared/recordPaidSession.ts'
+import {
+  recordFailedRegistration,
+  recordPaidRegistration,
+  type PaidCheckoutSession,
+} from '../_shared/recordPaidSession.ts'
 
 Deno.serve(async (req) => {
   const stripeSecret = (Deno.env.get('STRIPE_SECRET_KEY') ?? '')
@@ -23,6 +28,10 @@ Deno.serve(async (req) => {
 
   if (!signature) {
     return new Response('Missing Stripe signature.', { status: 400 })
+  }
+
+  if (!webhookSecret || /xxx|your_/i.test(webhookSecret)) {
+    return new Response('STRIPE_WEBHOOK_SECRET is not configured.', { status: 503 })
   }
 
   const body = await req.text()
@@ -53,8 +62,23 @@ Deno.serve(async (req) => {
 
       const recorded = await recordPaidRegistration(supabase, session)
       if ('error' in recorded) {
-        console.error('stripe-webhook record failed', recorded.error)
+        console.error('stripe-webhook record paid failed', recorded.error)
         return new Response('Webhook processing error.', { status: 500 })
+      }
+    }
+
+    if (
+      event.type === 'checkout.session.expired' ||
+      event.type === 'checkout.session.async_payment_failed'
+    ) {
+      const session = event.data.object as PaidCheckoutSession
+      const recorded = await recordFailedRegistration(supabase, session, 'failed')
+      if ('error' in recorded) {
+        console.error('stripe-webhook record failed status', recorded.error)
+        // Do not fail the webhook hard for abandoned sessions with incomplete metadata.
+        return new Response(JSON.stringify({ received: true, skipped: recorded.error }), {
+          headers: { 'Content-Type': 'application/json' },
+        })
       }
     }
 
