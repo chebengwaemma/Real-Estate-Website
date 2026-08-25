@@ -25,7 +25,8 @@ $secret = trim((string) ($config['stripe_secret_key'] ?? ''));
 if ($secret === '' || !preg_match('/^sk_(live|test)_/', $secret)) {
   http_response_code(503);
   echo json_encode([
-    'error' => 'STRIPE_SECRET_KEY is not configured on the server. Upload public_html/api/stripe-config.php and public_html/api/.env from your latest local npm run build.',
+    'error' => 'Payment secret missing on Hostinger. Replace the entire public_html/api folder from your latest local build (must include stripe-config.php + payments-secrets.php).',
+    'code' => 'missing_stripe_secret',
   ]);
   exit;
 }

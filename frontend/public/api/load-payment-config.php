@@ -1,7 +1,7 @@
 <?php
 /**
  * Loads Stripe/Supabase secrets for Hostinger PHP payment APIs.
- * Order: stripe-config.local.php → stripe-config.php → api/.env → getenv
+ * Order: payments-secrets.php → stripe-config.php → local → api/.env → getenv
  */
 function hopeland_load_payment_config(): array {
   $defaults = [
@@ -14,11 +14,35 @@ function hopeland_load_payment_config(): array {
 
   $merged = $defaults;
 
+  $secretsPhp = __DIR__ . '/payments-secrets.php';
+  if (is_file($secretsPhp)) {
+    include_once $secretsPhp;
+    if (defined('HOPELAND_STRIPE_SECRET') && HOPELAND_STRIPE_SECRET) {
+      $merged['stripe_secret_key'] = (string) HOPELAND_STRIPE_SECRET;
+    }
+    if (defined('HOPELAND_SUPABASE_URL') && HOPELAND_SUPABASE_URL) {
+      $merged['supabase_url'] = (string) HOPELAND_SUPABASE_URL;
+    }
+    if (defined('HOPELAND_SERVICE_ROLE_KEY') && HOPELAND_SERVICE_ROLE_KEY) {
+      $merged['supabase_service_role_key'] = (string) HOPELAND_SERVICE_ROLE_KEY;
+    }
+    if (defined('HOPELAND_FEE_AMOUNT')) {
+      $merged['fee_amount'] = (int) HOPELAND_FEE_AMOUNT;
+    }
+    if (defined('HOPELAND_FEE_CURRENCY') && HOPELAND_FEE_CURRENCY) {
+      $merged['fee_currency'] = (string) HOPELAND_FEE_CURRENCY;
+    }
+  }
+
   $configPhp = __DIR__ . '/stripe-config.php';
   if (is_file($configPhp)) {
     $fromPhp = include $configPhp;
     if (is_array($fromPhp)) {
-      $merged = array_merge($merged, $fromPhp);
+      foreach ($fromPhp as $k => $v) {
+        if ($v !== '' && $v !== null) {
+          $merged[$k] = $v;
+        }
+      }
     }
   }
 
@@ -26,7 +50,11 @@ function hopeland_load_payment_config(): array {
   if (is_file($localPhp)) {
     $fromLocal = include $localPhp;
     if (is_array($fromLocal)) {
-      $merged = array_merge($merged, $fromLocal);
+      foreach ($fromLocal as $k => $v) {
+        if ($v !== '' && $v !== null) {
+          $merged[$k] = $v;
+        }
+      }
     }
   }
 
@@ -68,7 +96,6 @@ function hopeland_load_payment_config(): array {
     $merged['stripe_secret_key'] = $envSecret;
   }
 
-  // Allow build-time base64 so hosts that strip "sk_live_" from .php still work.
   $secret = trim((string) ($merged['stripe_secret_key'] ?? ''));
   if ($secret !== '' && strpos($secret, 'sk_') !== 0 && preg_match('#^[A-Za-z0-9+/]+=*$#', $secret)) {
     $decoded = base64_decode($secret, true);
