@@ -1,6 +1,6 @@
 import { FunctionsFetchError, FunctionsHttpError, FunctionsRelayError } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabaseClient'
-import { getSupabaseAnonKey, getSupabaseUrl, isLocalHost } from '@/lib/env'
+import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/env'
 
 export type CheckoutStartResult =
   | { clientSecret: string; url?: undefined }
@@ -33,7 +33,7 @@ async function readFunctionError(err: unknown): Promise<string | null> {
     return 'Could not start checkout. Please try again.'
   }
   if (err instanceof FunctionsRelayError || err instanceof FunctionsFetchError) {
-    return 'Payments aren\'t set up yet — the checkout service isn\'t reachable. Please try again shortly or contact support.'
+    return 'Payments are not reachable yet. Please try again shortly or contact support.'
   }
   return err instanceof Error ? err.message : null
 }
@@ -53,8 +53,15 @@ async function invokeViaRawFetch(
     },
     body: JSON.stringify(body),
   })
+  if (res.status === 404) {
+    throw new Error(
+      'Checkout is not available on the server yet. Re-upload the latest public_html (including /api) or deploy the create-checkout-session function.',
+    )
+  }
   const contentType = res.headers.get('content-type') ?? ''
-  if (!contentType.includes('application/json')) return null
+  if (!contentType.includes('application/json')) {
+    throw new Error('Checkout service returned an unexpected response. Please try again shortly.')
+  }
   const data = (await res.json()) as CheckoutApiResponse
   if (!res.ok) {
     throw new Error(data.error ?? 'Could not start checkout.')
@@ -81,30 +88,36 @@ async function invokeCreateCheckout(
   throw new Error(message ?? 'Could not start checkout. Please try again.')
 }
 
-async function createViaLocalDevApi(
+/**
+ * Same path on localhost (Vite plugin) and live (Hostinger PHP via .htaccess).
+ * Also tries the explicit .php URL if the extensionless route is missing.
+ */
+async function createViaSameOriginApi(
   body: CheckoutRegistrationFields & { uiMode: 'embedded' | 'hosted'; siteUrl: string },
 ): Promise<CheckoutApiResponse | null> {
-  if (!isLocalHost()) return null
-  try {
-    const localRes = await fetch('/api/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    })
-    const contentType = localRes.headers.get('content-type') ?? ''
-    if (!contentType.includes('application/json')) return null
-    const localData = (await localRes.json()) as CheckoutApiResponse
-    if (!localRes.ok) {
-      if (localRes.status === 404) return null
-      throw new Error(localData.error ?? 'Could not start checkout.')
+  const endpoints = ['/api/create-checkout-session', '/api/create-checkout-session.php']
+  for (const endpoint of endpoints) {
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      if (res.status === 404) continue
+      const contentType = res.headers.get('content-type') ?? ''
+      if (!contentType.includes('application/json')) continue
+      const data = (await res.json()) as CheckoutApiResponse
+      if (!res.ok) {
+        throw new Error(data.error ?? 'Could not start checkout.')
+      }
+      return data
+    } catch (err) {
+      if (err instanceof Error && !/Failed to fetch|NetworkError|fetch|JSON/i.test(err.message)) {
+        throw err
+      }
     }
-    return localData
-  } catch (err) {
-    if (err instanceof Error && !/Failed to fetch|NetworkError|fetch|JSON/i.test(err.message)) {
-      throw err
-    }
-    return null
   }
+  return null
 }
 
 function toResult(data: CheckoutApiResponse, allowEmbedded: boolean): CheckoutStartResult | null {
@@ -116,7 +129,7 @@ function toResult(data: CheckoutApiResponse, allowEmbedded: boolean): CheckoutSt
 /**
  * Starts Stripe Checkout the same way locally and on live:
  * hosted Checkout session (redirect to Stripe), never embedded.
- * Localhost tries the Vite `/api` plugin first, then the Edge Function.
+ * Order: same-origin /api (Vite or Hostinger PHP) → Supabase Edge Function.
  */
 export async function startRegistrationCheckout(
   fields: CheckoutRegistrationFields,
@@ -124,11 +137,11 @@ export async function startRegistrationCheckout(
   const siteUrl = typeof window !== 'undefined' ? window.location.origin.replace(/\/$/, '') : ''
   const payload = { ...fields, siteUrl, uiMode: 'hosted' as const }
 
-  const local = await createViaLocalDevApi(payload)
-  if (local) {
-    const fromLocal = toResult(local, false)
-    if (fromLocal) return fromLocal
-    if (local.error) throw new Error(local.error)
+  const sameOrigin = await createViaSameOriginApi(payload)
+  if (sameOrigin) {
+    const fromSame = toResult(sameOrigin, false)
+    if (fromSame) return fromSame
+    if (sameOrigin.error) throw new Error(sameOrigin.error)
   }
 
   const remote = await invokeCreateCheckout(payload)

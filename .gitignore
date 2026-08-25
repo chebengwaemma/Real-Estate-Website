@@ -20,6 +20,10 @@ backend/.env
 # Public VITE_* only — baked into client builds (anon/publishable keys)
 !frontend/.env.production
 
+# Hostinger PHP payment secrets (generated at build — never commit)
+frontend/public/api/stripe-config.php
+**/api/stripe-config.php
+
 # logs / OS / editor
 *.log
 .DS_Store

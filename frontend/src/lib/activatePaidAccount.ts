@@ -1,6 +1,6 @@
 import { FunctionsHttpError } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabaseClient'
-import { getSupabaseAnonKey, getSupabaseUrl, isLocalHost } from '@/lib/env'
+import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/env'
 import { clearPendingAuth, readPendingAuth } from '@/lib/pendingAuth'
 import type { Registration } from '@/types'
 
@@ -12,35 +12,40 @@ type FinalizeResponse = {
   error?: string
 }
 
-async function finalizeViaLocalApi(
+/** Same path on localhost (Vite) and live (Hostinger PHP via .htaccess). */
+async function finalizeViaSameOriginApi(
   sessionId: string,
   password: string,
 ): Promise<FinalizeResponse | null> {
-  if (!isLocalHost()) return null
-  try {
-    const res = await fetch('/api/finalize-paid-registration', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId,
-        password: password.length >= 6 ? password : undefined,
-      }),
-    })
-    if (res.status === 404) return null
-    const contentType = res.headers.get('content-type') ?? ''
-    if (!contentType.includes('application/json')) return null
-    const data = (await res.json()) as FinalizeResponse
-    if (!res.ok) {
-      return {
-        paid: data.paid,
-        error: data.error ?? 'Could not finalize payment.',
-        registration: data.registration,
-      }
-    }
-    return data
-  } catch {
-    return null
+  const endpoints = ['/api/finalize-paid-registration', '/api/finalize-paid-registration.php']
+  const payload = {
+    sessionId,
+    password: password.length >= 6 ? password : undefined,
   }
+  for (const endpoint of endpoints) {
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (res.status === 404) continue
+      const contentType = res.headers.get('content-type') ?? ''
+      if (!contentType.includes('application/json')) continue
+      const data = (await res.json()) as FinalizeResponse
+      if (!res.ok) {
+        return {
+          paid: data.paid,
+          error: data.error ?? 'Could not finalize payment.',
+          registration: data.registration,
+        }
+      }
+      return data
+    } catch {
+      // try next endpoint
+    }
+  }
+  return null
 }
 
 async function finalizeViaRawFetch(
@@ -125,7 +130,7 @@ async function finalizeViaEdgeFunction(
 /**
  * After Stripe redirects to success: verify payment, save registration only if
  * paid, and create Auth account only if paid.
- * Dev: local Vite API optional. Production/Vercel: Edge Function only.
+ * Order: same-origin /api (Vite or Hostinger PHP) → Supabase Edge Function.
  */
 export async function finalizePaidRegistration(sessionId: string): Promise<{
   registration: Registration | null
@@ -135,7 +140,7 @@ export async function finalizePaidRegistration(sessionId: string): Promise<{
   const pending = readPendingAuth()
   const password = pending?.password ?? ''
 
-  let result = await finalizeViaLocalApi(sessionId, password)
+  let result = await finalizeViaSameOriginApi(sessionId, password)
 
   if (!result || result.error) {
     const edge = await finalizeViaEdgeFunction(sessionId, password)
