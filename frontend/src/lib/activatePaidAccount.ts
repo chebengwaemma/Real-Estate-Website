@@ -12,42 +12,6 @@ type FinalizeResponse = {
   error?: string
 }
 
-/** Same path on localhost (Vite) and live (Hostinger PHP via .htaccess). */
-async function finalizeViaSameOriginApi(
-  sessionId: string,
-  password: string,
-): Promise<FinalizeResponse | null> {
-  const endpoints = ['/api/finalize-paid-registration', '/api/finalize-paid-registration.php']
-  const payload = {
-    sessionId,
-    password: password.length >= 6 ? password : undefined,
-  }
-  for (const endpoint of endpoints) {
-    try {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-      if (res.status === 404) continue
-      const contentType = res.headers.get('content-type') ?? ''
-      if (!contentType.includes('application/json')) continue
-      const data = (await res.json()) as FinalizeResponse
-      if (!res.ok) {
-        return {
-          paid: data.paid,
-          error: data.error ?? 'Could not finalize payment.',
-          registration: data.registration,
-        }
-      }
-      return data
-    } catch {
-      // try next endpoint
-    }
-  }
-  return null
-}
-
 async function finalizeViaRawFetch(
   sessionId: string,
   password: string,
@@ -105,7 +69,7 @@ async function finalizeViaEdgeFunction(
         }
       }
     } catch {
-      // fall through to the original invoke error
+      // fall through
     }
     if (error instanceof FunctionsHttpError) {
       try {
@@ -128,9 +92,8 @@ async function finalizeViaEdgeFunction(
 }
 
 /**
- * After Stripe redirects to success: verify payment, save registration only if
- * paid, and create Auth account only if paid.
- * Order: same-origin /api (Vite or Hostinger PHP) → Supabase Edge Function.
+ * After Stripe redirects to success: verify payment via Supabase Edge Function only.
+ * Does not call Hostinger PHP /api/* endpoints.
  */
 export async function finalizePaidRegistration(sessionId: string): Promise<{
   registration: Registration | null
@@ -140,43 +103,40 @@ export async function finalizePaidRegistration(sessionId: string): Promise<{
   const pending = readPendingAuth()
   const password = pending?.password ?? ''
 
-  let result = await finalizeViaSameOriginApi(sessionId, password)
+  const edge = await finalizeViaEdgeFunction(sessionId, password)
+  let result = edge.data?.paid && edge.data.registration ? edge.data : null
 
-  if (!result || result.error) {
-    const edge = await finalizeViaEdgeFunction(sessionId, password)
-    if (edge.data?.paid && edge.data.registration) {
-      result = edge.data
-    } else if (!result) {
-      if (edge.errorMessage) {
-        const { data: existing } = await supabase.functions.invoke<Registration>('get-registration-by-session', {
-          body: { sessionId },
-        })
-        if (existing?.status === 'paid') {
-          await activatePaidAccount(existing)
-          clearPendingAuth()
-          return { registration: existing, error: null, unpaid: false }
-        }
+  if (!result) {
+    if (edge.errorMessage) {
+      const { data: existing } = await supabase.functions.invoke<Registration>('get-registration-by-session', {
+        body: { sessionId },
+      })
+      if (existing?.status === 'paid') {
+        await activatePaidAccount(existing)
         clearPendingAuth()
-        return {
-          registration: null,
-          error:
-            /Failed to send a request to the Edge Function|not found|FunctionsFetchError|CORS/i.test(
-              edge.errorMessage,
-            )
-              ? 'Payment may have succeeded, but account setup is not ready yet. Please wait a moment and refresh, or contact support with your payment email.'
-              : edge.errorMessage,
-          unpaid: edge.unpaid,
-        }
+        return { registration: existing, error: null, unpaid: false }
       }
-    } else if (result.error && !result.registration) {
       clearPendingAuth()
-      const unpaid =
-        result.paid === false ||
-        (/not completed|not paid|invalid checkout/i.test(result.error) &&
-          !/SERVICE_ROLE|not configured|not connected/i.test(result.error))
       return {
         registration: null,
-        error: result.error,
+        error:
+          /Failed to send a request to the Edge Function|not found|FunctionsFetchError|CORS/i.test(
+            edge.errorMessage,
+          )
+            ? 'Payment may have succeeded, but account setup is not ready yet. Please wait a moment and refresh, or contact support with your payment email.'
+            : edge.errorMessage,
+        unpaid: edge.unpaid,
+      }
+    }
+    if (edge.data?.error && !edge.data.registration) {
+      clearPendingAuth()
+      const unpaid =
+        edge.data.paid === false ||
+        (/not completed|not paid|invalid checkout/i.test(edge.data.error) &&
+          !/SERVICE_ROLE|not configured|not connected/i.test(edge.data.error))
+      return {
+        registration: null,
+        error: edge.data.error,
         unpaid,
       }
     }
@@ -184,9 +144,10 @@ export async function finalizePaidRegistration(sessionId: string): Promise<{
 
   if (!result?.paid || !result.registration) {
     clearPendingAuth()
-    const message = result?.error ?? 'Payment not completed. No account was created.'
+    const message = result?.error ?? edge.errorMessage ?? 'Payment not completed. No account was created.'
     const unpaid =
       result?.paid === false ||
+      edge.unpaid ||
       (!result?.paid &&
         /not completed|not paid|invalid checkout/i.test(message) &&
         !/SERVICE_ROLE|not configured|not connected/i.test(message))

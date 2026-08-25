@@ -1,11 +1,7 @@
-# Hostinger / Apache — same API paths as localhost Vite, then SPA fallback
+# Hostinger / Apache — SPA fallback (no PHP payment rewrites)
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-
-  # Match localhost Vite routes: /api/create-checkout-session → PHP
-  RewriteRule ^api/create-checkout-session/?$ api/create-checkout-session.php [L,QSA]
-  RewriteRule ^api/finalize-paid-registration/?$ api/finalize-paid-registration.php [L,QSA]
 
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
