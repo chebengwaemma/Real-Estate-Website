@@ -7,6 +7,11 @@ export function Footer() {
   const { t } = useTranslation()
   const { data: settings } = useSiteSettings()
   const tagline = settings?.footer_tagline || t('footer.tagline')
+  const brand = settings?.site_name || 'Hopeland Global Checkers'
+  const logoUrl = settings?.logo_url?.trim() || ''
+  const email = settings?.contact_email || ''
+  const phone = settings?.contact_phone?.trim() || ''
+  const address = settings?.contact_address?.trim() || ''
 
   const sitemapLinks = [
     { to: '/', label: t('nav.home') },
@@ -28,31 +33,60 @@ export function Footer() {
     { icon: Camera, href: settings?.social_instagram || '#', label: 'Instagram' },
     { icon: MessageCircle, href: settings?.social_facebook || '#', label: 'Facebook' },
     { icon: Play, href: settings?.social_youtube || '#', label: 'YouTube' },
-  ]
+  ].filter((s) => s.href && s.href !== '#')
 
   return (
     <footer className="bg-navy pb-[calc(5rem+env(safe-area-inset-bottom))] text-white/70 lg:pb-0">
       <div className="container-page section-y flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
         <div className="max-w-sm min-w-0">
-          <p className="text-h2 break-words font-display font-extrabold text-white">
-            Hopeland Global Checkers<span className="text-primary">.</span>
-          </p>
-          <p className="text-body-lg mt-5 text-white/60">{tagline}</p>
-          <p className="mt-8 text-xs text-white/40">
-            &copy; {new Date().getFullYear()} Hopeland Global Checkers (Draughts) Federation
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {socials.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                aria-label={s.label}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-primary hover:text-white"
-              >
-                <s.icon size={18} />
-              </a>
-            ))}
+          <div className="flex items-center gap-3">
+            {logoUrl ? (
+              <img src={logoUrl} alt="" className="h-10 w-10 rounded-lg object-contain" />
+            ) : null}
+            <p className="text-h2 break-words font-display font-extrabold text-white">
+              {brand}
+              <span className="text-primary">.</span>
+            </p>
           </div>
+          <p className="text-body-lg mt-5 text-white/60">{tagline}</p>
+          {(email || phone || address) && (
+            <div className="mt-5 space-y-1 text-sm text-white/55">
+              {email ? (
+                <p>
+                  <a href={`mailto:${email}`} className="hover:text-white">
+                    {email}
+                  </a>
+                </p>
+              ) : null}
+              {phone ? (
+                <p>
+                  <a href={`tel:${phone.replace(/\s+/g, '')}`} className="hover:text-white">
+                    {phone}
+                  </a>
+                </p>
+              ) : null}
+              {address ? <p className="whitespace-pre-line">{address}</p> : null}
+            </div>
+          )}
+          <p className="mt-8 text-xs text-white/40">
+            &copy; {new Date().getFullYear()} {brand}
+          </p>
+          {socials.length > 0 ? (
+            <div className="mt-6 flex flex-wrap gap-3">
+              {socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={s.label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-primary hover:text-white"
+                >
+                  <s.icon size={18} />
+                </a>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div className="min-w-0 w-full lg:w-auto">

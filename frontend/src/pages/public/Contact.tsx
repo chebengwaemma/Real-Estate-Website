@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
-import { Mail, MapPin, Loader2 } from 'lucide-react'
+import { Mail, MapPin, Phone, Loader2 } from 'lucide-react'
 import { PageHero } from '@/components/layout/PageHero'
 import { FormField } from '@/components/forms/FormField'
 import { Button } from '@/components/common/Button'
@@ -14,7 +14,9 @@ export default function Contact() {
   const { data: settings } = useSiteSettings()
   const submitMessage = useSubmitContactMessage()
   const email = settings?.contact_email ?? 'contact@hcheckers.org'
-  const location = settings?.championship_location ?? 'Atlanta, Georgia, USA'
+  const phone = settings?.contact_phone?.trim() || ''
+  const address = settings?.contact_address?.trim() || settings?.championship_location || 'Atlanta, Georgia, USA'
+  const orgName = settings?.site_name || 'Hopeland Global Checkers (Draughts) Federation'
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -56,9 +58,24 @@ export default function Contact() {
               </span>
               <div>
                 <p className="text-sm font-bold text-ink">Email</p>
-                <p className="text-sm text-muted">{email}</p>
+                <a href={`mailto:${email}`} className="text-sm text-muted hover:text-primary">
+                  {email}
+                </a>
               </div>
             </div>
+            {phone ? (
+              <div className="flex items-start gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Phone size={18} />
+                </span>
+                <div>
+                  <p className="text-sm font-bold text-ink">Phone</p>
+                  <a href={`tel:${phone.replace(/\s+/g, '')}`} className="text-sm text-muted hover:text-primary">
+                    {phone}
+                  </a>
+                </div>
+              </div>
+            ) : null}
             <div className="flex items-start gap-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <MapPin size={18} />
@@ -66,8 +83,8 @@ export default function Contact() {
               <div>
                 <p className="text-sm font-bold text-ink">Address</p>
                 <address className="not-italic">
-                  <p className="text-sm text-muted">Hopeland Global Checkers (Draughts) Federation</p>
-                  <p className="text-sm text-muted">{location}</p>
+                  <p className="text-sm text-muted">{orgName}</p>
+                  <p className="whitespace-pre-line text-sm text-muted">{address}</p>
                 </address>
               </div>
             </div>

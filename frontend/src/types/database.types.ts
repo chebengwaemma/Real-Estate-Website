@@ -4,6 +4,8 @@
  * to a live Supabase instance, then this file can be replaced automatically.
  */
 
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+
 export type RegistrationStatus = 'pending' | 'paid' | 'failed' | 'refunded'
 
 export interface Registration {
@@ -79,6 +81,11 @@ export interface SiteSettings {
   announcement_text: string
   announcement_cta: string
   contact_email: string
+  contact_phone: string
+  contact_address: string
+  site_name: string
+  website_url: string
+  logo_url: string
   footer_tagline: string
   social_twitter: string
   social_instagram: string
@@ -90,6 +97,8 @@ export interface SiteSettings {
   final_cta_title: string
   final_cta_subtitle: string
   about_teaser: string
+  /** Future / custom key-value pairs — add fields in siteSettingsFields with storage: 'extras' */
+  extras: Record<string, string>
   updated_at: string
 }
 
@@ -247,6 +256,29 @@ export interface Database {
         Insert: Partial<ContactMessage> & Pick<ContactMessage, 'name' | 'email' | 'message'>
         Update: Partial<ContactMessage>
       }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      save_site_settings: {
+        Args: { data: Json }
+        Returns: SiteSettings
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      get_my_registration: {
+        Args: Record<PropertyKey, never>
+        Returns: Registration
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
     }
   }
 }

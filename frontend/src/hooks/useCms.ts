@@ -21,6 +21,8 @@ import {
   setMockSiteSettings,
 } from '@/lib/mockData'
 import { defaultSiteSettings } from '@/lib/cmsDefaults'
+import { cmsErrorMessage, isCmsTableMissing } from '@/lib/cmsError'
+import { normalizeSiteSettings, siteSettingsToPayload } from '@/lib/siteSettings'
 import type {
   CmsPage,
   ContactMessage,
@@ -32,6 +34,10 @@ import type {
   TestimonialRow,
   TimelineRow,
 } from '@/types'
+
+function throwCms(err: unknown, fallback: string): never {
+  throw new Error(cmsErrorMessage(err, fallback))
+}
 
 function normalizeTimeline(rows: TimelineRow[]): TimelineRow[] {
   return rows.map((row) => ({
@@ -55,10 +61,13 @@ export function useSiteSettings() {
     queryKey: ['site_settings'],
     ...CMS_QUERY,
     queryFn: async (): Promise<SiteSettings> => {
-      if (!isSupabaseConfigured) return { ...mockSiteSettings }
+      if (!isSupabaseConfigured) return normalizeSiteSettings(mockSiteSettings)
       const { data, error } = await supabase.from('site_settings').select('*').eq('id', 1).maybeSingle()
-      if (error) throw error
-      return (data as SiteSettings | null) ?? defaultSiteSettings
+      if (error) {
+        if (isCmsTableMissing(error)) return { ...defaultSiteSettings }
+        throwCms(error, 'Could not load site settings.')
+      }
+      return normalizeSiteSettings(data as SiteSettings | null)
     },
   })
 }
@@ -66,25 +75,65 @@ export function useSiteSettings() {
 export function useUpdateSiteSettings() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (input: Partial<SiteSettings>) => {
+    mutationFn: async (input: SiteSettings | Partial<SiteSettings>) => {
+      const merged = normalizeSiteSettings({ ...defaultSiteSettings, ...input } as SiteSettings)
       if (!isSupabaseConfigured) {
-        const next = { ...mockSiteSettings, ...input, updated_at: new Date().toISOString() }
+        const next = { ...merged, updated_at: new Date().toISOString() }
         setMockSiteSettings(next)
         return next
       }
+
+      const payload = siteSettingsToPayload(merged)
+
+      type RpcResult = { data: unknown; error: { message: string; code?: string } | null }
+      const rpcClient = supabase as unknown as {
+        rpc: (fn: string, args?: Record<string, unknown>) => PromiseLike<RpcResult>
+      }
+      const rpc = await rpcClient.rpc('save_site_settings', { data: payload })
+      if (!rpc.error && rpc.data) {
+        return normalizeSiteSettings(rpc.data as SiteSettings)
+      }
+
+      // Fallback: direct upsert (older DB without RPC)
+      if (rpc.error && !isMissingRpc(rpc.error)) {
+        throwCms(rpc.error, 'Could not save settings.')
+      }
+
       const { data, error } = await supabase
         .from('site_settings')
-        .upsert({ id: 1, ...input, updated_at: new Date().toISOString() } as never)
+        .upsert({ id: 1, ...payload, updated_at: new Date().toISOString() } as never)
         .select('*')
         .single()
-      if (error) throw error
-      return data as SiteSettings
+      if (error) {
+        if (isCmsTableMissing(error) || isMissingRpc(rpc.error)) {
+          throw new Error(
+            'Settings API missing. Run backend/supabase/SITE_SETTINGS.sql in Supabase SQL Editor, then Save again.',
+          )
+        }
+        throwCms(error, 'Could not save settings.')
+      }
+      return normalizeSiteSettings(data as SiteSettings)
     },
     onSuccess: (saved) => {
       queryClient.setQueryData(['site_settings'], saved)
       void queryClient.invalidateQueries({ queryKey: ['site_settings'] })
     },
   })
+}
+
+function isMissingRpc(err: unknown): boolean {
+  const message =
+    err instanceof Error
+      ? err.message
+      : typeof err === 'object' && err && 'message' in err
+        ? String((err as { message: unknown }).message)
+        : ''
+  const code =
+    typeof err === 'object' && err && 'code' in err ? String((err as { code: unknown }).code) : ''
+  return (
+    code === 'PGRST202' ||
+    /could not find the function|function .* does not exist|save_site_settings/i.test(message)
+  )
 }
 
 function useOrderedCollection<T extends { id: string; display_order?: number }>(opts: {

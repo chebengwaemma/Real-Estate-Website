@@ -1,5 +1,6 @@
 -- CMS tables for admin → public frontend control
--- Apply via: supabase db push  OR paste into SQL Editor
+-- Apply via: Supabase Dashboard → SQL Editor → paste this whole file → Run
+-- Prerequisite: public.is_admin() already exists (from SETUP.sql / ADMIN_AUTH_FIX.sql)
 
 -- ─── site_settings (singleton) ───────────────────────────────────────────────
 create table if not exists public.site_settings (
@@ -313,3 +314,13 @@ drop policy if exists "contact_messages_delete_admin" on public.contact_messages
 create policy "contact_messages_delete_admin"
   on public.contact_messages for delete
   using (public.is_admin());
+
+-- Privileges (needed on some projects so anon/authenticated can read / admin can write)
+grant select on public.site_settings, public.site_stats, public.site_features,
+  public.faqs, public.testimonials, public.timeline_items, public.cms_pages,
+  public.sports_games to anon, authenticated;
+grant insert, update, delete on public.site_settings, public.site_stats, public.site_features,
+  public.faqs, public.testimonials, public.timeline_items, public.cms_pages,
+  public.sports_games, public.contact_messages to authenticated;
+grant insert on public.contact_messages to anon, authenticated;
+grant select, update, delete on public.contact_messages to authenticated;

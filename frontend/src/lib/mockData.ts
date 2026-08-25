@@ -191,7 +191,7 @@ function readSiteSettings(): SiteSettings {
   try {
     const raw = window.localStorage.getItem('hopeland-demo:' + siteSettingsKey)
     if (!raw) return { ...defaultSiteSettings }
-    return { ...defaultSiteSettings, ...JSON.parse(raw) }
+    return { ...defaultSiteSettings, extras: {}, ...JSON.parse(raw) }
   } catch {
     return { ...defaultSiteSettings }
   }

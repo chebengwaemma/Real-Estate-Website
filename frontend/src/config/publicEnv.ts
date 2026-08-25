@@ -4,9 +4,9 @@
  * Anon + publishable keys are designed to be public; secrets stay server-side.
  */
 export const publicEnv = {
-  supabaseUrl: 'https://pskzpccgcikoyewlkmgb.supabase.co',
+  supabaseUrl: 'https://xydliulffdmacdfnkqts.supabase.co',
   supabaseAnonKey:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBza3pwY2NnY2lrb3lld2xrbWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwOTg4MzQsImV4cCI6MjEwMTY3NDgzNH0.5gwjmO8Jc0SWqIiR6Nd0h1q2miqUcEJH4WHoVZ_PfAc',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5ZGxpdWxmZmRtYWNkZm5rcXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTA2MjQsImV4cCI6MjEwMzE2NjYyNH0.Q5-H304jlappnhmMRSJ7pv3LS84YQaZFE-wxQ1cfwsk',
   stripePublishableKey:
     'pk_live_51KxzXWDFK01peQeTfqPjp7xTSfug4oo5UHS0X1nWlRVN54yK9NZ88aZmkg0oN4LQq92BlZDxCCdCbCdiBGorNr4c00b6org7P1',
   registrationFeeAmount: '1000',

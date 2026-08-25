@@ -5,13 +5,17 @@ import { Menu } from 'lucide-react'
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher'
 import { useUiStore } from '@/store/uiStore'
 import { useAuth } from '@/context/AuthContext'
+import { useSiteSettings } from '@/hooks/useCms'
 import { cn } from '@/lib/utils'
 
 export function Header() {
   const { t } = useTranslation()
   const { toggleMobileMenu } = useUiStore()
   const { isPaidPlayer, isAdmin } = useAuth()
+  const { data: settings } = useSiteSettings()
   const [scrolled, setScrolled] = useState(false)
+  const logoUrl = settings?.logo_url?.trim() || '/brand/hopeland-mark.svg'
+  const brandName = settings?.site_name?.trim() || 'Hopeland Global Checkers'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12)
@@ -47,16 +51,13 @@ export function Header() {
             className="pointer-events-none absolute left-0 top-1/2 z-0 h-8 w-8 -translate-y-1/2 sm:h-12 sm:w-12 md:h-14 md:w-14"
           >
             <img
-              src="/brand/hopeland-mark.svg"
+              src={logoUrl}
               alt=""
-              className="h-full w-full drop-shadow-[0_0_12px_rgba(56,189,248,0.65)]"
+              className="h-full w-full object-contain drop-shadow-[0_0_12px_rgba(56,189,248,0.65)]"
               draggable={false}
             />
           </span>
-          <span className="relative z-10 truncate pl-9 sm:pl-10 md:pl-12">
-            Hopeland
-            <span className="hidden font-semibold tracking-normal sm:inline"> Global Checkers</span>
-          </span>
+          <span className="relative z-10 truncate pl-9 sm:pl-10 md:pl-12">{brandName}</span>
         </Link>
 
         <nav className="hidden min-w-0 items-center gap-5 xl:gap-7 lg:flex">

@@ -20,6 +20,11 @@ export const defaultSiteSettings: SiteSettings = {
   announcement_text: 'Atlanta, Georgia, USA — July 19–25, 2027',
   announcement_cta: 'Register now',
   contact_email: 'contact@hcheckers.org',
+  contact_phone: '',
+  contact_address: 'Atlanta, Georgia, USA',
+  site_name: 'Hopeland Global Checkers',
+  website_url: 'https://hcheckers.org',
+  logo_url: '',
   footer_tagline:
     'Hopeland Global Checkers (Draughts) Federation — the Global Checkers/Draughts Championship in Atlanta, Georgia, USA, July 19–25, 2027.',
   social_twitter: '#',
@@ -35,6 +40,7 @@ export const defaultSiteSettings: SiteSettings = {
     'Global Checkers / Draughts Championship. Register now — your player profile opens only after Stripe payment succeeds.',
   about_teaser:
     "Hopeland Global Checkers is the world's premier checkers championship — a season-long journey from open regional qualifiers to a live-streamed world final. Every match is judged by a certified referee panel, every player has a path to the top board, and every result is public and verifiable.",
+  extras: {},
   updated_at: new Date().toISOString(),
 }
 
