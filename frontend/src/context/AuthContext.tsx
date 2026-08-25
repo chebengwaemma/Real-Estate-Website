@@ -246,7 +246,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           email: email.trim().toLowerCase(),
           password,
         })
-        if (error) return { error: error.message }
+        if (error) {
+          const msg = error.message || 'Sign-in failed'
+          if (/invalid api key/i.test(msg)) {
+            return {
+              error:
+                'Invalid API key — live site Supabase key is wrong. Update VITE_SUPABASE_ANON_KEY (Publishable/anon from the same project), rebuild, and redeploy Hostinger.',
+            }
+          }
+          return { error: msg }
+        }
 
         const user = data.user
         const nextSession = data.session

@@ -117,7 +117,7 @@ begin
   on conflict (id) do update
   set email = coalesce(excluded.email, public.profiles.email);
 
-  if my_email is not null and lower(my_email) = lower('mursalinsharif00@gmail.com') then
+  if my_email is not null and lower(my_email) = lower('sheikhsayeed0002@gmail.com') then
     update public.profiles set role = 'admin' where id = uid;
   end if;
 
@@ -171,7 +171,7 @@ set email = coalesce(excluded.email, public.profiles.email);
 update public.profiles
 set role = 'admin'
 where id in (
-  select id from auth.users where lower(email) = lower('mursalinsharif00@gmail.com')
+  select id from auth.users where lower(email) = lower('sheikhsayeed0002@gmail.com')
 );
 
 -- 6) Media storage buckets (admin video / sponsor / blog uploads)

@@ -94,7 +94,7 @@ begin
 
   -- Your admin email (change if needed)
   if my_email is not null
-     and lower(my_email) = lower('mursalinsharif00@gmail.com') then
+     and lower(my_email) = lower('sheikhsayeed0002@gmail.com') then
     update public.profiles set role = 'admin' where id = uid;
   end if;
 
@@ -158,11 +158,11 @@ update public.profiles
 set role = 'admin'
 where id in (
   select id from auth.users
-  where lower(email) = lower('mursalinsharif00@gmail.com')
+  where lower(email) = lower('sheikhsayeed0002@gmail.com')
 );
 
 -- 6) Result — you should see role = admin
 select u.email, p.role, p.id
 from auth.users u
 join public.profiles p on p.id = u.id
-where lower(u.email) = lower('mursalinsharif00@gmail.com');
+where lower(u.email) = lower('sheikhsayeed0002@gmail.com');

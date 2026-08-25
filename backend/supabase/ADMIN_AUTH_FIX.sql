@@ -85,7 +85,7 @@ begin
   on conflict (id) do update
   set email = coalesce(excluded.email, public.profiles.email);
 
-  if my_email is not null and lower(my_email) = lower('mursalinsharif00@gmail.com') then
+  if my_email is not null and lower(my_email) = lower('sheikhsayeed0002@gmail.com') then
     update public.profiles set role = 'admin' where id = uid;
   end if;
 

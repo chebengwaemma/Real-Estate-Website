@@ -1,9 +1,17 @@
--- Promote one Supabase Auth user to admin (run in SQL Editor).
--- Replace the email with your admin account.
+-- Promote sheikhsayeed0002@gmail.com to admin
+-- Supabase → SQL Editor → Run
 
-update public.profiles
-set role = 'admin'
-where email = 'you@example.com';
+-- Ensure Auth user exists first (Authentication → Users → Add user if needed)
 
--- Optional: confirm
--- select id, email, role from public.profiles order by created_at;
+insert into public.profiles (id, email, role)
+select id, coalesce(email, ''), 'admin'
+from auth.users
+where lower(email) = lower('sheikhsayeed0002@gmail.com')
+on conflict (id) do update
+set email = excluded.email,
+    role = 'admin';
+
+select u.email, p.role, p.id
+from auth.users u
+join public.profiles p on p.id = u.id
+where lower(u.email) = lower('sheikhsayeed0002@gmail.com');
