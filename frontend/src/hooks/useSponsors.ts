@@ -12,7 +12,7 @@ export function useSponsors() {
       if (!isSupabaseConfigured) return mockSponsors
       const { data, error } = await supabase.from('sponsors').select('*').order('display_order', { ascending: true })
       if (error) throw error
-      return data
+      return data ?? []
     },
   })
 }

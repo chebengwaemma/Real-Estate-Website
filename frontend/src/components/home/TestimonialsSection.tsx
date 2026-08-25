@@ -1,16 +1,21 @@
 import { SectionHeading } from '@/components/common/SectionHeading'
 import { Carousel } from '@/components/common/Carousel'
 import { TestimonialCard } from '@/components/cards/TestimonialCard'
+import { useTestimonials } from '@/hooks/useCms'
+import { defaultTestimonials } from '@/lib/cmsDefaults'
+import { cmsList } from '@/lib/cmsList'
 import type { TestimonialItem } from '@/types'
 
-const testimonials: TestimonialItem[] = [
-  { id: 'te1', name: 'Amara Okafor', role: '2025 Open Division Finalist', quote: 'The qualifier system gave me a real path from my local club to the world stage. Nothing else compares.', avatarInitials: 'AO' },
-  { id: 'te2', name: 'Liam Carter', role: 'Regional Champion, North America', quote: 'The live broadcast and referee panel made every match feel like it truly mattered.', avatarInitials: 'LC' },
-  { id: 'te3', name: 'Sofia Reyes', role: 'Junior Division Player', quote: 'I started in the Junior division at 12 — this season I qualified for the Open bracket.', avatarInitials: 'SR' },
-  { id: 'te4', name: 'Kenji Watanabe', role: 'Coach & Federation Delegate', quote: 'The transparency around seeding and results is exactly what competitive checkers needed.', avatarInitials: 'KW' },
-]
-
 export function TestimonialsSection() {
+  const { data } = useTestimonials()
+  const testimonials: TestimonialItem[] = cmsList(data, defaultTestimonials).map((t) => ({
+    id: t.id,
+    name: t.name,
+    role: t.role,
+    quote: t.quote,
+    avatarInitials: t.avatar_initials,
+  }))
+
   return (
     <section className="section-y bg-surface-white">
       <div className="container-page">

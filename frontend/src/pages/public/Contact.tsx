@@ -7,18 +7,34 @@ import { PageHero } from '@/components/layout/PageHero'
 import { FormField } from '@/components/forms/FormField'
 import { Button } from '@/components/common/Button'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
-import { ORGANIZATION_ADDRESS } from '@/components/home/ChampionshipBanner'
+import { useSiteSettings, useSubmitContactMessage } from '@/hooks/useCms'
 
 export default function Contact() {
   const [submitting, setSubmitting] = useState(false)
+  const { data: settings } = useSiteSettings()
+  const submitMessage = useSubmitContactMessage()
+  const email = settings?.contact_email ?? 'contact@hcheckers.org'
+  const location = settings?.championship_location ?? 'Atlanta, Georgia, USA'
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 700))
-    toast.success('Thanks — our team will get back to you shortly.')
-    e.currentTarget.reset()
-    setSubmitting(false)
+    const form = e.currentTarget
+    const fd = new FormData(form)
+    const name = String(fd.get('name') ?? '').trim()
+    const emailValue = String(fd.get('email') ?? '').trim()
+    const subject = String(fd.get('subject') ?? '').trim()
+    const message = String(fd.get('message') ?? '').trim()
+    const body = subject ? `Subject: ${subject}\n\n${message}` : message
+    try {
+      await submitMessage.mutateAsync({ name, email: emailValue, message: body })
+      toast.success('Thanks — our team will get back to you shortly.')
+      form.reset()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Could not send message.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -40,7 +56,7 @@ export default function Contact() {
               </span>
               <div>
                 <p className="text-sm font-bold text-ink">Email</p>
-                <p className="text-sm text-muted">hello@hopelandglobalcheckers.com</p>
+                <p className="text-sm text-muted">{email}</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -50,18 +66,15 @@ export default function Contact() {
               <div>
                 <p className="text-sm font-bold text-ink">Address</p>
                 <address className="not-italic">
-                  {ORGANIZATION_ADDRESS.map((line) => (
-                    <p key={line} className="text-sm text-muted">
-                      {line}
-                    </p>
-                  ))}
+                  <p className="text-sm text-muted">Hopeland Global Checkers (Draughts) Federation</p>
+                  <p className="text-sm text-muted">{location}</p>
                 </address>
               </div>
             </div>
           </div>
 
           <motion.form
-            onSubmit={onSubmit}
+            onSubmit={(e) => void onSubmit(e)}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

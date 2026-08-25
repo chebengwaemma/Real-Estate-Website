@@ -8,13 +8,21 @@ import { NetworkBackground } from '@/components/home/NetworkBackground'
 import { SponsorsMarquee } from '@/components/home/SponsorsMarquee'
 import { SponsorsStaticGrid } from '@/components/home/SponsorsStaticGrid'
 import { useAuth } from '@/context/AuthContext'
+import { useSiteSettings } from '@/hooks/useCms'
 import { fadeUp, floatY, floatYSlow, slideFromLeft, slideFromRight, staggerContainer } from '@/lib/motion'
 
 export function HeroSection() {
   const { t } = useTranslation('home')
   const { isPaidPlayer } = useAuth()
+  const { data: settings } = useSiteSettings()
   const isRegistered = isPaidPlayer
   const primaryTo = isRegistered ? '/account' : '/register'
+  // Admin CMS is source of truth for all languages
+  const eyebrow = settings?.hero_eyebrow || t('hero.eyebrow')
+  const title = settings?.hero_title || t('hero.title')
+  const subtitle = settings?.hero_subtitle || t('hero.subtitle')
+  const location = settings?.championship_location ?? 'Atlanta, Georgia, USA'
+  const dates = settings?.championship_dates ?? '19 July – 25 July, 2027'
 
   return (
     <section className="relative w-full max-w-full overflow-x-clip bg-navy text-white max-lg:pb-4">
@@ -62,13 +70,13 @@ export function HeroSection() {
             variants={slideFromLeft}
             className="text-eyebrow mb-2 inline-block rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] backdrop-blur-sm sm:mb-4 sm:px-4 sm:py-1.5 sm:text-xs"
           >
-            {t('hero.eyebrow')}
+            {eyebrow}
           </motion.span>
           <motion.h1
             variants={slideFromLeft}
             className="max-w-4xl text-balance font-display font-extrabold tracking-tight text-white text-[clamp(1.5rem,7vw,3.5rem)] leading-[1.12]"
           >
-            {t('hero.title')}
+            {title}
           </motion.h1>
           <motion.p
             variants={fadeUp}
@@ -78,17 +86,17 @@ export function HeroSection() {
               Global Checkers / Draughts Competition
             </span>
             <span className="text-sm font-extrabold text-white sm:text-base">
-              Atlanta, Georgia, USA
+              {location}
             </span>
             <span className="text-sm font-semibold text-white/90 sm:text-base">
-              19 July – 25 July, 2027
+              {dates}
             </span>
           </motion.p>
           <motion.p
             variants={fadeUp}
             className="mx-auto mt-2 max-w-xl text-[0.9rem] leading-snug text-white/70 line-clamp-3 sm:mt-4 sm:max-w-2xl sm:text-body-lg sm:leading-relaxed sm:line-clamp-none lg:mx-0"
           >
-            {t('hero.subtitle')}
+            {subtitle}
           </motion.p>
           <motion.div
             variants={slideFromLeft}

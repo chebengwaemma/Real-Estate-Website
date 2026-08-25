@@ -5,10 +5,27 @@ import { ArrowLeft, Play, Users } from 'lucide-react'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
 import { cn } from '@/lib/utils'
 import { GAMES, type GameCard } from '@/data/sportsGames'
+import { useSportsGames } from '@/hooks/useCms'
+import type { SportsGameRow } from '@/types'
+
+function toGameCard(row: SportsGameRow): GameCard {
+  return {
+    id: row.id,
+    title: row.title,
+    provider: row.provider,
+    category: row.category as GameCard['category'],
+    variant: row.variant,
+    gradient: row.gradient,
+    accent: row.accent ?? undefined,
+    badge: row.badge ?? undefined,
+  }
+}
 
 export default function SportGame() {
   const { gameId } = useParams<{ gameId: string }>()
-  const game = GAMES.find((g) => g.id === gameId)
+  const { data: sportsRows } = useSportsGames()
+  const games = sportsRows !== undefined ? sportsRows.map(toGameCard) : GAMES
+  const game = games.find((g) => g.id === gameId)
 
   if (!game) return <Navigate to="/sports" replace />
 

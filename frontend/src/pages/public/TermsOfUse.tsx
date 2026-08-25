@@ -1,8 +1,24 @@
 import { Helmet } from 'react-helmet-async'
 import { PageHero } from '@/components/layout/PageHero'
+import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
+import { useCmsPage } from '@/hooks/useCms'
+import { defaultCmsPages } from '@/lib/cmsDefaults'
+
+function renderBody(body: string) {
+  const looksHtml = /<\/?[a-z][\s\S]*>/i.test(body)
+  if (looksHtml) {
+    return <div className="prose prose-sm max-w-none text-ink/80" dangerouslySetInnerHTML={{ __html: body }} />
+  }
+  return <div className="flex flex-col gap-4 text-sm leading-relaxed text-ink/80 whitespace-pre-wrap">{body}</div>
+}
 
 export default function TermsOfUse() {
+  const { data: page, isLoading } = useCmsPage('terms-of-use')
+  const fallback = defaultCmsPages.find((p) => p.slug === 'terms-of-use')
+  const title = page?.title ?? fallback?.title ?? 'Terms of Use'
+  const body = page?.body ?? fallback?.body ?? ''
+
   return (
     <>
       <Helmet>
@@ -10,34 +26,17 @@ export default function TermsOfUse() {
         <link rel="canonical" href={`${SITE_URL}/terms-of-use`} />
       </Helmet>
 
-      <PageHero eyebrow="LEGAL" title="Terms of Use" />
+      <PageHero eyebrow="LEGAL" title={title} />
 
       <section className="section-y bg-surface-white">
         <div className="container-page max-w-3xl text-ink/80">
-          <div className="flex flex-col gap-6 text-sm leading-relaxed">
-            <p>
-              These placeholder Terms of Use govern participation in the Hopeland Global Checkers World Championship
-              and use of this website. Replace this content with terms reviewed by your legal counsel before launch.
-            </p>
-            <h2 className="text-h3 text-ink">Eligibility</h2>
-            <p>
-              Players must meet the minimum age and division requirements described on the Register page. False or
-              misrepresented registration information may result in disqualification.
-            </p>
-            <h2 className="text-h3 text-ink">Registration Fees</h2>
-            <p>
-              Registration fees are processed securely through Stripe. Refund eligibility windows are described at
-              the time of registration and in confirmation communications.
-            </p>
-            <h2 className="text-h3 text-ink">Code of Conduct</h2>
-            <p>
-              Players, coaches, and spectators are expected to act with good sportsmanship. Violations of the fair
-              play policy may result in match forfeiture or disqualification, at the discretion of the certified
-              referee panel.
-            </p>
-            <h2 className="text-h3 text-ink">Changes to These Terms</h2>
-            <p>We may update these terms between seasons. Continued participation constitutes acceptance of the updated terms.</p>
-          </div>
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <LoadingSpinner size={28} className="text-primary" />
+            </div>
+          ) : (
+            renderBody(body)
+          )}
         </div>
       </section>
     </>

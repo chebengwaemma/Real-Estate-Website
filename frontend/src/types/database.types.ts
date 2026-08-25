@@ -70,6 +70,109 @@ export interface Profile {
   created_at: string
 }
 
+export interface SiteSettings {
+  id: number
+  championship_location: string
+  championship_dates: string
+  championship_dates_start: string
+  championship_dates_end: string
+  announcement_text: string
+  announcement_cta: string
+  contact_email: string
+  footer_tagline: string
+  social_twitter: string
+  social_instagram: string
+  social_facebook: string
+  social_youtube: string
+  hero_eyebrow: string
+  hero_title: string
+  hero_subtitle: string
+  final_cta_title: string
+  final_cta_subtitle: string
+  about_teaser: string
+  updated_at: string
+}
+
+export interface SiteStatRow {
+  id: string
+  label: string
+  sublabel: string | null
+  value: number
+  suffix: string
+  display_order: number
+  created_at: string
+}
+
+export interface FeatureRow {
+  id: string
+  icon: string
+  title: string
+  description: string
+  display_order: number
+  created_at: string
+}
+
+export interface FaqRow {
+  id: string
+  question: string
+  answer: string
+  published: boolean
+  display_order: number
+  created_at: string
+}
+
+export interface TestimonialRow {
+  id: string
+  quote: string
+  name: string
+  role: string
+  avatar_initials: string
+  published: boolean
+  display_order: number
+  created_at: string
+}
+
+export interface TimelineRow {
+  id: string
+  quarter: string
+  title: string
+  items: string[]
+  status: 'done' | 'active' | 'upcoming'
+  display_order: number
+  created_at: string
+}
+
+export interface CmsPage {
+  id: string
+  slug: string
+  title: string
+  body: string
+  updated_at: string
+}
+
+export interface SportsGameRow {
+  id: string
+  title: string
+  provider: string
+  category: string
+  variant: 'original' | 'portrait'
+  gradient: string
+  accent: string | null
+  badge: string | null
+  display_order: number
+  published: boolean
+  created_at: string
+}
+
+export interface ContactMessage {
+  id: string
+  name: string
+  email: string
+  message: string
+  read: boolean
+  created_at: string
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -98,6 +201,51 @@ export interface Database {
         Row: Profile
         Insert: Partial<Profile> & Pick<Profile, 'id' | 'email' | 'role'>
         Update: Partial<Profile>
+      }
+      site_settings: {
+        Row: SiteSettings
+        Insert: Partial<SiteSettings>
+        Update: Partial<SiteSettings>
+      }
+      site_stats: {
+        Row: SiteStatRow
+        Insert: Partial<SiteStatRow> & Pick<SiteStatRow, 'label' | 'value'>
+        Update: Partial<SiteStatRow>
+      }
+      site_features: {
+        Row: FeatureRow
+        Insert: Partial<FeatureRow> & Pick<FeatureRow, 'title' | 'description'>
+        Update: Partial<FeatureRow>
+      }
+      faqs: {
+        Row: FaqRow
+        Insert: Partial<FaqRow> & Pick<FaqRow, 'question' | 'answer'>
+        Update: Partial<FaqRow>
+      }
+      testimonials: {
+        Row: TestimonialRow
+        Insert: Partial<TestimonialRow> & Pick<TestimonialRow, 'quote' | 'name' | 'role'>
+        Update: Partial<TestimonialRow>
+      }
+      timeline_items: {
+        Row: TimelineRow
+        Insert: Partial<TimelineRow> & Pick<TimelineRow, 'quarter' | 'title'>
+        Update: Partial<TimelineRow>
+      }
+      cms_pages: {
+        Row: CmsPage
+        Insert: Partial<CmsPage> & Pick<CmsPage, 'slug' | 'title' | 'body'>
+        Update: Partial<CmsPage>
+      }
+      sports_games: {
+        Row: SportsGameRow
+        Insert: Partial<SportsGameRow> & Pick<SportsGameRow, 'id' | 'title' | 'category'>
+        Update: Partial<SportsGameRow>
+      }
+      contact_messages: {
+        Row: ContactMessage
+        Insert: Partial<ContactMessage> & Pick<ContactMessage, 'name' | 'email' | 'message'>
+        Update: Partial<ContactMessage>
       }
     }
   }

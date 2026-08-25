@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Camera, MessageCircle, Play, Send } from 'lucide-react'
+import { useSiteSettings } from '@/hooks/useCms'
 
 export function Footer() {
   const { t } = useTranslation()
+  const { data: settings } = useSiteSettings()
+  const tagline = settings?.footer_tagline || t('footer.tagline')
 
   const sitemapLinks = [
     { to: '/', label: t('nav.home') },
@@ -21,10 +24,10 @@ export function Footer() {
   ]
 
   const socials = [
-    { icon: Send, href: '#', label: 'X / Twitter' },
-    { icon: Camera, href: '#', label: 'Instagram' },
-    { icon: MessageCircle, href: '#', label: 'Facebook' },
-    { icon: Play, href: '#', label: 'YouTube' },
+    { icon: Send, href: settings?.social_twitter || '#', label: 'X / Twitter' },
+    { icon: Camera, href: settings?.social_instagram || '#', label: 'Instagram' },
+    { icon: MessageCircle, href: settings?.social_facebook || '#', label: 'Facebook' },
+    { icon: Play, href: settings?.social_youtube || '#', label: 'YouTube' },
   ]
 
   return (
@@ -34,7 +37,7 @@ export function Footer() {
           <p className="text-h2 break-words font-display font-extrabold text-white">
             Hopeland Global Checkers<span className="text-primary">.</span>
           </p>
-          <p className="text-body-lg mt-5 text-white/60">{t('footer.tagline')}</p>
+          <p className="text-body-lg mt-5 text-white/60">{tagline}</p>
           <p className="mt-8 text-xs text-white/40">
             &copy; {new Date().getFullYear()} Hopeland Global Checkers (Draughts) Federation
           </p>

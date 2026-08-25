@@ -4,8 +4,10 @@ import { Globe2, MapPin, ShieldCheck, Trophy, Users } from 'lucide-react'
 import { PageHero } from '@/components/layout/PageHero'
 import { SectionHeading } from '@/components/common/SectionHeading'
 import { Card } from '@/components/common/Card'
+import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
-import { CHAMPIONSHIP_DATES, ORGANIZATION_ADDRESS } from '@/components/home/ChampionshipBanner'
+import { useCmsPage, useSiteSettings } from '@/hooks/useCms'
+import { defaultCmsPages } from '@/lib/cmsDefaults'
 
 const pillars = [
   { icon: Globe2, title: 'Global Reach', text: 'Regional qualifiers run across five continents and feed directly into the World Championship bracket.' },
@@ -14,7 +16,27 @@ const pillars = [
   { icon: Users, title: 'Open To Everyone', text: 'From first-time club players to federation-rated masters, there is a division built for every skill level.' },
 ]
 
+function renderBody(body: string) {
+  const looksHtml = /<\/?[a-z][\s\S]*>/i.test(body)
+  if (looksHtml) {
+    return <div className="prose prose-sm max-w-none text-ink/80" dangerouslySetInnerHTML={{ __html: body }} />
+  }
+  return (
+    <div className="flex flex-col gap-4 text-sm leading-relaxed text-ink/80 whitespace-pre-wrap">
+      {body}
+    </div>
+  )
+}
+
 export default function About() {
+  const { data: page, isLoading } = useCmsPage('about')
+  const { data: settings } = useSiteSettings()
+  const fallback = defaultCmsPages.find((p) => p.slug === 'about')
+  const title = page?.title ?? fallback?.title ?? 'About Hopeland Global Checkers'
+  const body = page?.body ?? fallback?.body ?? ''
+  const location = settings?.championship_location ?? 'Atlanta, Georgia, USA'
+  const dates = settings?.championship_dates ?? 'July 19 – 25, 2027'
+
   return (
     <>
       <Helmet>
@@ -25,11 +47,23 @@ export default function About() {
 
       <PageHero
         eyebrow="ABOUT THE CHAMPIONSHIP"
-        title="A Season-Long Path To The World Title"
+        title={title}
         subtitle="Hopeland Global Checkers brings together players from over 120 countries in a transparent, fairly-judged path from local qualifier to world champion."
       />
 
       <section className="section-y bg-surface-white">
+        <div className="container-page max-w-3xl">
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <LoadingSpinner size={28} className="text-primary" />
+            </div>
+          ) : (
+            renderBody(body)
+          )}
+        </div>
+      </section>
+
+      <section className="section-y bg-surface-light">
         <div className="container-page">
           <SectionHeading eyebrow="THE FORMAT" title="How The Championship Works" />
           <motion.div
@@ -52,7 +86,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section-y bg-surface-light">
+      <section className="section-y bg-surface-white">
         <div className="container-page grid gap-10 lg:grid-cols-3">
           {[
             { title: 'Open Division', text: 'Open to all players. Regional qualifiers determine seeding for the World Championship bracket.' },
@@ -75,21 +109,16 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section-y bg-surface-white">
+      <section className="section-y bg-surface-light">
         <div className="container-page">
           <SectionHeading eyebrow="LOCATION" title="Address" />
-          <div className="mx-auto mt-10 flex max-w-xl items-start gap-4 rounded-2xl border border-black/5 bg-white p-6 shadow-card sm:p-8">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <MapPin size={22} />
-            </span>
-            <address className="not-italic">
-              {ORGANIZATION_ADDRESS.map((line) => (
-                <p key={line} className="text-sm font-semibold text-ink sm:text-base">
-                  {line}
-                </p>
-              ))}
-              <p className="mt-2 text-sm text-muted">Championship venue · {CHAMPIONSHIP_DATES}</p>
-            </address>
+          <div className="mt-8 flex items-start gap-3 rounded-2xl border border-black/5 bg-white p-6 shadow-card">
+            <MapPin className="mt-1 shrink-0 text-primary" size={20} />
+            <div>
+              <p className="font-bold text-ink">Hopeland Global Checkers (Draughts) Federation</p>
+              <p className="mt-1 text-sm text-muted">{location}</p>
+              <p className="text-sm text-muted">{dates}</p>
+            </div>
           </div>
         </div>
       </section>

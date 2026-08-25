@@ -3,9 +3,14 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Trophy } from 'lucide-react'
 import { SectionHeading } from '@/components/common/SectionHeading'
 import { Button } from '@/components/common/Button'
+import { useSiteSettings } from '@/hooks/useCms'
 import { floatY, slideFromLeft, slideFromRight, viewportOnce } from '@/lib/motion'
 
 export function AboutTeaserSection() {
+  const { data: settings } = useSiteSettings()
+  const teaser =
+    settings?.about_teaser ??
+    "Hopeland Global Checkers is the world's premier checkers championship — a season-long journey from open regional qualifiers to a live-streamed world final. Every match is judged by a certified referee panel, every player has a path to the top board, and every result is public and verifiable."
   return (
     <section className="section-y bg-surface-light">
       <div className="container-page grid items-center gap-12 lg:grid-cols-2">
@@ -44,9 +49,7 @@ export function AboutTeaserSection() {
             className="mx-0 text-left"
           />
           <p className="text-body-lg mt-5 text-muted">
-            Hopeland Global Checkers is the world&rsquo;s premier checkers championship — a season-long journey from
-            open regional qualifiers to a live-streamed world final. Every match is judged by a certified referee
-            panel, every player has a path to the top board, and every result is public and verifiable.
+            {teaser}
           </p>
           <div className="mt-6 flex items-start gap-3 text-sm font-semibold text-ink sm:items-center">
             <Trophy size={18} className="mt-0.5 shrink-0 text-primary sm:mt-0" />

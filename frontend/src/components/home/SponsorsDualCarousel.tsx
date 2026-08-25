@@ -1,4 +1,5 @@
 import { useSponsors } from '@/hooks/useSponsors'
+import { isSupabaseConfigured } from '@/lib/supabaseClient'
 import { mockSponsors } from '@/lib/mockData'
 import type { Sponsor } from '@/types'
 import { cn } from '@/lib/utils'
@@ -90,7 +91,12 @@ interface SponsorsDualCarouselProps {
 /** Two columns of sponsor photos: left scrolls down, right scrolls up. */
 export function SponsorsDualCarousel({ className, tone = 'blue' }: SponsorsDualCarouselProps) {
   const { data: sponsors } = useSponsors()
-  const source = (sponsors && sponsors.length > 0 ? sponsors : mockSponsors) ?? []
+  const source =
+    (sponsors && sponsors.length > 0
+      ? sponsors
+      : isSupabaseConfigured
+        ? []
+        : mockSponsors) ?? []
   const photos = photosFromSponsors(source)
   const track = loopTrack(photos)
 

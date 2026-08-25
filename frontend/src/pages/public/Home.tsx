@@ -12,15 +12,22 @@ import { FAQSection } from '@/components/home/FAQSection'
 import { TestimonialsSection } from '@/components/home/TestimonialsSection'
 import { FinalCTASection } from '@/components/home/FinalCTASection'
 import { eventJsonLd, organizationJsonLd, SITE_NAME, SITE_URL } from '@/lib/seo'
+import { useSiteSettings } from '@/hooks/useCms'
 
 export default function Home() {
+  const { data: settings } = useSiteSettings()
+  const location = settings?.championship_location ?? CHAMPIONSHIP_LOCATION
+  const start = settings?.championship_dates_start ?? CHAMPIONSHIP_DATES_ISO.start
+  const end = settings?.championship_dates_end ?? CHAMPIONSHIP_DATES_ISO.end
+  const datesLabel = settings?.championship_dates ?? 'July 19–25, 2027'
+
   const jsonLd = [
     organizationJsonLd(),
     eventJsonLd({
       name: 'Global Checkers / Draughts Championship',
-      startDate: CHAMPIONSHIP_DATES_ISO.start,
-      endDate: CHAMPIONSHIP_DATES_ISO.end,
-      location: CHAMPIONSHIP_LOCATION,
+      startDate: start,
+      endDate: end,
+      location,
     }),
   ]
 
@@ -30,13 +37,13 @@ export default function Home() {
         <title>{SITE_NAME}</title>
         <meta
           name="description"
-          content="Hopeland Global Checkers (Draughts) Federation. Global Checkers/Draughts Championship — Atlanta, Georgia, USA, July 19–25, 2027. Register to compete."
+          content={`Hopeland Global Checkers (Draughts) Federation. Global Checkers/Draughts Championship — ${location}, ${datesLabel}. Register to compete.`}
         />
         <link rel="canonical" href={SITE_URL} />
         <meta property="og:title" content={SITE_NAME} />
         <meta
           property="og:description"
-          content="Global Checkers / Draughts Championship in Atlanta, Georgia, USA — July 19–25, 2027."
+          content={`Global Checkers / Draughts Championship in ${location} — ${datesLabel}.`}
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={SITE_URL} />

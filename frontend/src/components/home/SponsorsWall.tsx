@@ -1,6 +1,7 @@
 import { SponsorLogo } from '@/components/cards/SponsorLogo'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { useSponsors } from '@/hooks/useSponsors'
+import { isSupabaseConfigured } from '@/lib/supabaseClient'
 import { mockSponsors } from '@/lib/mockData'
 import { cn } from '@/lib/utils'
 
@@ -11,7 +12,7 @@ interface SponsorsWallProps {
 /** Two-column photo grid — actual partner images, no Sponsor 01/02 labels. */
 export function SponsorsWall({ className }: SponsorsWallProps) {
   const { data: sponsors, isLoading } = useSponsors()
-  const source = sponsors && sponsors.length > 0 ? sponsors : mockSponsors
+  const source = sponsors && sponsors.length > 0 ? sponsors : isSupabaseConfigured ? [] : mockSponsors
   const list = source.filter((s) => Boolean(s.logo_url))
 
   if (isLoading) {

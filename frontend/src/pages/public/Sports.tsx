@@ -22,6 +22,8 @@ import {
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
 import { cn } from '@/lib/utils'
 import { GAMES, type GameCard, type SportsCategoryId as CategoryId } from '@/data/sportsGames'
+import { useSportsGames } from '@/hooks/useCms'
+import type { SportsGameRow } from '@/types'
 
 const CATEGORIES: { id: CategoryId; label: string; icon: LucideIcon }[] = [
   { id: 'lobby', label: 'Lobby', icon: LayoutGrid },
@@ -59,13 +61,30 @@ const SECTION_TITLES: Record<Exclude<CategoryId, 'lobby'>, string> = {
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
+function toGameCard(row: SportsGameRow): GameCard {
+  return {
+    id: row.id,
+    title: row.title,
+    provider: row.provider,
+    category: row.category as Exclude<CategoryId, 'lobby'>,
+    variant: row.variant,
+    gradient: row.gradient,
+    accent: row.accent ?? undefined,
+    badge: row.badge ?? undefined,
+  }
+}
+
 export default function Sports() {
   const [category, setCategory] = useState<CategoryId>('lobby')
   const [query, setQuery] = useState('')
+  const { data: sportsRows } = useSportsGames()
+  const games: GameCard[] = sportsRows !== undefined
+    ? sportsRows.map(toGameCard)
+    : GAMES
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return GAMES.filter((game) => {
+    return games.filter((game) => {
       const matchesCategory = category === 'lobby' || game.category === category
       const matchesQuery =
         !q ||
@@ -73,7 +92,7 @@ export default function Sports() {
         game.provider.toLowerCase().includes(q)
       return matchesCategory && matchesQuery
     })
-  }, [category, query])
+  }, [category, query, games])
 
   const sections = useMemo(() => {
     if (category !== 'lobby') {

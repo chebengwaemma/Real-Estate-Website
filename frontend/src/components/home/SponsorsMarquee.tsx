@@ -1,4 +1,5 @@
 import { useSponsors } from '@/hooks/useSponsors'
+import { isSupabaseConfigured } from '@/lib/supabaseClient'
 import { mockSponsors } from '@/lib/mockData'
 import type { Sponsor } from '@/types'
 import { cn } from '@/lib/utils'
@@ -90,9 +91,15 @@ export function SponsorsMarquee({
   reverse = false,
 }: SponsorsMarqueeProps) {
   const { data: sponsors } = useSponsors()
-  const source = sponsors && sponsors.length > 0 ? sponsors : mockSponsors
+  const source =
+    sponsors && sponsors.length > 0
+      ? sponsors
+      : isSupabaseConfigured
+        ? []
+        : mockSponsors
   const list = photosOnly ? source.filter((s) => Boolean(s.logo_url)) : source
-  const track = buildTrack(list.length ? list : source)
+  if (list.length === 0) return null
+  const track = buildTrack(list)
   const loop = [...track, ...track]
   const durationSec = Math.max(24, track.length * 3.5)
   const resolvedSize = size ?? (compact ? 'compact' : 'default')

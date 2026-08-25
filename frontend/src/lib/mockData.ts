@@ -1,5 +1,16 @@
-import type { BlogPost, Registration, Sponsor, Video } from '@/types'
+import type { BlogPost, Registration, SiteSettings, Sponsor, Video } from '@/types'
 import { createDemoCollection } from './demoStore'
+import {
+  defaultCmsPages,
+  defaultContactMessages,
+  defaultFaqs,
+  defaultSiteFeatures,
+  defaultSiteSettings,
+  defaultSiteStats,
+  defaultSportsGames,
+  defaultTestimonials,
+  defaultTimeline,
+} from './cmsDefaults'
 
 const videosSeed: Video[] = [
   {
@@ -173,3 +184,60 @@ const registrationsSeed: Registration[] = [
 const registrationsCollection = createDemoCollection('registrations', registrationsSeed)
 export const mockRegistrations = registrationsCollection.data
 export const persistRegistrations = registrationsCollection.persist
+
+const siteSettingsKey = 'site_settings'
+function readSiteSettings(): SiteSettings {
+  if (typeof window === 'undefined') return { ...defaultSiteSettings }
+  try {
+    const raw = window.localStorage.getItem('hopeland-demo:' + siteSettingsKey)
+    if (!raw) return { ...defaultSiteSettings }
+    return { ...defaultSiteSettings, ...JSON.parse(raw) }
+  } catch {
+    return { ...defaultSiteSettings }
+  }
+}
+export let mockSiteSettings: SiteSettings = readSiteSettings()
+export function persistSiteSettings() {
+  if (typeof window === 'undefined') return
+  try {
+    window.localStorage.setItem('hopeland-demo:' + siteSettingsKey, JSON.stringify(mockSiteSettings))
+  } catch {
+    /* ignore */
+  }
+}
+export function setMockSiteSettings(next: SiteSettings) {
+  mockSiteSettings = next
+  persistSiteSettings()
+}
+
+const statsCollection = createDemoCollection('site_stats', defaultSiteStats)
+export const mockSiteStats = statsCollection.data
+export const persistSiteStats = statsCollection.persist
+
+const featuresCollection = createDemoCollection('site_features', defaultSiteFeatures)
+export const mockSiteFeatures = featuresCollection.data
+export const persistSiteFeatures = featuresCollection.persist
+
+const faqsCollection = createDemoCollection('faqs', defaultFaqs)
+export const mockFaqs = faqsCollection.data
+export const persistFaqs = faqsCollection.persist
+
+const testimonialsCollection = createDemoCollection('testimonials', defaultTestimonials)
+export const mockTestimonials = testimonialsCollection.data
+export const persistTestimonials = testimonialsCollection.persist
+
+const timelineCollection = createDemoCollection('timeline_items', defaultTimeline)
+export const mockTimeline = timelineCollection.data
+export const persistTimeline = timelineCollection.persist
+
+const cmsPagesCollection = createDemoCollection('cms_pages', defaultCmsPages)
+export const mockCmsPages = cmsPagesCollection.data
+export const persistCmsPages = cmsPagesCollection.persist
+
+const sportsCollection = createDemoCollection('sports_games', defaultSportsGames)
+export const mockSportsGames = sportsCollection.data
+export const persistSportsGames = sportsCollection.persist
+
+const messagesCollection = createDemoCollection('contact_messages', defaultContactMessages)
+export const mockContactMessages = messagesCollection.data
+export const persistContactMessages = messagesCollection.persist

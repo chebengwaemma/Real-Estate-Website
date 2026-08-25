@@ -2,9 +2,16 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/common/Button'
+import { useSiteSettings } from '@/hooks/useCms'
 import { slideFromLeft, slideFromRight, staggerContainer, viewportOnce } from '@/lib/motion'
 
 export function FinalCTASection() {
+  const { data: settings } = useSiteSettings()
+  const title = settings?.final_cta_title ?? 'Atlanta, Georgia, USA — July 19–25, 2027'
+  const subtitle =
+    settings?.final_cta_subtitle ??
+    'Global Checkers / Draughts Championship. Register now — your player profile opens only after Stripe payment succeeds.'
+
   return (
     <section className="relative overflow-hidden bg-navy text-white">
       <img
@@ -22,10 +29,10 @@ export function FinalCTASection() {
           variants={staggerContainer}
         >
           <motion.h2 variants={slideFromLeft} className="text-h1 mx-auto max-w-3xl text-white">
-            Atlanta, Georgia, USA — July 19–25, 2027
+            {title}
           </motion.h2>
           <motion.p variants={slideFromRight} className="text-body-lg mx-auto mt-4 max-w-xl text-white/85">
-            Global Checkers / Draughts Championship. Register now — your player profile opens only after Stripe payment succeeds.
+            {subtitle}
           </motion.p>
           <motion.div
             variants={slideFromLeft}

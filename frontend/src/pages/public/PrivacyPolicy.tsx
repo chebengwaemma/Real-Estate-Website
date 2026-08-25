@@ -1,8 +1,24 @@
 import { Helmet } from 'react-helmet-async'
 import { PageHero } from '@/components/layout/PageHero'
+import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
+import { useCmsPage } from '@/hooks/useCms'
+import { defaultCmsPages } from '@/lib/cmsDefaults'
+
+function renderBody(body: string) {
+  const looksHtml = /<\/?[a-z][\s\S]*>/i.test(body)
+  if (looksHtml) {
+    return <div className="prose prose-sm max-w-none text-ink/80" dangerouslySetInnerHTML={{ __html: body }} />
+  }
+  return <div className="flex flex-col gap-4 text-sm leading-relaxed text-ink/80 whitespace-pre-wrap">{body}</div>
+}
 
 export default function PrivacyPolicy() {
+  const { data: page, isLoading } = useCmsPage('privacy-policy')
+  const fallback = defaultCmsPages.find((p) => p.slug === 'privacy-policy')
+  const title = page?.title ?? fallback?.title ?? 'Privacy Policy'
+  const body = page?.body ?? fallback?.body ?? ''
+
   return (
     <>
       <Helmet>
@@ -10,36 +26,17 @@ export default function PrivacyPolicy() {
         <link rel="canonical" href={`${SITE_URL}/privacy-policy`} />
       </Helmet>
 
-      <PageHero eyebrow="LEGAL" title="Privacy Policy" />
+      <PageHero eyebrow="LEGAL" title={title} />
 
       <section className="section-y bg-surface-white">
         <div className="container-page max-w-3xl text-ink/80">
-          <div className="flex flex-col gap-6 text-sm leading-relaxed">
-            <p>
-              This placeholder Privacy Policy describes, in general terms, how Hopeland Global Checkers collects,
-              uses, and protects information submitted through registration, contact, and admin forms on this site.
-              Replace this content with policy text reviewed by your legal counsel before launch.
-            </p>
-            <h2 className="text-h3 text-ink">Information We Collect</h2>
-            <p>
-              Registration data (name, date of birth, city, country, phone, email), payment metadata processed via
-              Stripe, and standard analytics data such as browser type and approximate location used for language
-              defaults.
-            </p>
-            <h2 className="text-h3 text-ink">How We Use Information</h2>
-            <p>
-              To process championship registrations, communicate event updates, verify player eligibility by
-              division, and improve the site experience.
-            </p>
-            <h2 className="text-h3 text-ink">Data Storage &amp; Security</h2>
-            <p>
-              Data is stored using Supabase with row-level security restricting registration records to authorized
-              administrators only. Payment card details are never stored on our servers — all payments are handled
-              directly by Stripe.
-            </p>
-            <h2 className="text-h3 text-ink">Contact</h2>
-            <p>For questions about this policy, contact hello@hopelandglobalcheckers.com.</p>
-          </div>
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <LoadingSpinner size={28} className="text-primary" />
+            </div>
+          ) : (
+            renderBody(body)
+          )}
         </div>
       </section>
     </>

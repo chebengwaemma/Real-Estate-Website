@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { LayoutDashboard, Users, Video, Award, Newspaper, Settings, X } from 'lucide-react'
+import { LayoutDashboard, Users, Video, Award, Newspaper, Settings, Globe, LayoutTemplate, FileText, Trophy, Inbox, X } from 'lucide-react'
 import { useUiStore } from '@/store/uiStore'
 import { cn } from '@/lib/utils'
 
@@ -11,7 +11,12 @@ const links = [
   { to: '/admin/videos', label: 'Videos', icon: Video },
   { to: '/admin/sponsors', label: 'Sponsors', icon: Award },
   { to: '/admin/blog', label: 'Blog', icon: Newspaper },
-  { to: '/admin/settings', label: 'Settings', icon: Settings },
+  { to: '/admin/site', label: 'Site settings', icon: Globe },
+  { to: '/admin/home', label: 'Home sections', icon: LayoutTemplate },
+  { to: '/admin/pages', label: 'Pages', icon: FileText },
+  { to: '/admin/sports', label: 'Sports games', icon: Trophy },
+  { to: '/admin/messages', label: 'Messages', icon: Inbox },
+  { to: '/admin/settings', label: 'Account', icon: Settings },
 ]
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {

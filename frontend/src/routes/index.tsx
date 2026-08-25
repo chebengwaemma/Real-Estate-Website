@@ -31,6 +31,11 @@ const AdminRegistrations = lazy(() => import('@/pages/admin/RegistrationsList'))
 const AdminVideos = lazy(() => import('@/pages/admin/VideosManager'))
 const AdminSponsors = lazy(() => import('@/pages/admin/SponsorsManager'))
 const AdminBlog = lazy(() => import('@/pages/admin/BlogManager'))
+const AdminSite = lazy(() => import('@/pages/admin/SiteSettingsManager'))
+const AdminHomeSections = lazy(() => import('@/pages/admin/HomeSectionsManager'))
+const AdminPages = lazy(() => import('@/pages/admin/CmsPagesManager'))
+const AdminSports = lazy(() => import('@/pages/admin/SportsGamesManager'))
+const AdminMessages = lazy(() => import('@/pages/admin/ContactMessagesManager'))
 const AdminSettings = lazy(() => import('@/pages/admin/Settings'))
 
 function PageFallback() {
@@ -76,6 +81,11 @@ export function AppRoutes() {
             <Route path="videos" element={<AdminVideos />} />
             <Route path="sponsors" element={<AdminSponsors />} />
             <Route path="blog" element={<AdminBlog />} />
+            <Route path="site" element={<AdminSite />} />
+            <Route path="home" element={<AdminHomeSections />} />
+            <Route path="pages" element={<AdminPages />} />
+            <Route path="sports" element={<AdminSports />} />
+            <Route path="messages" element={<AdminMessages />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Route>

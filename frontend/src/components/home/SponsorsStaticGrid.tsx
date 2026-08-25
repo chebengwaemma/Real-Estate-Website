@@ -1,5 +1,4 @@
 import { useSponsors } from '@/hooks/useSponsors'
-import { mockSponsors } from '@/lib/mockData'
 import type { Sponsor } from '@/types'
 import { cn } from '@/lib/utils'
 
@@ -11,7 +10,7 @@ interface SponsorsStaticGridProps {
 /** BlockDAG-style static logo wall — same partners as the marquee, not scrolling. */
 export function SponsorsStaticGrid({ className, tone = 'navy' }: SponsorsStaticGridProps) {
   const { data: sponsors } = useSponsors()
-  const list = (sponsors && sponsors.length > 0 ? sponsors : mockSponsors) as Sponsor[]
+  const list = (sponsors ?? []) as Sponsor[]
 
   if (list.length === 0) return null
 

@@ -1,17 +1,22 @@
 import { motion } from 'framer-motion'
 import { SectionHeading } from '@/components/common/SectionHeading'
 import { StatCard } from '@/components/cards/StatCard'
+import { useSiteStats } from '@/hooks/useCms'
+import { defaultSiteStats } from '@/lib/cmsDefaults'
+import { cmsList } from '@/lib/cmsList'
 import { slideByIndex, staggerContainer, viewportOnce } from '@/lib/motion'
 import type { StatItem } from '@/types'
 
-const stats: StatItem[] = [
-  { id: 'countries', value: 128, suffix: '+', label: 'Countries Represented', sublabel: 'Growing every season' },
-  { id: 'players', value: 42800, suffix: '+', label: 'Registered Players', sublabel: 'Across all divisions' },
-  { id: 'prize', value: 250000, suffix: '', label: 'Prize Pool (USD)', sublabel: 'Distributed across finalists' },
-  { id: 'matches', value: 9600, suffix: '+', label: 'Matches Played', sublabel: 'Live-streamed and archived' },
-]
-
 export function StatsSection() {
+  const { data } = useSiteStats()
+  const stats: StatItem[] = cmsList(data, defaultSiteStats).map((s) => ({
+    id: s.id,
+    value: s.value,
+    suffix: s.suffix,
+    label: s.label,
+    sublabel: s.sublabel ?? undefined,
+  }))
+
   return (
     <section className="relative section-y overflow-hidden bg-navy">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.12),transparent_45%)]" />

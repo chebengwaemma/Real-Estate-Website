@@ -1,17 +1,11 @@
 import { motion } from 'framer-motion'
 import { SectionHeading } from '@/components/common/SectionHeading'
 import { FeatureCard } from '@/components/cards/FeatureCard'
+import { useSiteFeatures } from '@/hooks/useCms'
+import { defaultSiteFeatures } from '@/lib/cmsDefaults'
+import { cmsList } from '@/lib/cmsList'
 import { floatY, floatYSlow, slideByIndex, slideFromLeft, slideFromRight, staggerContainer, viewportOnce } from '@/lib/motion'
 import type { FeatureItem } from '@/types'
-
-const features: FeatureItem[] = [
-  { id: 'global', icon: 'Globe2', title: 'Global Competition', description: 'Regional qualifiers on five continents feed directly into the World Championship bracket.' },
-  { id: 'live', icon: 'Radio', title: 'Live-Streamed Matches', description: 'Every quarterfinal, semifinal, and final match is broadcast live with expert commentary.' },
-  { id: 'fair', icon: 'ShieldCheck', title: 'Certified Fair Play', description: 'An independent referee panel and digital move-review system protect every result.' },
-  { id: 'prize', icon: 'Trophy', title: 'Real Prize Pool', description: 'A growing prize pool is distributed across finalists in every division, every season.' },
-  { id: 'divisions', icon: 'Layers', title: 'Divisions For Everyone', description: 'Open, Masters, and Junior divisions mean there is a bracket for every skill level.' },
-  { id: 'community', icon: 'Users', title: 'A Global Community', description: 'Connect with players, coaches, and fans from more than 120 countries.' },
-]
 
 const showcase = [
   { src: '/home/home-feature-live.png', label: 'Live Finals', float: floatY },
@@ -21,12 +15,19 @@ const showcase = [
 ]
 
 export function FeaturesSection() {
+  const { data } = useSiteFeatures()
+  const features: FeatureItem[] = cmsList(data, defaultSiteFeatures).map((f) => ({
+    id: f.id,
+    icon: f.icon,
+    title: f.title,
+    description: f.description,
+  }))
+
   return (
     <section className="section-y bg-surface-white">
       <div className="container-page">
         <SectionHeading eyebrow="WHY COMPETE" title="Core Attributes Of The Championship" />
 
-        {/* Dual-side image showcase — settles toward center */}
         <div className="mt-8 grid min-w-0 grid-cols-2 gap-2 sm:mt-12 sm:gap-4 lg:grid-cols-4">
           {showcase.map((item, i) => (
             <motion.div
