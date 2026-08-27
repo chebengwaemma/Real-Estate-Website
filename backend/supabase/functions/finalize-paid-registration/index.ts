@@ -14,6 +14,7 @@ import {
   fetchPaidCheckoutSession,
   recordPaidRegistration,
 } from '../_shared/recordPaidSession.ts'
+import { sendPaidRegistrationEmails } from '../_shared/sendRegistrationEmails.ts'
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -52,6 +53,12 @@ Deno.serve(async (req) => {
         status: recorded.status,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
+    }
+
+    try {
+      await sendPaidRegistrationEmails(supabase, recorded.registration)
+    } catch (emailError) {
+      console.error('finalize-paid-registration email failed', emailError)
     }
 
     let accountError: string | null = null

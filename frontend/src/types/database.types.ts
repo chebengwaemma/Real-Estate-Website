@@ -15,6 +15,7 @@ export interface Registration {
   date_of_birth: string
   city: string
   country: string
+  nationality: string | null
   phone: string
   email: string
   status: RegistrationStatus
@@ -188,7 +189,10 @@ export interface Database {
       registrations: {
         Row: Registration
         Insert: Partial<Registration> &
-          Pick<Registration, 'first_name' | 'last_name' | 'date_of_birth' | 'city' | 'country' | 'phone' | 'email'>
+          Pick<
+            Registration,
+            'first_name' | 'last_name' | 'date_of_birth' | 'city' | 'country' | 'phone' | 'email'
+          >
         Update: Partial<Registration>
       }
       videos: {

@@ -4,6 +4,8 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 
 import enCommon from '@/locales/en/common.json'
 import enHome from '@/locales/en/home.json'
+import bnCommon from '@/locales/bn/common.json'
+import bnHome from '@/locales/bn/home.json'
 import esCommon from '@/locales/es/common.json'
 import esHome from '@/locales/es/home.json'
 import frCommon from '@/locales/fr/common.json'
@@ -28,6 +30,7 @@ export interface SupportedLanguage {
 
 export const supportedLanguages: SupportedLanguage[] = [
   { code: 'en', label: 'English', nativeLabel: 'English', dir: 'ltr' },
+  { code: 'bn', label: 'Bengali', nativeLabel: 'বাংলা', dir: 'ltr' },
   { code: 'es', label: 'Spanish', nativeLabel: 'Español', dir: 'ltr' },
   { code: 'fr', label: 'French', nativeLabel: 'Français', dir: 'ltr' },
   { code: 'pt', label: 'Portuguese', nativeLabel: 'Português', dir: 'ltr' },
@@ -40,6 +43,7 @@ export const supportedLanguages: SupportedLanguage[] = [
 /** Maps a two-letter country code to a default supported language. */
 export const countryToLanguage: Record<string, string> = {
   US: 'en', GB: 'en', CA: 'en', AU: 'en', NZ: 'en', IE: 'en', ZA: 'en', NG: 'en', KE: 'en',
+  BD: 'bn',
   ES: 'es', MX: 'es', AR: 'es', CO: 'es', CL: 'es', PE: 'es', VE: 'es', EC: 'es', GT: 'es', UY: 'es', PY: 'es', BO: 'es', DO: 'es', CR: 'es', PA: 'es', HN: 'es', SV: 'es', NI: 'es',
   FR: 'fr', BE: 'fr', CH: 'fr', SN: 'fr', CI: 'fr', ML: 'fr', CM: 'fr', CD: 'fr',
   PT: 'pt', BR: 'pt', AO: 'pt', MZ: 'pt',
@@ -55,6 +59,7 @@ i18next
   .init({
     resources: {
       en: { common: enCommon, home: enHome },
+      bn: { common: bnCommon, home: bnHome },
       es: { common: esCommon, home: esHome },
       fr: { common: frCommon, home: frHome },
       pt: { common: ptCommon, home: ptHome },
@@ -65,6 +70,8 @@ i18next
     },
     fallbackLng: 'en',
     supportedLngs: supportedLanguages.map((l) => l.code),
+    nonExplicitSupportedLngs: true,
+    load: 'languageOnly',
     ns: ['common', 'home'],
     defaultNS: 'common',
     interpolation: { escapeValue: false },

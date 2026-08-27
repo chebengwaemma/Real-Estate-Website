@@ -23,6 +23,11 @@ const RegisterCancelled = lazy(() => import('@/pages/public/RegisterCancelled'))
 const Contact = lazy(() => import('@/pages/public/Contact'))
 const PrivacyPolicy = lazy(() => import('@/pages/public/PrivacyPolicy'))
 const TermsOfUse = lazy(() => import('@/pages/public/TermsOfUse'))
+const LeadershipPage = lazy(() => import('@/pages/public/CmsDocumentPage'))
+const RulesPage = lazy(() => import('@/pages/public/CmsDocumentPage').then((m) => ({ default: m.RulesPage })))
+const Competition2027Page = lazy(() =>
+  import('@/pages/public/CmsDocumentPage').then((m) => ({ default: m.Competition2027Page })),
+)
 const NotFound = lazy(() => import('@/pages/public/NotFound'))
 
 const AdminLogin = lazy(() => import('@/pages/admin/Login'))
@@ -53,6 +58,9 @@ export function AppRoutes() {
         <Route element={<PublicLayout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
+          <Route path="leadership" element={<LeadershipPage />} />
+          <Route path="rules" element={<RulesPage />} />
+          <Route path="competition-2027" element={<Competition2027Page />} />
           <Route path="videos" element={<Videos />} />
           <Route path="sports" element={<Sports />} />
           <Route path="sports/:gameId" element={<SportGame />} />

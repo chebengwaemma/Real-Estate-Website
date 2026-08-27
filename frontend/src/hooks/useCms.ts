@@ -330,7 +330,30 @@ export function useCmsPageMutations() {
     onSuccess: invalidate,
   })
 
-  return { update }
+  const create = useMutation({
+    mutationFn: async (input: { slug: string; title: string; body?: string }) => {
+      const slug = input.slug.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '')
+      const title = input.title.trim()
+      const body = input.body?.trim() || `<p>Edit this page to add your content.</p>`
+      if (!slug || !title) throw new Error('Slug and title are required.')
+      if (!isSupabaseConfigured) {
+        mockCmsPages.push({
+          id: crypto.randomUUID(),
+          slug,
+          title,
+          body,
+          updated_at: new Date().toISOString(),
+        })
+        persistCmsPages()
+        return
+      }
+      const { error } = await supabase.from('cms_pages').insert({ slug, title, body } as never)
+      if (error) throwCms(error, 'Database operation failed.')
+    },
+    onSuccess: invalidate,
+  })
+
+  return { update, create }
 }
 
 export function useSportsGames(admin = false) {

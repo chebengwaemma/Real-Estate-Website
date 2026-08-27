@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { Globe2, MapPin, ShieldCheck, Trophy, Users } from 'lucide-react'
 import { PageHero } from '@/components/layout/PageHero'
@@ -8,13 +9,7 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
 import { useCmsPage, useSiteSettings } from '@/hooks/useCms'
 import { defaultCmsPages } from '@/lib/cmsDefaults'
-
-const pillars = [
-  { icon: Globe2, title: 'Global Reach', text: 'Regional qualifiers run across five continents and feed directly into the World Championship bracket.' },
-  { icon: ShieldCheck, title: 'Certified Fair Play', text: 'An independent referee panel and digital move-review system protect every result, every round.' },
-  { icon: Trophy, title: 'Real Stakes', text: 'A growing prize pool is distributed across finalists in the Open, Masters, and Junior divisions.' },
-  { icon: Users, title: 'Open To Everyone', text: 'From first-time club players to federation-rated masters, there is a division built for every skill level.' },
-]
+import { cmsOrTranslated } from '@/lib/localizedCms'
 
 function renderBody(body: string) {
   const looksHtml = /<\/?[a-z][\s\S]*>/i.test(body)
@@ -29,27 +24,39 @@ function renderBody(body: string) {
 }
 
 export default function About() {
+  const { t, i18n } = useTranslation()
   const { data: page, isLoading } = useCmsPage('about')
   const { data: settings } = useSiteSettings()
   const fallback = defaultCmsPages.find((p) => p.slug === 'about')
-  const title = page?.title ?? fallback?.title ?? 'About Hopeland Global Checkers'
+  const title = cmsOrTranslated(i18n.language, page?.title ?? fallback?.title, t('pages.about.metaTitle'))
   const body = page?.body ?? fallback?.body ?? ''
   const location = settings?.championship_location ?? 'Atlanta, Georgia, USA'
   const dates = settings?.championship_dates ?? 'July 19 – 25, 2027'
 
+  const pillars = [
+    { icon: Globe2, title: t('pages.about.pillarGlobal'), text: t('pages.about.pillarGlobalText') },
+    { icon: ShieldCheck, title: t('pages.about.pillarFair'), text: t('pages.about.pillarFairText') },
+    { icon: Trophy, title: t('pages.about.pillarStakes'), text: t('pages.about.pillarStakesText') },
+    { icon: Users, title: t('pages.about.pillarOpen'), text: t('pages.about.pillarOpenText') },
+  ]
+
+  const divisions = [
+    { title: t('pages.about.openDivision'), text: t('pages.about.openDivisionText') },
+    { title: t('pages.about.mastersDivision'), text: t('pages.about.mastersDivisionText') },
+    { title: t('pages.about.juniorDivision'), text: t('pages.about.juniorDivisionText') },
+  ]
+
   return (
     <>
       <Helmet>
-        <title>About — {SITE_NAME}</title>
-        <meta name="description" content="Learn how the Hopeland Global Checkers World Championship runs, from regional qualifiers to the live-streamed world final." />
+        <title>
+          {t('pages.about.metaTitle')} — {SITE_NAME}
+        </title>
+        <meta name="description" content={t('pages.about.metaDescription')} />
         <link rel="canonical" href={`${SITE_URL}/about`} />
       </Helmet>
 
-      <PageHero
-        eyebrow="ABOUT THE CHAMPIONSHIP"
-        title={title}
-        subtitle="Hopeland Global Checkers brings together players from over 120 countries in a transparent, fairly-judged path from local qualifier to world champion."
-      />
+      <PageHero eyebrow={t('pages.about.eyebrow')} title={title} subtitle={t('pages.about.subtitle')} />
 
       <section className="section-y bg-surface-white">
         <div className="container-page max-w-3xl">
@@ -65,7 +72,7 @@ export default function About() {
 
       <section className="section-y bg-surface-light">
         <div className="container-page">
-          <SectionHeading eyebrow="THE FORMAT" title="How The Championship Works" />
+          <SectionHeading eyebrow={t('pages.about.formatEyebrow')} title={t('pages.about.formatTitle')} />
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -88,11 +95,7 @@ export default function About() {
 
       <section className="section-y bg-surface-white">
         <div className="container-page grid gap-10 lg:grid-cols-3">
-          {[
-            { title: 'Open Division', text: 'Open to all players. Regional qualifiers determine seeding for the World Championship bracket.' },
-            { title: 'Masters Division', text: 'Reserved for federation-rated players competing for the highest level of recognition.' },
-            { title: 'Junior Division', text: 'For competitors under 16, with dedicated qualifiers and a standalone Junior world title.' },
-          ].map((division, index) => (
+          {divisions.map((division, index) => (
             <motion.div
               key={division.title}
               initial={{ opacity: 0, y: 24 }}
@@ -101,7 +104,9 @@ export default function About() {
               transition={{ delay: index * 0.08 }}
               className="rounded-2xl border border-black/5 bg-white p-8 shadow-card"
             >
-              <p className="text-eyebrow mb-3">Division 0{index + 1}</p>
+              <p className="text-eyebrow mb-3">
+                {t('pages.about.division')} 0{index + 1}
+              </p>
               <h3 className="text-h3 text-ink">{division.title}</h3>
               <p className="mt-2 text-sm text-muted">{division.text}</p>
             </motion.div>
@@ -111,11 +116,11 @@ export default function About() {
 
       <section className="section-y bg-surface-light">
         <div className="container-page">
-          <SectionHeading eyebrow="LOCATION" title="Address" />
+          <SectionHeading eyebrow={t('pages.about.locationEyebrow')} title={t('pages.about.addressTitle')} />
           <div className="mt-8 flex items-start gap-3 rounded-2xl border border-black/5 bg-white p-6 shadow-card">
             <MapPin className="mt-1 shrink-0 text-primary" size={20} />
             <div>
-              <p className="font-bold text-ink">Hopeland Global Checkers (Draughts) Federation</p>
+              <p className="font-bold text-ink">{settings?.site_name || 'Hopeland Global Checkers (Draughts) Federation'}</p>
               <p className="mt-1 text-sm text-muted">{location}</p>
               <p className="text-sm text-muted">{dates}</p>
             </div>

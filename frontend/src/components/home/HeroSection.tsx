@@ -9,18 +9,18 @@ import { SponsorsMarquee } from '@/components/home/SponsorsMarquee'
 import { SponsorsStaticGrid } from '@/components/home/SponsorsStaticGrid'
 import { useAuth } from '@/context/AuthContext'
 import { useSiteSettings } from '@/hooks/useCms'
+import { cmsOrTranslated } from '@/lib/localizedCms'
 import { fadeUp, floatY, floatYSlow, slideFromLeft, slideFromRight, staggerContainer } from '@/lib/motion'
 
 export function HeroSection() {
-  const { t } = useTranslation('home')
+  const { t, i18n } = useTranslation('home')
   const { isPaidPlayer } = useAuth()
   const { data: settings } = useSiteSettings()
   const isRegistered = isPaidPlayer
   const primaryTo = isRegistered ? '/account' : '/register'
-  // Admin CMS is source of truth for all languages
-  const eyebrow = settings?.hero_eyebrow || t('hero.eyebrow')
-  const title = settings?.hero_title || t('hero.title')
-  const subtitle = settings?.hero_subtitle || t('hero.subtitle')
+  const eyebrow = cmsOrTranslated(i18n.language, settings?.hero_eyebrow, t('hero.eyebrow'))
+  const title = cmsOrTranslated(i18n.language, settings?.hero_title, t('hero.title'))
+  const subtitle = cmsOrTranslated(i18n.language, settings?.hero_subtitle, t('hero.subtitle'))
   const location = settings?.championship_location ?? 'Atlanta, Georgia, USA'
   const dates = settings?.championship_dates ?? '19 July – 25 July, 2027'
 
@@ -83,7 +83,7 @@ export function HeroSection() {
             className="mx-auto mt-3 flex w-full max-w-lg flex-col items-center gap-0.5 rounded-2xl border border-white/20 bg-white/10 px-3 py-2.5 text-center backdrop-blur-sm sm:mt-5 sm:px-5 lg:mx-0 lg:items-start lg:text-left"
           >
             <span className="text-[10px] font-bold tracking-[0.18em] text-primary-light uppercase sm:text-[11px]">
-              Global Checkers / Draughts Competition
+              {t('hero.competitionLabel')}
             </span>
             <span className="text-sm font-extrabold text-white sm:text-base">
               {location}
@@ -140,7 +140,7 @@ export function HeroSection() {
 
       <div className="container-page relative z-10 w-full border-t border-white/10 pb-8 pt-4 sm:pb-10 sm:pt-5">
         <p className="mb-2 text-center text-[10px] font-semibold tracking-[0.18em] text-white/50 uppercase sm:mb-3 sm:text-[11px] sm:tracking-[0.2em]">
-          Official partners
+          {t('hero.officialPartners')}
         </p>
         <div className="max-w-full overflow-hidden">
           <SponsorsMarquee variant="dark" compact />

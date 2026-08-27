@@ -2,16 +2,26 @@
   "nav": {
     "home": "Start",
     "about": "Über uns",
+    "leadership": "Führungsrat",
+    "rules": "Regeln",
+    "competition2027": "Wettbewerb 2027",
     "videos": "Videos",
     "blog": "Blog",
     "sponsors": "Sponsoren",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "sports": "Sport",
+    "register": "Anmeldung"
   },
   "header": {
-    "registerCta": "Jetzt Registrieren",
+    "registerCta": "Jetzt anmelden",
+    "dashboard": "Dashboard",
     "myProfile": "Mein Profil",
     "signIn": "Anmelden",
-    "account": "Konto"
+    "account": "Konto",
+    "profile": "Profil",
+    "admin": "Admin",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen"
   },
   "mobileNav": {
     "home": "Start",
@@ -19,19 +29,31 @@
     "blog": "Blog",
     "sports": "Sport",
     "register": "Anmeldung",
+    "profile": "Profil",
     "menu": "Menü"
   },
   "announcement": {
-    "text": "Die Anmeldung zur Meisterschaft ist eröffnet",
-    "cta": "Platz sichern"
+    "text": "Atlanta, Georgia, USA — 19.–25. Juli 2027",
+    "cta": "Jetzt anmelden"
   },
   "footer": {
-    "tagline": "Die internationale Dame-Meisterschaft — antreten, vernetzen und ganz nach oben spielen.",
+    "tagline": "Hopeland Global Checkers (Draughts) Federation — die Weltmeisterschaft im Damespiel in Atlanta, Georgia, USA, 19.–25. Juli 2027.",
     "sitemapHeading": "Sitemap",
     "exploreHeading": "Entdecken",
     "legalHeading": "Rechtliches",
-    "connectHeading": "Vernetzen",
-    "rights": "Alle Rechte vorbehalten."
+    "connectHeading": "Verbinden",
+    "followUs": "Hopeland Checkers folgen",
+    "socialHint": "Facebook, X, YouTube und Instagram unter Admin → Website-Einstellungen hinzufügen.",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "rights": "Alle Rechte vorbehalten.",
+    "skipToContent": "Zum Inhalt springen"
+  },
+  "social": {
+    "facebook": "Facebook",
+    "x": "X",
+    "youtube": "YouTube",
+    "instagram": "Instagram"
   },
   "language": {
     "label": "Sprache"
@@ -39,6 +61,166 @@
   "buttons": {
     "learnMore": "Mehr erfahren",
     "watchNow": "Jetzt ansehen",
-    "readMore": "Weiterlesen"
+    "readMore": "Weiterlesen",
+    "getInTouch": "Kontakt",
+    "sendMessage": "Nachricht senden",
+    "sending": "Senden…",
+    "registerNow": "Jetzt anmelden",
+    "howItWorks": "So funktioniert’s",
+    "allVideos": "Alle Videos",
+    "allPosts": "Alle Beiträge"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "Über die Meisterschaft",
+      "metaTitle": "Über uns",
+      "metaDescription": "Learn how the Hopeland Global Checkers World Championship runs, from regional qualifiers to the live-streamed world final.",
+      "subtitle": "Hopeland Global Checkers brings together players from over 120 countries in a transparent, fairly-judged path from local qualifier to world champion.",
+      "formatEyebrow": "The format",
+      "formatTitle": "So funktioniert die Meisterschaft",
+      "pillarGlobal": "Global Reach",
+      "pillarGlobalText": "Regional qualifiers run across five continents and feed directly into the World Championship bracket.",
+      "pillarFair": "Certified Fair Play",
+      "pillarFairText": "An independent referee panel and digital move-review system protect every result, every round.",
+      "pillarStakes": "Real Stakes",
+      "pillarStakesText": "A growing prize pool is distributed across finalists in the Open, Masters, and Junior divisions.",
+      "pillarOpen": "Open To Everyone",
+      "pillarOpenText": "From first-time club players to federation-rated masters, there is a division built for every skill level.",
+      "division": "Division",
+      "openDivision": "Open Division",
+      "openDivisionText": "Open to all players. Regional qualifiers determine seeding for the World Championship bracket.",
+      "mastersDivision": "Masters Division",
+      "mastersDivisionText": "Reserved for federation-rated players competing for the highest level of recognition.",
+      "juniorDivision": "Junior Division",
+      "juniorDivisionText": "For competitors under 16, with dedicated qualifiers and a standalone Junior world title.",
+      "locationEyebrow": "Location",
+      "addressTitle": "Adresse"
+    },
+    "videos": {
+      "eyebrow": "Media hub",
+      "title": "Videos & Highlights",
+      "subtitle": "Keynotes, match replays, and behind-the-scenes coverage from every stage of the championship.",
+      "metaDescription": "Watch highlights, keynotes, and match replays from the Hopeland Global Checkers World Championship."
+    },
+    "blog": {
+      "eyebrow": "Community & news",
+      "title": "Blog",
+      "subtitle": "Announcements, player spotlights, and everything happening across the championship season.",
+      "metaDescription": "News, updates, and stories from the Hopeland Global Checkers World Championship.",
+      "empty": "Noch keine Beiträge."
+    },
+    "sponsors": {
+      "eyebrow": "Our partners",
+      "title": "Sponsoren",
+      "subtitle": "The organizations powering every board, broadcast, and prize pool of the championship.",
+      "ctaTitle": "Werden Sie Sponsor",
+      "ctaText": "Reach a global audience of players, coaches, and fans across more than 120 countries.",
+      "metaDescription": "Meet the organizations powering the Hopeland Global Checkers World Championship."
+    },
+    "contact": {
+      "eyebrow": "Get in touch",
+      "title": "Kontakt",
+      "subtitle": "Questions about registration, sponsorship, or media? We'd love to hear from you.",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "address": "Adresse",
+      "fullName": "Vollständiger Name",
+      "emailAddress": "Email Address",
+      "subject": "Betreff",
+      "message": "Nachricht",
+      "success": "Danke — unser Team meldet sich bald.",
+      "error": "Could not send message.",
+      "metaDescription": "Get in touch with the Hopeland Global Checkers organizing committee."
+    },
+    "register": {
+      "eyebrow": "Join the championship",
+      "title": "Jetzt anmelden",
+      "subtitle": "Pay the registration fee to confirm your spot. If payment fails, nothing is saved — you can register again.",
+      "included": "Enthalten",
+      "perkBracket": "Access to your regional qualifier bracket",
+      "perkStream": "Live-stream credentials for every stage",
+      "perkReferee": "Certified referee panel on every match",
+      "metaDescription": "Register to compete in the Hopeland Global Checkers World Championship."
+    },
+    "login": {
+      "eyebrow": "Player access",
+      "title": "Anmelden",
+      "subtitle": "Use the email and password from your paid registration.",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "submit": "Anmelden",
+      "noAccount": "No account yet?",
+      "registerLink": "Register now",
+      "metaDescription": "Sign in to your Hopeland Global Checkers player profile."
+    },
+    "leadership": {
+      "eyebrow": "Organization",
+      "fallbackTitle": "Führungsrat",
+      "fallbackBody": "<p>Meet the leadership of Hopeland Global Checkers (Draughts) Federation.</p><p>Edit this page in Admin → Pages to add names, roles, and biographies.</p>"
+    },
+    "rules": {
+      "eyebrow": "Fair play",
+      "fallbackTitle": "Regeln",
+      "fallbackBody": "<p>Championship rules, fair-play standards, and competition format will be published here.</p><p>Edit this page in Admin → Pages to add the official rulebook.</p>"
+    },
+    "competition2027": {
+      "eyebrow": "Atlanta 2027",
+      "fallbackTitle": "Wettbewerb 2027",
+      "fallbackBody": "<p>The Global Checkers / Draughts Championship takes place in Atlanta, Georgia, USA, July 19–25, 2027.</p><p>Edit this page in Admin → Pages to add schedule, venues, and competition details.</p>"
+    },
+    "privacy": {
+      "eyebrow": "Legal"
+    },
+    "terms": {
+      "eyebrow": "Legal"
+    },
+    "notFound": {
+      "title": "Seite nicht gefunden",
+      "subtitle": "The page you are looking for does not exist.",
+      "home": "Zur Startseite"
+    }
+  },
+  "registerForm": {
+    "localMode": "Local payment mode — registration completes here without Stripe Checkout. Your player account opens after this form succeeds.",
+    "payFirst": "Your player account opens only after payment succeeds. If the card is declined, cancelled, or has no balance — no account is created and nothing is saved.",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "dateOfBirth": "Geburtsdatum",
+    "city": "Stadt",
+    "country": "Land",
+    "nationality": "Nationalität",
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "passwordHint": "Min. 6 characters",
+    "repeatPassword": "Repeat password",
+    "selectCountry": "Land wählen",
+    "selectNationality": "Nationalität wählen",
+    "passwordUnlocks": "After payment succeeds, this password unlocks Sign In for your player profile.",
+    "feeLabel": "Anmeldegebühr",
+    "feeHint": "Charged only when payment completes",
+    "feeHintLocal": "Recorded locally for this intermediate build",
+    "submit": "Jetzt anmelden",
+    "submitLocal": "Complete Registration",
+    "submitting": "Redirecting…",
+    "completing": "Completing…",
+    "secure": "Payments are securely processed by Stripe. Failed payments create no registration.",
+    "secureLocal": "Local payment mode — Stripe Checkout is disabled for this intermediate build.",
+    "error": "Something went wrong. Please try again.",
+    "errors": {
+      "firstName": "First name is too short",
+      "lastName": "Last name is too short",
+      "dobRequired": "Date of birth is required",
+      "dobAge": "Players must be at least 6 years old",
+      "city": "City is required",
+      "country": "Country is required",
+      "nationality": "Nationality is required",
+      "phone": "Enter a valid phone number",
+      "email": "Enter a valid email address",
+      "password": "Password must be at least 6 characters",
+      "confirmPassword": "Confirm your password",
+      "passwordMatch": "Passwords do not match"
+    }
   }
 }

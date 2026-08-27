@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { PageHero } from '@/components/layout/PageHero'
 import { VideoCard } from '@/components/cards/VideoCard'
@@ -11,24 +12,24 @@ import { SITE_NAME, SITE_URL } from '@/lib/seo'
 import type { Video } from '@/types'
 
 export default function Videos() {
+  const { t } = useTranslation()
   const { data: videos, isLoading } = useVideos()
   const [activeVideo, setActiveVideo] = useState<Video | null>(null)
 
   return (
     <>
       <Helmet>
-        <title>Videos — {SITE_NAME}</title>
-        <meta
-          name="description"
-          content="Watch highlights, keynotes, and match replays from the Hopeland Global Checkers World Championship."
-        />
+        <title>
+          {t('pages.videos.title')} — {SITE_NAME}
+        </title>
+        <meta name="description" content={t('pages.videos.metaDescription')} />
         <link rel="canonical" href={`${SITE_URL}/videos`} />
       </Helmet>
 
       <PageHero
-        eyebrow="MEDIA HUB"
-        title="Videos & Highlights"
-        subtitle="Keynotes, match replays, and behind-the-scenes coverage from every stage of the championship."
+        eyebrow={t('pages.videos.eyebrow')}
+        title={t('pages.videos.title')}
+        subtitle={t('pages.videos.subtitle')}
       />
 
       <section className="section-y bg-surface-white">

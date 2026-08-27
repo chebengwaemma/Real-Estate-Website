@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { SectionHeading } from '@/components/common/SectionHeading'
 import { Button } from '@/components/common/Button'
+import { useTranslation } from 'react-i18next'
 import { Carousel } from '@/components/common/Carousel'
 import { VideoCard } from '@/components/cards/VideoCard'
 import { VideoPlayer } from '@/components/videos/VideoPlayer'
@@ -14,6 +15,7 @@ import { slideByIndex, viewportOnce } from '@/lib/motion'
 import type { Video } from '@/types'
 
 export function VideosPreviewSection() {
+  const { t } = useTranslation(['home', 'common'])
   const { data: videos, isLoading } = useVideos()
   const [activeVideo, setActiveVideo] = useState<Video | null>(null)
 
@@ -22,14 +24,14 @@ export function VideosPreviewSection() {
       <div className="container-page">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <SectionHeading
-            eyebrow="MEDIA HUB"
-            title="Watch The Road To The Title"
+            eyebrow={t('videos.eyebrow')}
+            title={t('videos.title')}
             align="left"
             className="mx-0 text-left"
           />
           <Link to="/videos" className="shrink-0">
             <Button variant="outline" size="sm" icon={<ArrowRight size={16} />}>
-              All videos
+              {t('buttons.allVideos', { ns: 'common' })}
             </Button>
           </Link>
         </div>

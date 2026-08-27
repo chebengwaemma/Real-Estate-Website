@@ -1,16 +1,17 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { ArrowRight, Trophy } from 'lucide-react'
 import { SectionHeading } from '@/components/common/SectionHeading'
 import { Button } from '@/components/common/Button'
 import { useSiteSettings } from '@/hooks/useCms'
+import { cmsOrTranslated } from '@/lib/localizedCms'
 import { floatY, slideFromLeft, slideFromRight, viewportOnce } from '@/lib/motion'
 
 export function AboutTeaserSection() {
+  const { t, i18n } = useTranslation('home')
   const { data: settings } = useSiteSettings()
-  const teaser =
-    settings?.about_teaser ??
-    "Hopeland Global Checkers is the world's premier checkers championship — a season-long journey from open regional qualifiers to a live-streamed world final. Every match is judged by a certified referee panel, every player has a path to the top board, and every result is public and verifiable."
+  const teaser = cmsOrTranslated(i18n.language, settings?.about_teaser, t('about.teaser'))
   return (
     <section className="section-y bg-surface-light">
       <div className="container-page grid items-center gap-12 lg:grid-cols-2">
@@ -43,8 +44,8 @@ export function AboutTeaserSection() {
           className="order-1 lg:order-2"
         >
           <SectionHeading
-            eyebrow="ABOUT THE CHAMPIONSHIP"
-            title="What Is Hopeland Global Checkers?"
+            eyebrow={t('about.eyebrow')}
+            title={t('about.title')}
             align="left"
             className="mx-0 text-left"
           />
@@ -53,12 +54,12 @@ export function AboutTeaserSection() {
           </p>
           <div className="mt-6 flex items-start gap-3 text-sm font-semibold text-ink sm:items-center">
             <Trophy size={18} className="mt-0.5 shrink-0 text-primary sm:mt-0" />
-            <span className="min-w-0">Open, Masters, and Junior divisions for every skill level</span>
+            <span className="min-w-0">{t('about.divisions')}</span>
           </div>
           <div className="mt-8">
             <Link to="/about">
               <Button variant="secondary" icon={<ArrowRight size={16} />}>
-                Learn about the format
+                {t('about.learnFormat')}
               </Button>
             </Link>
           </div>

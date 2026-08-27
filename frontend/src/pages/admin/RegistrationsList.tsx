@@ -28,7 +28,7 @@ export default function RegistrationsList() {
       const query = search.trim().toLowerCase()
       const matchesSearch =
         !query ||
-        `${r.first_name} ${r.last_name} ${r.email} ${r.country}`.toLowerCase().includes(query)
+        `${r.first_name} ${r.last_name} ${r.email} ${r.country} ${r.nationality ?? ''}`.toLowerCase().includes(query)
       return matchesStatus && matchesSearch
     })
   }, [registrations, search, statusFilter])
@@ -40,6 +40,7 @@ export default function RegistrationsList() {
     { key: 'name', header: 'Name', render: (r) => `${r.first_name} ${r.last_name}` },
     { key: 'email', header: 'Email', render: (r) => r.email },
     { key: 'country', header: 'Country', render: (r) => r.country },
+    { key: 'nationality', header: 'Nationality', render: (r) => r.nationality || '—' },
     {
       key: 'status',
       header: 'Status',

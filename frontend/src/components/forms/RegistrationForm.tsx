@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Loader2, ShieldCheck } from 'lucide-react'
 import { FormField } from '@/components/forms/FormField'
 import { CountrySelect } from '@/components/forms/CountrySelect'
 import { Button } from '@/components/common/Button'
-import { registrationSchema, type RegistrationSchema } from '@/lib/validators'
+import { createRegistrationSchema, type RegistrationSchema } from '@/lib/validators'
 import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient'
 import { registrationFee } from '@/lib/stripeClient'
 import { getStripePublishableKey } from '@/lib/stripePublishableKey'
@@ -20,22 +21,20 @@ import { useCreateDemoRegistration } from '@/hooks/useRegistrations'
 import { useRegistrantStore } from '@/store/registrantStore'
 import type { Registration } from '@/types'
 
-function getRegistrationErrorMessage(err: unknown): string {
-  return err instanceof Error ? err.message : 'Something went wrong. Please try again.'
-}
-
 export function RegistrationForm() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [submitting, setSubmitting] = useState(false)
   const createDemoRegistration = useCreateDemoRegistration()
   const setRegistrantId = useRegistrantStore((s) => s.setRegistrantId)
   const localPayment = isLocalPaymentMode()
+  const schema = useMemo(() => createRegistrationSchema((key) => t(key)), [t])
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegistrationSchema>({ resolver: zodResolver(registrationSchema) })
+  } = useForm<RegistrationSchema>({ resolver: zodResolver(schema) })
 
   const onSubmit = async (values: RegistrationSchema) => {
     setSubmitting(true)
@@ -73,6 +72,7 @@ export function RegistrationForm() {
                     date_of_birth: values.dateOfBirth,
                     city: values.city,
                     country: values.country,
+                    nationality: values.nationality,
                     phone: values.phone,
                     email: values.email,
                   })
@@ -107,6 +107,7 @@ export function RegistrationForm() {
           date_of_birth: values.dateOfBirth,
           city: values.city,
           country: values.country,
+          nationality: values.nationality,
           phone: values.phone,
           email: values.email,
         })
@@ -126,6 +127,7 @@ export function RegistrationForm() {
           date_of_birth: values.dateOfBirth,
           city: values.city,
           country: values.country,
+          nationality: values.nationality,
           phone: values.phone,
           email: values.email,
         })
@@ -159,7 +161,7 @@ export function RegistrationForm() {
       throw new Error('Could not start checkout. Please try again.')
     } catch (err) {
       clearPendingAuth()
-      toast.error(getRegistrationErrorMessage(err))
+      toast.error(err instanceof Error ? err.message : t('registerForm.error'))
     } finally {
       setSubmitting(false)
     }
@@ -168,65 +170,61 @@ export function RegistrationForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <div className="rounded-xl border border-primary/15 bg-primary/5 px-4 py-3 text-xs text-muted">
-        {localPayment ? (
-          <>
-            <span className="font-semibold text-ink">Local payment mode</span> — registration completes here without
-            Stripe Checkout (intermediate / demo). Your player account opens after this form succeeds.
-          </>
-        ) : (
-          <>
-            Your player account opens <span className="font-semibold text-ink">only after payment succeeds</span>.
-            If the card is declined, cancelled, or has no balance — no account is created and nothing is saved.
-          </>
-        )}
+        {localPayment ? t('registerForm.localMode') : t('registerForm.payFirst')}
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <FormField label="First Name" placeholder="Amara" error={errors.firstName?.message} {...register('firstName')} />
-        <FormField label="Last Name" placeholder="Okafor" error={errors.lastName?.message} {...register('lastName')} />
+        <FormField label={t('registerForm.firstName')} placeholder="Amara" error={errors.firstName?.message} {...register('firstName')} />
+        <FormField label={t('registerForm.lastName')} placeholder="Okafor" error={errors.lastName?.message} {...register('lastName')} />
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <FormField label="Date of Birth" type="date" error={errors.dateOfBirth?.message} {...register('dateOfBirth')} />
-        <FormField label="City" placeholder="Lagos" error={errors.city?.message} {...register('city')} />
+        <FormField label={t('registerForm.dateOfBirth')} type="date" error={errors.dateOfBirth?.message} {...register('dateOfBirth')} />
+        <FormField label={t('registerForm.city')} placeholder="Lagos" error={errors.city?.message} {...register('city')} />
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <CountrySelect label="Country" error={errors.country?.message} {...register('country')} />
-        <FormField label="Phone Number" type="tel" placeholder="+234 801 234 5678" error={errors.phone?.message} {...register('phone')} />
+        <CountrySelect
+          label={t('registerForm.country')}
+          placeholder={t('registerForm.selectCountry')}
+          error={errors.country?.message}
+          {...register('country')}
+        />
+        <CountrySelect
+          label={t('registerForm.nationality')}
+          placeholder={t('registerForm.selectNationality')}
+          error={errors.nationality?.message}
+          {...register('nationality')}
+        />
       </div>
 
-      <FormField label="Email Address" type="email" placeholder="you@example.com" error={errors.email?.message} {...register('email')} />
+      <FormField label={t('registerForm.phone')} type="tel" placeholder="+234 801 234 5678" error={errors.phone?.message} {...register('phone')} />
+      <FormField label={t('registerForm.email')} type="email" placeholder="you@example.com" error={errors.email?.message} {...register('email')} />
 
       <div className="grid gap-5 sm:grid-cols-2">
         <FormField
-          label="Password"
+          label={t('registerForm.password')}
           type="password"
           autoComplete="new-password"
-          placeholder="Min. 6 characters"
+          placeholder={t('registerForm.passwordHint')}
           error={errors.password?.message}
           {...register('password')}
         />
         <FormField
-          label="Confirm Password"
+          label={t('registerForm.confirmPassword')}
           type="password"
           autoComplete="new-password"
-          placeholder="Repeat password"
+          placeholder={t('registerForm.repeatPassword')}
           error={errors.confirmPassword?.message}
           {...register('confirmPassword')}
         />
       </div>
-      <p className="text-xs text-muted">
-        After payment succeeds, this password unlocks <span className="font-semibold text-ink">Sign In</span> for your
-        player profile.
-      </p>
+      <p className="text-xs text-muted">{t('registerForm.passwordUnlocks')}</p>
 
       <div className="flex flex-col gap-2 rounded-xl border border-black/10 bg-surface-light px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div className="min-w-0">
-          <p className="text-sm font-bold text-ink">Registration Fee</p>
-          <p className="text-xs text-muted">
-            {localPayment ? 'Recorded locally for this intermediate build' : 'Charged only when payment completes'}
-          </p>
+          <p className="text-sm font-bold text-ink">{t('registerForm.feeLabel')}</p>
+          <p className="text-xs text-muted">{localPayment ? t('registerForm.feeHintLocal') : t('registerForm.feeHint')}</p>
         </div>
         <p className="text-h3 text-primary">{formatCurrency(registrationFee.amount, registrationFee.currency)}</p>
       </div>
@@ -240,18 +238,16 @@ export function RegistrationForm() {
       >
         {submitting
           ? localPayment
-            ? 'Completing…'
-            : 'Redirecting…'
+            ? t('registerForm.completing')
+            : t('registerForm.submitting')
           : localPayment
-            ? 'Complete Registration'
-            : 'Register Now'}
+            ? t('registerForm.submitLocal')
+            : t('registerForm.submit')}
       </Button>
 
       <p className="flex items-center justify-center gap-1.5 text-center text-xs text-muted">
         <ShieldCheck size={14} className="text-success" />
-        {localPayment
-          ? 'Local payment mode — Stripe Checkout is disabled for this intermediate build.'
-          : 'Payments are securely processed by Stripe. Failed payments create no registration.'}
+        {localPayment ? t('registerForm.secureLocal') : t('registerForm.secure')}
       </p>
     </form>
   )

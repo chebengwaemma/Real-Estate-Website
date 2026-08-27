@@ -1,9 +1,61 @@
 {
   "hero": {
-    "eyebrow": "Championnat du Monde",
-    "title": "Chaque Coup Écrit l'Histoire",
-    "subtitle": "Rejoignez des milliers de joueurs de plus de 120 pays qui s'affrontent pour le titre mondial de Hopeland Global Checkers — diffusé en direct, arbitré équitablement et ouvert à tous les niveaux.",
-    "ctaPrimary": "S'inscrire pour Concourir",
-    "ctaSecondary": "Voir les Temps Forts"
+    "eyebrow": "Hopeland Global Checkers (Draughts) Federation",
+    "title": "Chaque coup écrit l’histoire",
+    "subtitle": "The official home of the Global Checkers / Draughts Championship — Atlanta, Georgia, USA, 19–25 July 2027. Live-streamed, fairly judged, and open to every skill level.",
+    "ctaPrimary": "S’inscrire pour concourir",
+    "ctaProfile": "Profil",
+    "ctaSecondary": "Voir les temps forts",
+    "competitionLabel": "Compétition mondiale de dames",
+    "officialPartners": "Partenaires officiels"
+  },
+  "prizes": {
+    "winner": "Vainqueur",
+    "second": "Deuxième prix",
+    "third": "Troisième prix"
+  },
+  "about": {
+    "eyebrow": "About the championship",
+    "title": "Qu’est-ce que Hopeland Global Checkers ?",
+    "teaser": "Hopeland Global Checkers is the world's premier checkers championship — a season-long journey from open regional qualifiers to a live-streamed world final. Every match is judged by a certified referee panel, every player has a path to the top board, and every result is public and verifiable.",
+    "divisions": "Open, Masters, and Junior divisions for every skill level",
+    "learnFormat": "Découvrir le format"
+  },
+  "stats": {
+    "eyebrow": "En chiffres",
+    "title": "Un championnat fondé sur une vraie compétition"
+  },
+  "features": {
+    "eyebrow": "Pourquoi concourir",
+    "title": "Les piliers du championnat",
+    "liveFinals": "Live Finals",
+    "openDivision": "Open Division",
+    "masters": "Masters",
+    "junior": "Junior"
+  },
+  "videos": {
+    "eyebrow": "Media hub",
+    "title": "La route vers le titre"
+  },
+  "dates": {
+    "eyebrow": "Season roadmap",
+    "title": "Dates clés"
+  },
+  "blog": {
+    "eyebrow": "Latest updates",
+    "title": "Actualités du championnat"
+  },
+  "faq": {
+    "eyebrow": "FAQs",
+    "title": "Réponses aux questions fréquentes"
+  },
+  "testimonials": {
+    "eyebrow": "Community",
+    "title": "Rejoignez la communauté qui grandit le plus vite",
+    "subtitle": "Hear from players and coaches across the Hopeland Global Checkers community."
+  },
+  "cta": {
+    "title": "Atlanta, Géorgie, États-Unis — 19–25 juillet 2027",
+    "subtitle": "Global Checkers / Draughts Championship. Register now — your player profile opens only after Stripe payment succeeds."
   }
 }

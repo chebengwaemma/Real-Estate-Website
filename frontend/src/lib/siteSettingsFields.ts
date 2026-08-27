@@ -20,6 +20,7 @@ export const SITE_SETTING_SECTIONS = [
   'Website',
   'Contact',
   'Social',
+  'Prizes',
   'Championship',
   'Announcement',
   'Hero',
@@ -33,14 +34,20 @@ export const SITE_SETTING_FIELDS: SiteSettingFieldDef[] = [
   { key: 'logo_url', label: 'Logo', section: 'Website', type: 'image', storage: 'column', hint: 'Shown in header & footer when set.' },
   { key: 'footer_tagline', label: 'Footer tagline', section: 'Website', type: 'textarea', storage: 'column', rows: 3 },
 
-  { key: 'contact_email', label: 'Contact email', section: 'Contact', type: 'email', storage: 'column' },
+  { key: 'contact_email', label: 'Public contact email', section: 'Contact', type: 'email', storage: 'column', hint: 'Shown on the website. Default: Info@HCheckers.org' },
   { key: 'contact_phone', label: 'Phone', section: 'Contact', type: 'tel', storage: 'column' },
   { key: 'contact_address', label: 'Address', section: 'Contact', type: 'textarea', storage: 'column', rows: 2 },
+  { key: 'registration_from_email', label: 'Registration from-email', section: 'Contact', type: 'email', storage: 'extras', hint: 'Paid players receive confirmation from this address. Default: Admin@HCheckers.org' },
+  { key: 'registration_admin_email', label: 'Admin registration notify email', section: 'Contact', type: 'email', storage: 'extras', hint: 'Receives a copy when someone pays and registers. Default: Admin@HCheckers.org' },
 
-  { key: 'social_twitter', label: 'Twitter / X URL', section: 'Social', type: 'url', storage: 'column' },
-  { key: 'social_instagram', label: 'Instagram URL', section: 'Social', type: 'url', storage: 'column' },
-  { key: 'social_facebook', label: 'Facebook URL', section: 'Social', type: 'url', storage: 'column' },
-  { key: 'social_youtube', label: 'YouTube URL', section: 'Social', type: 'url', storage: 'column' },
+  { key: 'social_twitter', label: 'X (Twitter) URL', section: 'Social', type: 'url', storage: 'column', hint: 'Full profile URL, e.g. https://x.com/yourpage' },
+  { key: 'social_instagram', label: 'Instagram URL', section: 'Social', type: 'url', storage: 'column', hint: 'Full profile URL, e.g. https://instagram.com/yourpage' },
+  { key: 'social_facebook', label: 'Facebook URL', section: 'Social', type: 'url', storage: 'column', hint: 'Full page URL, e.g. https://facebook.com/yourpage' },
+  { key: 'social_youtube', label: 'YouTube URL', section: 'Social', type: 'url', storage: 'column', hint: 'Full channel URL, e.g. https://youtube.com/@yourchannel' },
+
+  { key: 'prize_first', label: 'Winner prize (USD)', section: 'Prizes', type: 'text', storage: 'extras', hint: 'Number only, e.g. 25000. Shown in large type at the top of the homepage.' },
+  { key: 'prize_second', label: 'Second prize (USD)', section: 'Prizes', type: 'text', storage: 'extras', hint: 'Number only, e.g. 10000' },
+  { key: 'prize_third', label: 'Third prize (USD)', section: 'Prizes', type: 'text', storage: 'extras', hint: 'Number only, e.g. 5000' },
 
   { key: 'championship_location', label: 'Location', section: 'Championship', type: 'text', storage: 'column' },
   { key: 'championship_dates', label: 'Dates (display)', section: 'Championship', type: 'text', storage: 'column' },

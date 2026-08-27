@@ -29,6 +29,7 @@ export type RegistrationRow = {
   date_of_birth: string
   city: string
   country: string
+  nationality?: string | null
   phone: string
   email: string
   status: string
@@ -99,6 +100,7 @@ export async function recordPaidRegistration(
     date_of_birth: metadata.date_of_birth,
     city: metadata.city,
     country: metadata.country,
+    nationality: (metadata.nationality || '').trim() || null,
     phone: metadata.phone,
     email: String(metadata.email).trim().toLowerCase(),
     status: 'paid' as const,
@@ -113,6 +115,15 @@ export async function recordPaidRegistration(
     .insert(row as never)
     .select('*')
     .maybeSingle()
+
+  if (insertError && /nationality/i.test(insertError.message || '')) {
+    const { nationality: _n, ...withoutNationality } = row
+    const retry = await supabase.from('registrations').insert(withoutNationality as never).select('*').maybeSingle()
+    if (retry.error && retry.error.code !== '23505') {
+      return { error: retry.error.message, status: 500 }
+    }
+    if (retry.data) return { registration: retry.data as RegistrationRow }
+  }
 
   if (insertError && insertError.code !== '23505') {
     return { error: insertError.message, status: 500 }
@@ -162,6 +173,7 @@ export async function recordFailedRegistration(
     date_of_birth: metadata.date_of_birth,
     city: metadata.city,
     country: metadata.country,
+    nationality: (metadata.nationality || '').trim() || null,
     phone: metadata.phone,
     email: String(metadata.email).trim().toLowerCase(),
     status,

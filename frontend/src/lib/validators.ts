@@ -12,28 +12,37 @@ function isAtLeastAge(minAge: number) {
   }
 }
 
-export const registrationSchema = z.object({
-  firstName: z.string().trim().min(2, 'First name is too short').max(60),
-  lastName: z.string().trim().min(2, 'Last name is too short').max(60),
-  dateOfBirth: z
-    .string()
-    .min(1, 'Date of birth is required')
-    .refine(isAtLeastAge(6), 'Players must be at least 6 years old'),
-  city: z.string().trim().min(2, 'City is required').max(80),
-  country: z.string().trim().min(2, 'Country is required'),
-  phone: z
-    .string()
-    .trim()
-    .min(6, 'Enter a valid phone number')
-    .max(20)
-    .regex(/^[+()\d\s-]+$/, 'Enter a valid phone number'),
-  email: z.string().trim().toLowerCase().email('Enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters').max(72),
-  confirmPassword: z.string().min(6, 'Confirm your password'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Passwords do not match',
-  path: ['confirmPassword'],
-})
+type Translate = (key: string) => string
+
+export function createRegistrationSchema(t: Translate) {
+  return z
+    .object({
+      firstName: z.string().trim().min(2, t('registerForm.errors.firstName')).max(60),
+      lastName: z.string().trim().min(2, t('registerForm.errors.lastName')).max(60),
+      dateOfBirth: z
+        .string()
+        .min(1, t('registerForm.errors.dobRequired'))
+        .refine(isAtLeastAge(6), t('registerForm.errors.dobAge')),
+      city: z.string().trim().min(2, t('registerForm.errors.city')).max(80),
+      country: z.string().trim().min(2, t('registerForm.errors.country')),
+      nationality: z.string().trim().min(2, t('registerForm.errors.nationality')),
+      phone: z
+        .string()
+        .trim()
+        .min(6, t('registerForm.errors.phone'))
+        .max(20)
+        .regex(/^[+()\d\s-]+$/, t('registerForm.errors.phone')),
+      email: z.string().trim().toLowerCase().email(t('registerForm.errors.email')),
+      password: z.string().min(6, t('registerForm.errors.password')).max(72),
+      confirmPassword: z.string().min(6, t('registerForm.errors.confirmPassword')),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t('registerForm.errors.passwordMatch'),
+      path: ['confirmPassword'],
+    })
+}
+
+export const registrationSchema = createRegistrationSchema((key) => key)
 
 export type RegistrationSchema = z.infer<typeof registrationSchema>
 

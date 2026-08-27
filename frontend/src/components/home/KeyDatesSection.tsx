@@ -1,5 +1,6 @@
 import { SectionHeading } from '@/components/common/SectionHeading'
 import { Carousel } from '@/components/common/Carousel'
+import { useTranslation } from 'react-i18next'
 import { TimelineCard } from '@/components/cards/TimelineCard'
 import { useSiteSettings, useTimeline } from '@/hooks/useCms'
 import { defaultTimeline } from '@/lib/cmsDefaults'
@@ -8,6 +9,7 @@ import { CHAMPIONSHIP_DATES, CHAMPIONSHIP_LOCATION } from '@/components/home/Cha
 import type { TimelineItem } from '@/types'
 
 export function KeyDatesSection() {
+  const { t } = useTranslation('home')
   const { data: settings } = useSiteSettings()
   const { data } = useTimeline()
   const location = settings?.championship_location ?? CHAMPIONSHIP_LOCATION
@@ -24,8 +26,8 @@ export function KeyDatesSection() {
     <section className="section-y bg-navy">
       <div className="container-page">
         <SectionHeading
-          eyebrow="SEASON ROADMAP"
-          title="Key Dates"
+          eyebrow={t('dates.eyebrow')}
+          title={t('dates.title')}
           subtitle={`${location} · ${dates}`}
           tone="dark"
         />

@@ -14,6 +14,7 @@ import {
   recordPaidRegistration,
   type PaidCheckoutSession,
 } from '../_shared/recordPaidSession.ts'
+import { sendPaidRegistrationEmails } from '../_shared/sendRegistrationEmails.ts'
 
 Deno.serve(async (req) => {
   const stripeSecret = (Deno.env.get('STRIPE_SECRET_KEY') ?? '')
@@ -64,6 +65,11 @@ Deno.serve(async (req) => {
       if ('error' in recorded) {
         console.error('stripe-webhook record paid failed', recorded.error)
         return new Response('Webhook processing error.', { status: 500 })
+      }
+      try {
+        await sendPaidRegistrationEmails(supabase, recorded.registration)
+      } catch (emailError) {
+        console.error('stripe-webhook registration email failed', emailError)
       }
     }
 

@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AnnouncementBar } from '@/components/layout/AnnouncementBar'
 import { Header } from '@/components/layout/Header'
@@ -6,6 +7,7 @@ import { MobileDrawerMenu } from '@/components/layout/MobileDrawerMenu'
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
 import { Footer } from '@/components/layout/Footer'
 export function PublicLayout() {
+  const { t } = useTranslation()
   const location = useLocation()
 
   return (
@@ -14,7 +16,7 @@ export function PublicLayout() {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
       >
-        Skip to main content
+        {t('footer.skipToContent')}
       </a>
       <div className="sticky top-0 z-40 w-full min-w-0">
         <AnnouncementBar />

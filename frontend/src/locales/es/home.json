@@ -1,9 +1,46 @@
 {
   "hero": {
-    "eyebrow": "Campeonato Mundial",
-    "title": "Donde Cada Movimiento Escribe Historia",
-    "subtitle": "Únete a miles de jugadores de más de 120 países compitiendo por el título mundial de Hopeland Global Checkers — transmitido en vivo, con juicio imparcial y abierto a todos los niveles.",
-    "ctaPrimary": "Regístrate para Competir",
-    "ctaSecondary": "Ver Momentos Destacados"
+    "eyebrow": "Hopeland Global Checkers (Draughts) Federation",
+    "title": "Cada jugada escribe historia",
+    "subtitle": "La casa oficial del Campeonato Mundial de Damas — Atlanta, Georgia, EE. UU., 19–25 de julio de 2027. En directo, con arbitraje justo y abierto a todos los niveles.",
+    "ctaPrimary": "Inscríbete para competir",
+    "ctaProfile": "Perfil",
+    "ctaSecondary": "Ver destacados",
+    "competitionLabel": "Competencia mundial de damas",
+    "officialPartners": "Socios oficiales"
+  },
+  "prizes": {
+    "winner": "Ganador",
+    "second": "Segundo premio",
+    "third": "Tercer premio"
+  },
+  "about": {
+    "eyebrow": "Sobre el campeonato",
+    "title": "¿Qué es Hopeland Global Checkers?",
+    "teaser": "Hopeland Global Checkers es el principal campeonato mundial de damas — un viaje de clasificatorios regionales abiertos hasta una final mundial en directo. Cada partida la juzga un panel de árbitros certificados.",
+    "divisions": "Divisiones Open, Masters y Junior para cada nivel",
+    "learnFormat": "Conoce el formato"
+  },
+  "stats": { "eyebrow": "En cifras", "title": "Un campeonato basado en competencia real" },
+  "features": {
+    "eyebrow": "Por qué competir",
+    "title": "Pilares del campeonato",
+    "liveFinals": "Finales en vivo",
+    "openDivision": "División Open",
+    "masters": "Masters",
+    "junior": "Junior"
+  },
+  "videos": { "eyebrow": "Centro de medios", "title": "El camino al título" },
+  "dates": { "eyebrow": "Calendario", "title": "Fechas clave" },
+  "blog": { "eyebrow": "Últimas noticias", "title": "Novedades del campeonato" },
+  "faq": { "eyebrow": "Preguntas", "title": "Respuestas a dudas frecuentes" },
+  "testimonials": {
+    "eyebrow": "Comunidad",
+    "title": "Únete a la comunidad de más rápido crecimiento",
+    "subtitle": "Escucha a jugadores y entrenadores de Hopeland Global Checkers."
+  },
+  "cta": {
+    "title": "Atlanta, Georgia, EE. UU. — 19–25 de julio de 2027",
+    "subtitle": "Campeonato Mundial de Damas. Regístrate ahora — tu perfil de jugador se abre solo cuando el pago de Stripe se confirma."
   }
 }

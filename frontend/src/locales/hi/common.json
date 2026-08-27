@@ -2,43 +2,225 @@
   "nav": {
     "home": "होम",
     "about": "परिचय",
+    "leadership": "लीडरशिप बोर्ड",
+    "rules": "नियम",
+    "competition2027": "2027 प्रतियोगिता",
     "videos": "वीडियो",
     "blog": "ब्लॉग",
     "sponsors": "प्रायोजक",
-    "contact": "संपर्क करें"
+    "contact": "संपर्क",
+    "sports": "खेल",
+    "register": "रजिस्टर"
   },
   "header": {
     "registerCta": "अभी रजिस्टर करें",
+    "dashboard": "डैशबोर्ड",
     "myProfile": "मेरी प्रोफ़ाइल",
     "signIn": "साइन इन",
-    "account": "अकाउंट"
+    "account": "अकाउंट",
+    "profile": "प्रोफ़ाइल",
+    "admin": "एडमिन",
+    "openMenu": "मेनू खोलें",
+    "closeMenu": "मेनू बंद करें"
   },
   "mobileNav": {
     "home": "होम",
     "videos": "वीडियो",
     "blog": "ब्लॉग",
-    "sports": "स्पोर्ट्स",
-    "register": "रजिस्ट्रेशन",
+    "sports": "खेल",
+    "register": "रजिस्टर",
+    "profile": "प्रोफ़ाइल",
     "menu": "मेनू"
   },
   "announcement": {
-    "text": "चैंपियनशिप के लिए रजिस्ट्रेशन खुला है",
-    "cta": "अपनी जगह सुरक्षित करें"
+    "text": "अटलांटा, जॉर्जिया, यूएसए — 19–25 जुलाई 2027",
+    "cta": "अभी रजिस्टर करें"
   },
   "footer": {
-    "tagline": "अंतरराष्ट्रीय चेकर्स चैंपियनशिप — प्रतिस्पर्धा करें, जुड़ें, और शीर्ष तक पहुंचें।",
+    "tagline": "Hopeland Global Checkers (Draughts) Federation — अटलांटा, जॉर्जिया, यूएसए में विश्व चेकर्स चैंपियनशिप, 19–25 जुलाई 2027।",
     "sitemapHeading": "साइटमैप",
-    "exploreHeading": "एक्सप्लोर करें",
+    "exploreHeading": "एक्सप्लोर",
     "legalHeading": "कानूनी",
     "connectHeading": "जुड़ें",
-    "rights": "सर्वाधिकार सुरक्षित।"
+    "followUs": "Hopeland Checkers को फॉलो करें",
+    "socialHint": "Admin → साइट सेटिंग्स में Facebook, X, YouTube और Instagram लिंक जोड़ें।",
+    "privacy": "गोपनीयता नीति",
+    "terms": "उपयोग की शर्तें",
+    "rights": "सर्वाधिकार सुरक्षित।",
+    "skipToContent": "मुख्य सामग्री पर जाएँ"
+  },
+  "social": {
+    "facebook": "Facebook",
+    "x": "X",
+    "youtube": "YouTube",
+    "instagram": "Instagram"
   },
   "language": {
     "label": "भाषा"
   },
   "buttons": {
-    "learnMore": "अधिक जानें",
+    "learnMore": "और जानें",
     "watchNow": "अभी देखें",
-    "readMore": "और पढ़ें"
+    "readMore": "और पढ़ें",
+    "getInTouch": "संपर्क करें",
+    "sendMessage": "संदेश भेजें",
+    "sending": "भेजा जा रहा है…",
+    "registerNow": "अभी रजिस्टर करें",
+    "howItWorks": "यह कैसे काम करता है",
+    "allVideos": "सभी वीडियो",
+    "allPosts": "सभी पोस्ट"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "चैंपियनशिप के बारे में",
+      "metaTitle": "परिचय",
+      "metaDescription": "Learn how the Hopeland Global Checkers World Championship runs, from regional qualifiers to the live-streamed world final.",
+      "subtitle": "Hopeland Global Checkers brings together players from over 120 countries in a transparent, fairly-judged path from local qualifier to world champion.",
+      "formatEyebrow": "The format",
+      "formatTitle": "चैंपियनशिप कैसे काम करती है",
+      "pillarGlobal": "Global Reach",
+      "pillarGlobalText": "Regional qualifiers run across five continents and feed directly into the World Championship bracket.",
+      "pillarFair": "Certified Fair Play",
+      "pillarFairText": "An independent referee panel and digital move-review system protect every result, every round.",
+      "pillarStakes": "Real Stakes",
+      "pillarStakesText": "A growing prize pool is distributed across finalists in the Open, Masters, and Junior divisions.",
+      "pillarOpen": "Open To Everyone",
+      "pillarOpenText": "From first-time club players to federation-rated masters, there is a division built for every skill level.",
+      "division": "Division",
+      "openDivision": "Open Division",
+      "openDivisionText": "Open to all players. Regional qualifiers determine seeding for the World Championship bracket.",
+      "mastersDivision": "Masters Division",
+      "mastersDivisionText": "Reserved for federation-rated players competing for the highest level of recognition.",
+      "juniorDivision": "Junior Division",
+      "juniorDivisionText": "For competitors under 16, with dedicated qualifiers and a standalone Junior world title.",
+      "locationEyebrow": "Location",
+      "addressTitle": "पता"
+    },
+    "videos": {
+      "eyebrow": "Media hub",
+      "title": "वीडियो और हाइलाइट्स",
+      "subtitle": "Keynotes, match replays, and behind-the-scenes coverage from every stage of the championship.",
+      "metaDescription": "Watch highlights, keynotes, and match replays from the Hopeland Global Checkers World Championship."
+    },
+    "blog": {
+      "eyebrow": "Community & news",
+      "title": "ब्लॉग",
+      "subtitle": "Announcements, player spotlights, and everything happening across the championship season.",
+      "metaDescription": "News, updates, and stories from the Hopeland Global Checkers World Championship.",
+      "empty": "अभी कोई पोस्ट नहीं।"
+    },
+    "sponsors": {
+      "eyebrow": "Our partners",
+      "title": "प्रायोजक",
+      "subtitle": "The organizations powering every board, broadcast, and prize pool of the championship.",
+      "ctaTitle": "चैंपियनशिप स्पॉन्सर बनें",
+      "ctaText": "Reach a global audience of players, coaches, and fans across more than 120 countries.",
+      "metaDescription": "Meet the organizations powering the Hopeland Global Checkers World Championship."
+    },
+    "contact": {
+      "eyebrow": "Get in touch",
+      "title": "संपर्क करें",
+      "subtitle": "Questions about registration, sponsorship, or media? We'd love to hear from you.",
+      "email": "ईमेल",
+      "phone": "फ़ोन",
+      "address": "पता",
+      "fullName": "पूरा नाम",
+      "emailAddress": "Email Address",
+      "subject": "विषय",
+      "message": "संदेश",
+      "success": "धन्यवाद — हमारी टीम जल्द संपर्क करेगी।",
+      "error": "Could not send message.",
+      "metaDescription": "Get in touch with the Hopeland Global Checkers organizing committee."
+    },
+    "register": {
+      "eyebrow": "Join the championship",
+      "title": "अभी रजिस्टर करें",
+      "subtitle": "Pay the registration fee to confirm your spot. If payment fails, nothing is saved — you can register again.",
+      "included": "क्या शामिल है",
+      "perkBracket": "Access to your regional qualifier bracket",
+      "perkStream": "Live-stream credentials for every stage",
+      "perkReferee": "Certified referee panel on every match",
+      "metaDescription": "Register to compete in the Hopeland Global Checkers World Championship."
+    },
+    "login": {
+      "eyebrow": "Player access",
+      "title": "साइन इन",
+      "subtitle": "Use the email and password from your paid registration.",
+      "email": "ईमेल",
+      "password": "पासवर्ड",
+      "submit": "साइन इन",
+      "noAccount": "No account yet?",
+      "registerLink": "Register now",
+      "metaDescription": "Sign in to your Hopeland Global Checkers player profile."
+    },
+    "leadership": {
+      "eyebrow": "Organization",
+      "fallbackTitle": "लीडरशिप बोर्ड",
+      "fallbackBody": "<p>Meet the leadership of Hopeland Global Checkers (Draughts) Federation.</p><p>Edit this page in Admin → Pages to add names, roles, and biographies.</p>"
+    },
+    "rules": {
+      "eyebrow": "Fair play",
+      "fallbackTitle": "नियम",
+      "fallbackBody": "<p>Championship rules, fair-play standards, and competition format will be published here.</p><p>Edit this page in Admin → Pages to add the official rulebook.</p>"
+    },
+    "competition2027": {
+      "eyebrow": "Atlanta 2027",
+      "fallbackTitle": "2027 प्रतियोगिता",
+      "fallbackBody": "<p>The Global Checkers / Draughts Championship takes place in Atlanta, Georgia, USA, July 19–25, 2027.</p><p>Edit this page in Admin → Pages to add schedule, venues, and competition details.</p>"
+    },
+    "privacy": {
+      "eyebrow": "Legal"
+    },
+    "terms": {
+      "eyebrow": "Legal"
+    },
+    "notFound": {
+      "title": "पेज नहीं मिला",
+      "subtitle": "The page you are looking for does not exist.",
+      "home": "होम पर वापस जाएँ"
+    }
+  },
+  "registerForm": {
+    "localMode": "Local payment mode — registration completes here without Stripe Checkout. Your player account opens after this form succeeds.",
+    "payFirst": "Your player account opens only after payment succeeds. If the card is declined, cancelled, or has no balance — no account is created and nothing is saved.",
+    "firstName": "पहला नाम",
+    "lastName": "उपनाम",
+    "dateOfBirth": "जन्म तिथि",
+    "city": "शहर",
+    "country": "देश",
+    "nationality": "राष्ट्रीयता",
+    "phone": "फ़ोन",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "confirmPassword": "पासवर्ड पुष्टि करें",
+    "passwordHint": "Min. 6 characters",
+    "repeatPassword": "Repeat password",
+    "selectCountry": "अपना देश चुनें",
+    "selectNationality": "अपनी राष्ट्रीयता चुनें",
+    "passwordUnlocks": "After payment succeeds, this password unlocks Sign In for your player profile.",
+    "feeLabel": "रजिस्ट्रेशन शुल्क",
+    "feeHint": "Charged only when payment completes",
+    "feeHintLocal": "Recorded locally for this intermediate build",
+    "submit": "अभी रजिस्टर करें",
+    "submitLocal": "Complete Registration",
+    "submitting": "Redirecting…",
+    "completing": "Completing…",
+    "secure": "Payments are securely processed by Stripe. Failed payments create no registration.",
+    "secureLocal": "Local payment mode — Stripe Checkout is disabled for this intermediate build.",
+    "error": "Something went wrong. Please try again.",
+    "errors": {
+      "firstName": "First name is too short",
+      "lastName": "Last name is too short",
+      "dobRequired": "Date of birth is required",
+      "dobAge": "Players must be at least 6 years old",
+      "city": "City is required",
+      "country": "Country is required",
+      "nationality": "Nationality is required",
+      "phone": "Enter a valid phone number",
+      "email": "Enter a valid email address",
+      "password": "Password must be at least 6 characters",
+      "confirmPassword": "Confirm your password",
+      "passwordMatch": "Passwords do not match"
+    }
   }
 }

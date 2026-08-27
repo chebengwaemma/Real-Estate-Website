@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { SectionHeading } from '@/components/common/SectionHeading'
 import { FeatureCard } from '@/components/cards/FeatureCard'
 import { useSiteFeatures } from '@/hooks/useCms'
@@ -7,14 +8,8 @@ import { cmsList } from '@/lib/cmsList'
 import { floatY, floatYSlow, slideByIndex, slideFromLeft, slideFromRight, staggerContainer, viewportOnce } from '@/lib/motion'
 import type { FeatureItem } from '@/types'
 
-const showcase = [
-  { src: '/home/home-feature-live.png', label: 'Live Finals', float: floatY },
-  { src: '/home/home-feature-open.png', label: 'Open Division', float: floatYSlow },
-  { src: '/home/home-feature-masters.png', label: 'Masters', float: floatY },
-  { src: '/home/home-feature-junior.png', label: 'Junior', float: floatYSlow },
-]
-
 export function FeaturesSection() {
+  const { t } = useTranslation('home')
   const { data } = useSiteFeatures()
   const features: FeatureItem[] = cmsList(data, defaultSiteFeatures).map((f) => ({
     id: f.id,
@@ -22,11 +17,17 @@ export function FeaturesSection() {
     title: f.title,
     description: f.description,
   }))
+  const showcase = [
+    { src: '/home/home-feature-live.png', label: t('features.liveFinals'), float: floatY },
+    { src: '/home/home-feature-open.png', label: t('features.openDivision'), float: floatYSlow },
+    { src: '/home/home-feature-masters.png', label: t('features.masters'), float: floatY },
+    { src: '/home/home-feature-junior.png', label: t('features.junior'), float: floatYSlow },
+  ]
 
   return (
     <section className="section-y bg-surface-white">
       <div className="container-page">
-        <SectionHeading eyebrow="WHY COMPETE" title="Core Attributes Of The Championship" />
+        <SectionHeading eyebrow={t('features.eyebrow')} title={t('features.title')} />
 
         <div className="mt-8 grid min-w-0 grid-cols-2 gap-2 sm:mt-12 sm:gap-4 lg:grid-cols-4">
           {showcase.map((item, i) => (

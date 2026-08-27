@@ -2,14 +2,15 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { useSiteSettings } from '@/hooks/useCms'
+import { cmsOrTranslated } from '@/lib/localizedCms'
 
 export function AnnouncementBar() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { isPaidPlayer } = useAuth()
   const { data: settings } = useSiteSettings()
 
-  const text = settings?.announcement_text || t('announcement.text')
-  const cta = settings?.announcement_cta || t('announcement.cta')
+  const text = cmsOrTranslated(i18n.language, settings?.announcement_text, t('announcement.text'))
+  const cta = cmsOrTranslated(i18n.language, settings?.announcement_cta, t('announcement.cta'))
 
   return (
     <div className="relative z-40 bg-black text-white">

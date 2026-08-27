@@ -44,7 +44,9 @@ export function LanguageSwitcher({ tone = 'light' }: { tone?: 'light' | 'dark' }
                     className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-ink hover:bg-black/5"
                   >
                     {lang.nativeLabel}
-                    {i18n.language === lang.code && <Check size={14} className="text-primary" />}
+                    {(i18n.resolvedLanguage || i18n.language).startsWith(lang.code) && (
+                      <Check size={14} className="text-primary" />
+                    )}
                   </button>
                 </li>
               ))}

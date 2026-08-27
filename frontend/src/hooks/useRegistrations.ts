@@ -33,7 +33,7 @@ export function useRegistrationStats(registrations: Registration[] | undefined) 
 
 export type DemoRegistrationInput = Pick<
   Registration,
-  'first_name' | 'last_name' | 'date_of_birth' | 'city' | 'country' | 'phone' | 'email'
+  'first_name' | 'last_name' | 'date_of_birth' | 'city' | 'country' | 'nationality' | 'phone' | 'email'
 >
 
 /**
@@ -49,6 +49,7 @@ export function useCreateDemoRegistration() {
       const registration: Registration = {
         id: crypto.randomUUID(),
         ...input,
+        nationality: input.nationality,
         status: 'paid',
         fee_amount: registrationFee.amount,
         fee_currency: registrationFee.currency,

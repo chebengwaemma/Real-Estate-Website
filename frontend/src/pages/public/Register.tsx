@@ -1,35 +1,39 @@
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { ShieldCheck, Globe2, Clock } from 'lucide-react'
 import { PageHero } from '@/components/layout/PageHero'
 import { RegistrationForm } from '@/components/forms/RegistrationForm'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
 
-const perks = [
-  { icon: Globe2, text: 'Access to your regional qualifier bracket' },
-  { icon: Clock, text: 'Live-stream credentials for every stage' },
-  { icon: ShieldCheck, text: 'Certified referee panel on every match' },
-]
-
 export default function Register() {
+  const { t } = useTranslation()
+  const perks = [
+    { icon: Globe2, text: t('pages.register.perkBracket') },
+    { icon: Clock, text: t('pages.register.perkStream') },
+    { icon: ShieldCheck, text: t('pages.register.perkReferee') },
+  ]
+
   return (
     <>
       <Helmet>
-        <title>Register — {SITE_NAME}</title>
-        <meta name="description" content="Register to compete in the Hopeland Global Checkers World Championship." />
+        <title>
+          {t('pages.register.title')} — {SITE_NAME}
+        </title>
+        <meta name="description" content={t('pages.register.metaDescription')} />
         <link rel="canonical" href={`${SITE_URL}/register`} />
       </Helmet>
 
       <PageHero
-        eyebrow="JOIN THE CHAMPIONSHIP"
-        title="Register Now"
-        subtitle="Pay the registration fee to confirm your spot. If payment fails, nothing is saved — you can register again."
+        eyebrow={t('pages.register.eyebrow')}
+        title={t('pages.register.title')}
+        subtitle={t('pages.register.subtitle')}
       />
 
       <section className="section-y bg-surface-white">
         <div className="container-page grid gap-12 lg:grid-cols-[1fr_1.3fr]">
           <div className="order-2 lg:order-1">
-            <h2 className="text-h3 text-ink">What&rsquo;s included</h2>
+            <h2 className="text-h3 text-ink">{t('pages.register.included')}</h2>
             <div className="mt-6 flex flex-col gap-5">
               {perks.map((perk, i) => (
                 <motion.div
