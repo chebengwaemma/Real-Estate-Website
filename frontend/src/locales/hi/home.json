@@ -1,9 +1,61 @@
 {
   "hero": {
-    "eyebrow": "विश्व चैंपियनशिप",
-    "title": "जहाँ हर चाल इतिहास लिखती है",
-    "subtitle": "120 से अधिक देशों के हज़ारों खिलाड़ियों के साथ जुड़ें, जो Hopeland Global Checkers के विश्व खिताब के लिए प्रतिस्पर्धा कर रहे हैं — लाइव-स्ट्रीम, निष्पक्ष निर्णय, और हर स्तर के लिए खुला।",
-    "ctaPrimary": "प्रतिस्पर्धा के लिए रजिस्टर करें",
-    "ctaSecondary": "हाइलाइट्स देखें"
+    "eyebrow": "Hopeland Global Checkers (Draughts) Federation",
+    "title": "हर चाल इतिहास लिखती है",
+    "subtitle": "The official home of the Global Checkers / Draughts Championship — Atlanta, Georgia, USA, 19–25 July 2027. Live-streamed, fairly judged, and open to every skill level.",
+    "ctaPrimary": "प्रतियोगिता के लिए रजिस्टर करें",
+    "ctaProfile": "प्रोफ़ाइल",
+    "ctaSecondary": "हाइलाइट्स देखें",
+    "competitionLabel": "ग्लोबल चेकर्स / ड्रॉट्स प्रतियोगिता",
+    "officialPartners": "आधिकारिक पार्टनर"
+  },
+  "prizes": {
+    "winner": "विजेता",
+    "second": "दूसरा पुरस्कार",
+    "third": "तीसरा पुरस्कार"
+  },
+  "about": {
+    "eyebrow": "About the championship",
+    "title": "Hopeland Global Checkers क्या है?",
+    "teaser": "Hopeland Global Checkers is the world's premier checkers championship — a season-long journey from open regional qualifiers to a live-streamed world final. Every match is judged by a certified referee panel, every player has a path to the top board, and every result is public and verifiable.",
+    "divisions": "Open, Masters, and Junior divisions for every skill level",
+    "learnFormat": "फ़ॉर्मेट जानें"
+  },
+  "stats": {
+    "eyebrow": "By the numbers",
+    "title": "असली प्रतिस्पर्धा पर बनी चैंपियनशिप"
+  },
+  "features": {
+    "eyebrow": "Why compete",
+    "title": "चैंपियनशिप की मुख्य विशेषताएँ",
+    "liveFinals": "Live Finals",
+    "openDivision": "Open Division",
+    "masters": "Masters",
+    "junior": "Junior"
+  },
+  "videos": {
+    "eyebrow": "Media hub",
+    "title": "खिताब तक का सफ़र देखें"
+  },
+  "dates": {
+    "eyebrow": "Season roadmap",
+    "title": "महत्वपूर्ण तिथियाँ"
+  },
+  "blog": {
+    "eyebrow": "Latest updates",
+    "title": "चैंपियनशिप की खबरें"
+  },
+  "faq": {
+    "eyebrow": "FAQs",
+    "title": "आम सवालों के जवाब"
+  },
+  "testimonials": {
+    "eyebrow": "Community",
+    "title": "सबसे तेज़ी से बढ़ते समुदाय से जुड़ें",
+    "subtitle": "Hear from players and coaches across the Hopeland Global Checkers community."
+  },
+  "cta": {
+    "title": "अटलांटा, जॉर्जिया, यूएसए — 19–25 जुलाई 2027",
+    "subtitle": "Global Checkers / Draughts Championship. Register now — your player profile opens only after Stripe payment succeeds."
   }
 }

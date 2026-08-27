@@ -2,17 +2,26 @@
   "nav": {
     "home": "Home",
     "about": "About",
+    "leadership": "Leadership Board",
+    "rules": "Rules",
+    "competition2027": "2027 Competition",
     "videos": "Videos",
     "blog": "Blog",
     "sponsors": "Sponsors",
-    "contact": "Contact"
+    "contact": "Contact",
+    "sports": "Sports",
+    "register": "Register"
   },
   "header": {
-    "registerCta": "Dashboard",
+    "registerCta": "Register Now",
+    "dashboard": "Dashboard",
     "myProfile": "My Profile",
     "signIn": "Sign In",
     "account": "Account",
-    "profile": "Profile"
+    "profile": "Profile",
+    "admin": "Admin",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "mobileNav": {
     "home": "Home",
@@ -33,7 +42,18 @@
     "exploreHeading": "Explore",
     "legalHeading": "Legal",
     "connectHeading": "Connect",
-    "rights": "All rights reserved."
+    "followUs": "Follow Hopeland Checkers",
+    "socialHint": "Add Facebook, X, YouTube, and Instagram links in Admin → Site Settings.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "rights": "All rights reserved.",
+    "skipToContent": "Skip to main content"
+  },
+  "social": {
+    "facebook": "Facebook",
+    "x": "X",
+    "youtube": "YouTube",
+    "instagram": "Instagram"
   },
   "language": {
     "label": "Language"
@@ -41,6 +61,166 @@
   "buttons": {
     "learnMore": "Learn more",
     "watchNow": "Watch now",
-    "readMore": "Read more"
+    "readMore": "Read more",
+    "getInTouch": "Get in Touch",
+    "sendMessage": "Send Message",
+    "sending": "Sending…",
+    "registerNow": "Register Now",
+    "howItWorks": "How It Works",
+    "allVideos": "All videos",
+    "allPosts": "All posts"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "About the championship",
+      "metaTitle": "About",
+      "metaDescription": "Learn how the Hopeland Global Checkers World Championship runs, from regional qualifiers to the live-streamed world final.",
+      "subtitle": "Hopeland Global Checkers brings together players from over 120 countries in a transparent, fairly-judged path from local qualifier to world champion.",
+      "formatEyebrow": "The format",
+      "formatTitle": "How The Championship Works",
+      "pillarGlobal": "Global Reach",
+      "pillarGlobalText": "Regional qualifiers run across five continents and feed directly into the World Championship bracket.",
+      "pillarFair": "Certified Fair Play",
+      "pillarFairText": "An independent referee panel and digital move-review system protect every result, every round.",
+      "pillarStakes": "Real Stakes",
+      "pillarStakesText": "A growing prize pool is distributed across finalists in the Open, Masters, and Junior divisions.",
+      "pillarOpen": "Open To Everyone",
+      "pillarOpenText": "From first-time club players to federation-rated masters, there is a division built for every skill level.",
+      "division": "Division",
+      "openDivision": "Open Division",
+      "openDivisionText": "Open to all players. Regional qualifiers determine seeding for the World Championship bracket.",
+      "mastersDivision": "Masters Division",
+      "mastersDivisionText": "Reserved for federation-rated players competing for the highest level of recognition.",
+      "juniorDivision": "Junior Division",
+      "juniorDivisionText": "For competitors under 16, with dedicated qualifiers and a standalone Junior world title.",
+      "locationEyebrow": "Location",
+      "addressTitle": "Address"
+    },
+    "videos": {
+      "eyebrow": "Media hub",
+      "title": "Videos & Highlights",
+      "subtitle": "Keynotes, match replays, and behind-the-scenes coverage from every stage of the championship.",
+      "metaDescription": "Watch highlights, keynotes, and match replays from the Hopeland Global Checkers World Championship."
+    },
+    "blog": {
+      "eyebrow": "Community & news",
+      "title": "Blog",
+      "subtitle": "Announcements, player spotlights, and everything happening across the championship season.",
+      "metaDescription": "News, updates, and stories from the Hopeland Global Checkers World Championship.",
+      "empty": "No posts yet."
+    },
+    "sponsors": {
+      "eyebrow": "Our partners",
+      "title": "Sponsors",
+      "subtitle": "The organizations powering every board, broadcast, and prize pool of the championship.",
+      "ctaTitle": "Become a Championship Sponsor",
+      "ctaText": "Reach a global audience of players, coaches, and fans across more than 120 countries.",
+      "metaDescription": "Meet the organizations powering the Hopeland Global Checkers World Championship."
+    },
+    "contact": {
+      "eyebrow": "Get in touch",
+      "title": "Contact Us",
+      "subtitle": "Questions about registration, sponsorship, or media? We'd love to hear from you.",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "fullName": "Full Name",
+      "emailAddress": "Email Address",
+      "subject": "Subject",
+      "message": "Message",
+      "success": "Thanks — our team will get back to you shortly.",
+      "error": "Could not send message.",
+      "metaDescription": "Get in touch with the Hopeland Global Checkers organizing committee."
+    },
+    "register": {
+      "eyebrow": "Join the championship",
+      "title": "Register Now",
+      "subtitle": "Pay the registration fee to confirm your spot. If payment fails, nothing is saved — you can register again.",
+      "included": "What's included",
+      "perkBracket": "Access to your regional qualifier bracket",
+      "perkStream": "Live-stream credentials for every stage",
+      "perkReferee": "Certified referee panel on every match",
+      "metaDescription": "Register to compete in the Hopeland Global Checkers World Championship."
+    },
+    "login": {
+      "eyebrow": "Player access",
+      "title": "Sign In",
+      "subtitle": "Use the email and password from your paid registration.",
+      "email": "Email Address",
+      "password": "Password",
+      "submit": "Sign In",
+      "noAccount": "No account yet?",
+      "registerLink": "Register now",
+      "metaDescription": "Sign in to your Hopeland Global Checkers player profile."
+    },
+    "leadership": {
+      "eyebrow": "Organization",
+      "fallbackTitle": "Leadership Board",
+      "fallbackBody": "<p>Meet the leadership of Hopeland Global Checkers (Draughts) Federation.</p><p>Edit this page in Admin → Pages to add names, roles, and biographies.</p>"
+    },
+    "rules": {
+      "eyebrow": "Fair play",
+      "fallbackTitle": "Rules",
+      "fallbackBody": "<p>Championship rules, fair-play standards, and competition format will be published here.</p><p>Edit this page in Admin → Pages to add the official rulebook.</p>"
+    },
+    "competition2027": {
+      "eyebrow": "Atlanta 2027",
+      "fallbackTitle": "2027 Competition",
+      "fallbackBody": "<p>The Global Checkers / Draughts Championship takes place in Atlanta, Georgia, USA, July 19–25, 2027.</p><p>Edit this page in Admin → Pages to add schedule, venues, and competition details.</p>"
+    },
+    "privacy": {
+      "eyebrow": "Legal"
+    },
+    "terms": {
+      "eyebrow": "Legal"
+    },
+    "notFound": {
+      "title": "Page not found",
+      "subtitle": "The page you are looking for does not exist.",
+      "home": "Back to home"
+    }
+  },
+  "registerForm": {
+    "localMode": "Local payment mode — registration completes here without Stripe Checkout. Your player account opens after this form succeeds.",
+    "payFirst": "Your player account opens only after payment succeeds. If the card is declined, cancelled, or has no balance — no account is created and nothing is saved.",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "dateOfBirth": "Date of Birth",
+    "city": "City",
+    "country": "Country",
+    "nationality": "Nationality",
+    "phone": "Phone Number",
+    "email": "Email Address",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "passwordHint": "Min. 6 characters",
+    "repeatPassword": "Repeat password",
+    "selectCountry": "Select your country",
+    "selectNationality": "Select your nationality",
+    "passwordUnlocks": "After payment succeeds, this password unlocks Sign In for your player profile.",
+    "feeLabel": "Registration Fee",
+    "feeHint": "Charged only when payment completes",
+    "feeHintLocal": "Recorded locally for this intermediate build",
+    "submit": "Register Now",
+    "submitLocal": "Complete Registration",
+    "submitting": "Redirecting…",
+    "completing": "Completing…",
+    "secure": "Payments are securely processed by Stripe. Failed payments create no registration.",
+    "secureLocal": "Local payment mode — Stripe Checkout is disabled for this intermediate build.",
+    "error": "Something went wrong. Please try again.",
+    "errors": {
+      "firstName": "First name is too short",
+      "lastName": "Last name is too short",
+      "dobRequired": "Date of birth is required",
+      "dobAge": "Players must be at least 6 years old",
+      "city": "City is required",
+      "country": "Country is required",
+      "nationality": "Nationality is required",
+      "phone": "Enter a valid phone number",
+      "email": "Enter a valid email address",
+      "password": "Password must be at least 6 characters",
+      "confirmPassword": "Confirm your password",
+      "passwordMatch": "Passwords do not match"
+    }
   }
 }

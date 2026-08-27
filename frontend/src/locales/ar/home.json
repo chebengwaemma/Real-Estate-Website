@@ -1,9 +1,61 @@
 {
   "hero": {
-    "eyebrow": "بطولة العالم",
-    "title": "حيث تكتب كل حركة تاريخًا",
-    "subtitle": "انضم إلى آلاف اللاعبين من أكثر من 120 دولة يتنافسون على لقب بطولة Hopeland Global Checkers العالمية — بالبث المباشر، وبتحكيم عادل، ومفتوحة لجميع المستويات.",
+    "eyebrow": "Hopeland Global Checkers (Draughts) Federation",
+    "title": "كل نقلة تكتب التاريخ",
+    "subtitle": "The official home of the Global Checkers / Draughts Championship — Atlanta, Georgia, USA, 19–25 July 2027. Live-streamed, fairly judged, and open to every skill level.",
     "ctaPrimary": "سجّل للمنافسة",
-    "ctaSecondary": "شاهد أبرز اللحظات"
+    "ctaProfile": "الملف",
+    "ctaSecondary": "شاهد الملخصات",
+    "competitionLabel": "بطولة العالم للداما",
+    "officialPartners": "الشركاء الرسميون"
+  },
+  "prizes": {
+    "winner": "الفائز",
+    "second": "الجائزة الثانية",
+    "third": "الجائزة الثالثة"
+  },
+  "about": {
+    "eyebrow": "About the championship",
+    "title": "ما هو هوبلاند غلوبال تشيكرز؟",
+    "teaser": "Hopeland Global Checkers is the world's premier checkers championship — a season-long journey from open regional qualifiers to a live-streamed world final. Every match is judged by a certified referee panel, every player has a path to the top board, and every result is public and verifiable.",
+    "divisions": "Open, Masters, and Junior divisions for every skill level",
+    "learnFormat": "تعرّف على النظام"
+  },
+  "stats": {
+    "eyebrow": "By the numbers",
+    "title": "بطولة مبنية على منافسة حقيقية"
+  },
+  "features": {
+    "eyebrow": "Why compete",
+    "title": "أسس البطولة",
+    "liveFinals": "Live Finals",
+    "openDivision": "Open Division",
+    "masters": "Masters",
+    "junior": "Junior"
+  },
+  "videos": {
+    "eyebrow": "Media hub",
+    "title": "الطريق إلى اللقب"
+  },
+  "dates": {
+    "eyebrow": "Season roadmap",
+    "title": "المواعيد المهمة"
+  },
+  "blog": {
+    "eyebrow": "Latest updates",
+    "title": "أخبار البطولة"
+  },
+  "faq": {
+    "eyebrow": "FAQs",
+    "title": "إجابات للأسئلة الشائعة"
+  },
+  "testimonials": {
+    "eyebrow": "Community",
+    "title": "انضم إلى المجتمع الأسرع نموًا",
+    "subtitle": "Hear from players and coaches across the Hopeland Global Checkers community."
+  },
+  "cta": {
+    "title": "أتلانتا، جورجيا، الولايات المتحدة — 19–25 يوليو 2027",
+    "subtitle": "Global Checkers / Draughts Championship. Register now — your player profile opens only after Stripe payment succeeds."
   }
 }

@@ -1,9 +1,61 @@
 {
   "hero": {
-    "eyebrow": "世界锦标赛",
-    "title": "每一步都书写历史",
-    "subtitle": "加入来自120多个国家的数千名棋手，共同角逐Hopeland Global Checkers世界冠军称号——全程直播、公平公正、面向所有水平的选手。",
+    "eyebrow": "Hopeland Global Checkers (Draughts) Federation",
+    "title": "每一步都在书写历史",
+    "subtitle": "The official home of the Global Checkers / Draughts Championship — Atlanta, Georgia, USA, 19–25 July 2027. Live-streamed, fairly judged, and open to every skill level.",
     "ctaPrimary": "报名参赛",
-    "ctaSecondary": "观看精彩集锦"
+    "ctaProfile": "资料",
+    "ctaSecondary": "观看集锦",
+    "competitionLabel": "全球跳棋锦标赛",
+    "officialPartners": "官方合作伙伴"
+  },
+  "prizes": {
+    "winner": "冠军",
+    "second": "亚军",
+    "third": "季军"
+  },
+  "about": {
+    "eyebrow": "About the championship",
+    "title": "什么是 Hopeland Global Checkers？",
+    "teaser": "Hopeland Global Checkers is the world's premier checkers championship — a season-long journey from open regional qualifiers to a live-streamed world final. Every match is judged by a certified referee panel, every player has a path to the top board, and every result is public and verifiable.",
+    "divisions": "Open, Masters, and Junior divisions for every skill level",
+    "learnFormat": "了解赛制"
+  },
+  "stats": {
+    "eyebrow": "By the numbers",
+    "title": "建立在真实竞技之上的锦标赛"
+  },
+  "features": {
+    "eyebrow": "Why compete",
+    "title": "锦标赛核心特色",
+    "liveFinals": "Live Finals",
+    "openDivision": "Open Division",
+    "masters": "Masters",
+    "junior": "Junior"
+  },
+  "videos": {
+    "eyebrow": "Media hub",
+    "title": "通往冠军之路"
+  },
+  "dates": {
+    "eyebrow": "Season roadmap",
+    "title": "重要日期"
+  },
+  "blog": {
+    "eyebrow": "Latest updates",
+    "title": "锦标赛新闻"
+  },
+  "faq": {
+    "eyebrow": "FAQs",
+    "title": "常见问题解答"
+  },
+  "testimonials": {
+    "eyebrow": "Community",
+    "title": "加入增长最快的社区",
+    "subtitle": "Hear from players and coaches across the Hopeland Global Checkers community."
+  },
+  "cta": {
+    "title": "美国佐治亚州亚特兰大 — 2027年7月19–25日",
+    "subtitle": "Global Checkers / Draughts Championship. Register now — your player profile opens only after Stripe payment succeeds."
   }
 }

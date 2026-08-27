@@ -9,6 +9,7 @@ interface RegistrationPayload {
   dateOfBirth: string
   city: string
   country: string
+  nationality?: string
   phone: string
   email: string
 }
@@ -159,6 +160,7 @@ async function upsertPaidRegistration(
     date_of_birth: metadata.date_of_birth,
     city: metadata.city,
     country: metadata.country,
+    nationality: (metadata.nationality || '').trim() || null,
     phone: metadata.phone,
     email: String(metadata.email).trim().toLowerCase(),
     status: 'paid',
@@ -407,7 +409,7 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
             }
 
             const { url, serviceKey } = supabaseConfig(env)
-            const feeAmount = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || 1000)
+            const feeAmount = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || 25000)
             const feeCurrency = (
               env.VITE_REGISTRATION_FEE_CURRENCY ||
               env.REGISTRATION_FEE_CURRENCY ||
@@ -426,6 +428,7 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
                   date_of_birth: body.dateOfBirth,
                   city: body.city.trim(),
                   country: body.country.trim(),
+                  nationality: (body.nationality || '').trim() || null,
                   phone: body.phone.trim(),
                   email: body.email.trim().toLowerCase(),
                   status: 'paid',
@@ -451,6 +454,7 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
                 date_of_birth: body.dateOfBirth,
                 city: body.city.trim(),
                 country: body.country.trim(),
+                nationality: (body.nationality || '').trim(),
                 phone: body.phone.trim(),
                 email: body.email.trim().toLowerCase(),
               },
@@ -520,7 +524,7 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
           }
           const body = raw
 
-          const feeAmount = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || 1000)
+          const feeAmount = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || 25000)
           const feeCurrency = (
             env.VITE_REGISTRATION_FEE_CURRENCY ||
             env.REGISTRATION_FEE_CURRENCY ||
@@ -561,6 +565,7 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
           params.set('metadata[date_of_birth]', body.dateOfBirth)
           params.set('metadata[city]', body.city.trim())
           params.set('metadata[country]', body.country.trim())
+          params.set('metadata[nationality]', (body.nationality || body.country).trim())
           params.set('metadata[phone]', body.phone.trim())
           params.set('metadata[email]', email)
 

@@ -6,6 +6,7 @@ import { X } from 'lucide-react'
 import { useUiStore } from '@/store/uiStore'
 import { useAuth } from '@/context/AuthContext'
 import { Button } from '@/components/common/Button'
+import { HEADER_NAV } from '@/config/publicNav'
 import { cn } from '@/lib/utils'
 
 export function MobileDrawerMenu() {
@@ -28,11 +29,7 @@ export function MobileDrawerMenu() {
 
   const navLinks = [
     { to: '/', label: t('mobileNav.home') },
-    { to: '/about', label: t('nav.about') },
-    { to: '/videos', label: t('nav.videos') },
-    { to: '/blog', label: t('nav.blog') },
-    { to: '/sponsors', label: t('nav.sponsors') },
-    { to: '/contact', label: t('nav.contact') },
+    ...HEADER_NAV.map((item) => ({ to: item.to, label: t(item.labelKey) })),
   ]
 
   return (
@@ -53,7 +50,7 @@ export function MobileDrawerMenu() {
             transition={{ type: 'spring', stiffness: 320, damping: 32 }}
             role="dialog"
             aria-modal="true"
-            aria-label="Site navigation"
+            aria-label={t('header.openMenu')}
             className="absolute inset-y-0 right-0 flex w-[min(88vw,24rem)] flex-col bg-navy text-white shadow-2xl"
           >
             <div className="flex shrink-0 items-center justify-between px-5 pt-5 pb-4">
@@ -62,7 +59,7 @@ export function MobileDrawerMenu() {
               </span>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                aria-label="Close menu"
+                aria-label={t('header.closeMenu')}
                 className="rounded-full p-2 hover:bg-white/10"
               >
                 <X size={22} />

@@ -5,9 +5,10 @@ import { cn } from '@/lib/utils'
 interface CountrySelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string
   error?: string
+  placeholder?: string
 }
 
-export function CountrySelect({ label, error, className, id, ...props }: CountrySelectProps) {
+export function CountrySelect({ label, error, placeholder, className, id, ...props }: CountrySelectProps) {
   const fieldId = id ?? props.name
 
   return (
@@ -26,7 +27,7 @@ export function CountrySelect({ label, error, className, id, ...props }: Country
         aria-describedby={error ? `${fieldId}-error` : undefined}
         {...props}
       >
-        <option value="">Select your country</option>
+        <option value="">{placeholder || 'Select your country'}</option>
         {countries.map((country) => (
           <option key={country} value={country}>
             {country}

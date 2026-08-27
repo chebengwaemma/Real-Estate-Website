@@ -2,16 +2,26 @@
   "nav": {
     "home": "Inicio",
     "about": "Acerca de",
+    "leadership": "Junta directiva",
+    "rules": "Reglamento",
+    "competition2027": "Competencia 2027",
     "videos": "Videos",
     "blog": "Blog",
     "sponsors": "Patrocinadores",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "sports": "Deportes",
+    "register": "Registro"
   },
   "header": {
     "registerCta": "Regístrate ahora",
+    "dashboard": "Panel",
     "myProfile": "Mi perfil",
-    "signIn": "Iniciar sesion",
-    "account": "Cuenta"
+    "signIn": "Iniciar sesión",
+    "account": "Cuenta",
+    "profile": "Perfil",
+    "admin": "Admin",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
   },
   "mobileNav": {
     "home": "Inicio",
@@ -19,26 +29,192 @@
     "blog": "Blog",
     "sports": "Deportes",
     "register": "Registro",
+    "profile": "Perfil",
     "menu": "Menú"
   },
   "announcement": {
-    "text": "Las inscripciones para el Campeonato están abiertas",
-    "cta": "Reserva tu lugar"
+    "text": "Atlanta, Georgia, EE. UU. — 19–25 de julio de 2027",
+    "cta": "Regístrate ahora"
   },
   "footer": {
-    "tagline": "El campeonato internacional de damas — compite, conecta y llega al tablero principal.",
+    "tagline": "Hopeland Global Checkers (Draughts) Federation — el Campeonato Mundial de Damas en Atlanta, Georgia, EE. UU., 19–25 de julio de 2027.",
     "sitemapHeading": "Mapa del sitio",
     "exploreHeading": "Explorar",
     "legalHeading": "Legal",
     "connectHeading": "Conéctate",
-    "rights": "Todos los derechos reservados."
+    "followUs": "Sigue a Hopeland Checkers",
+    "socialHint": "Añade Facebook, X, YouTube e Instagram en Admin → Ajustes del sitio.",
+    "privacy": "Política de privacidad",
+    "terms": "Términos de uso",
+    "rights": "Todos los derechos reservados.",
+    "skipToContent": "Saltar al contenido"
   },
-  "language": {
-    "label": "Idioma"
+  "social": {
+    "facebook": "Facebook",
+    "x": "X",
+    "youtube": "YouTube",
+    "instagram": "Instagram"
   },
+  "language": { "label": "Idioma" },
   "buttons": {
     "learnMore": "Más información",
     "watchNow": "Ver ahora",
-    "readMore": "Leer más"
+    "readMore": "Leer más",
+    "getInTouch": "Contactar",
+    "sendMessage": "Enviar mensaje",
+    "sending": "Enviando…",
+    "registerNow": "Regístrate ahora",
+    "howItWorks": "Cómo funciona",
+    "allVideos": "Todos los videos",
+    "allPosts": "Todas las publicaciones"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "Sobre el campeonato",
+      "metaTitle": "Acerca de",
+      "metaDescription": "Cómo se disputa el Campeonato Mundial Hopeland Global Checkers, desde clasificatorios regionales hasta la final en directo.",
+      "subtitle": "Hopeland Global Checkers reúne a jugadores de más de 120 países en un camino transparente y justo, del clasificatorio local al título mundial.",
+      "formatEyebrow": "El formato",
+      "formatTitle": "Cómo funciona el campeonato",
+      "pillarGlobal": "Alcance global",
+      "pillarGlobalText": "Los clasificatorios regionales se disputan en cinco continentes y alimentan directamente el cuadro del Campeonato Mundial.",
+      "pillarFair": "Juego limpio certificado",
+      "pillarFairText": "Un panel independiente de árbitros y un sistema digital de revisión protegen cada resultado.",
+      "pillarStakes": "Premios reales",
+      "pillarStakesText": "Un premio creciente se reparte entre finalistas de las divisiones Open, Masters y Junior.",
+      "pillarOpen": "Abierto a todos",
+      "pillarOpenText": "Desde jugadores de club hasta maestros federados, hay una división para cada nivel.",
+      "division": "División",
+      "openDivision": "División Open",
+      "openDivisionText": "Abierta a todos los jugadores. Los clasificatorios regionales determinan el seeding.",
+      "mastersDivision": "División Masters",
+      "mastersDivisionText": "Reservada a jugadores federados que compiten al más alto nivel.",
+      "juniorDivision": "División Junior",
+      "juniorDivisionText": "Para menores de 16 años, con clasificatorios propios y título mundial Junior.",
+      "locationEyebrow": "Ubicación",
+      "addressTitle": "Dirección"
+    },
+    "videos": {
+      "eyebrow": "Centro de medios",
+      "title": "Videos y destacados",
+      "subtitle": "Conferencias, repeticiones y coberturas de cada fase del campeonato.",
+      "metaDescription": "Mira destacados y repeticiones del Campeonato Mundial Hopeland Global Checkers."
+    },
+    "blog": {
+      "eyebrow": "Comunidad y noticias",
+      "title": "Blog",
+      "subtitle": "Anuncios, protagonistas y todo lo que ocurre en la temporada.",
+      "metaDescription": "Noticias y actualizaciones del Campeonato Mundial Hopeland Global Checkers.",
+      "empty": "Aún no hay publicaciones."
+    },
+    "sponsors": {
+      "eyebrow": "Nuestros socios",
+      "title": "Patrocinadores",
+      "subtitle": "Las organizaciones que impulsan cada tablero, transmisión y premio del campeonato.",
+      "ctaTitle": "Conviértete en patrocinador",
+      "ctaText": "Llega a una audiencia global de jugadores, entrenadores y aficionados en más de 120 países.",
+      "metaDescription": "Conoce a las organizaciones que impulsan el Campeonato Mundial Hopeland Global Checkers."
+    },
+    "contact": {
+      "eyebrow": "Contacto",
+      "title": "Contáctanos",
+      "subtitle": "¿Preguntas sobre registro, patrocinio o medios? Nos encantaría saber de ti.",
+      "email": "Correo",
+      "phone": "Teléfono",
+      "address": "Dirección",
+      "fullName": "Nombre completo",
+      "emailAddress": "Correo electrónico",
+      "subject": "Asunto",
+      "message": "Mensaje",
+      "success": "Gracias — nuestro equipo te responderá pronto.",
+      "error": "No se pudo enviar el mensaje.",
+      "metaDescription": "Contacta al comité organizador de Hopeland Global Checkers."
+    },
+    "register": {
+      "eyebrow": "Únete al campeonato",
+      "title": "Regístrate ahora",
+      "subtitle": "Paga la cuota de inscripción para confirmar tu plaza. Si el pago falla, no se guarda nada.",
+      "included": "Qué incluye",
+      "perkBracket": "Acceso a tu cuadro clasificatorio regional",
+      "perkStream": "Credenciales de transmisión en vivo en cada fase",
+      "perkReferee": "Panel de árbitros certificados en cada partida",
+      "metaDescription": "Inscríbete para competir en el Campeonato Mundial Hopeland Global Checkers."
+    },
+    "login": {
+      "eyebrow": "Acceso de jugador",
+      "title": "Iniciar sesión",
+      "subtitle": "Usa el correo y la contraseña de tu inscripción pagada.",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submit": "Iniciar sesión",
+      "noAccount": "¿Aún no tienes cuenta?",
+      "registerLink": "Regístrate ahora",
+      "metaDescription": "Inicia sesión en tu perfil de jugador de Hopeland Global Checkers."
+    },
+    "leadership": {
+      "eyebrow": "Organización",
+      "fallbackTitle": "Junta directiva",
+      "fallbackBody": "<p>Conoce el liderazgo de Hopeland Global Checkers (Draughts) Federation.</p><p>Edita esta página en Admin → Páginas para añadir nombres, cargos y biografías.</p>"
+    },
+    "rules": {
+      "eyebrow": "Juego limpio",
+      "fallbackTitle": "Reglamento",
+      "fallbackBody": "<p>El reglamento, las normas de juego limpio y el formato se publicarán aquí.</p><p>Edita esta página en Admin → Páginas para añadir el reglamento oficial.</p>"
+    },
+    "competition2027": {
+      "eyebrow": "Atlanta 2027",
+      "fallbackTitle": "Competencia 2027",
+      "fallbackBody": "<p>El Campeonato Mundial de Damas se celebra en Atlanta, Georgia, EE. UU., del 19 al 25 de julio de 2027.</p><p>Edita esta página en Admin → Páginas para añadir calendario, sedes y detalles.</p>"
+    },
+    "privacy": { "eyebrow": "Legal" },
+    "terms": { "eyebrow": "Legal" },
+    "notFound": {
+      "title": "Página no encontrada",
+      "subtitle": "La página que buscas no existe.",
+      "home": "Volver al inicio"
+    }
+  },
+  "registerForm": {
+    "localMode": "Modo de pago local — el registro se completa aquí sin Stripe Checkout.",
+    "payFirst": "Tu cuenta de jugador se abre solo después de un pago exitoso. Si la tarjeta se rechaza o cancela, no se crea ninguna cuenta.",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "dateOfBirth": "Fecha de nacimiento",
+    "city": "Ciudad",
+    "country": "País",
+    "nationality": "Nacionalidad",
+    "phone": "Teléfono",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "passwordHint": "Mín. 6 caracteres",
+    "repeatPassword": "Repite la contraseña",
+    "selectCountry": "Selecciona tu país",
+    "selectNationality": "Selecciona tu nacionalidad",
+    "passwordUnlocks": "Tras el pago, esta contraseña abre el inicio de sesión de tu perfil.",
+    "feeLabel": "Cuota de inscripción",
+    "feeHint": "Se cobra solo cuando el pago se completa",
+    "feeHintLocal": "Registrado localmente en esta versión intermedia",
+    "submit": "Regístrate ahora",
+    "submitLocal": "Completar registro",
+    "submitting": "Redirigiendo…",
+    "completing": "Completando…",
+    "secure": "Los pagos se procesan de forma segura con Stripe. Un pago fallido no crea inscripción.",
+    "secureLocal": "Modo de pago local — Stripe Checkout está desactivado.",
+    "error": "Algo salió mal. Inténtalo de nuevo.",
+    "errors": {
+      "firstName": "El nombre es demasiado corto",
+      "lastName": "El apellido es demasiado corto",
+      "dobRequired": "La fecha de nacimiento es obligatoria",
+      "dobAge": "Los jugadores deben tener al menos 6 años",
+      "city": "La ciudad es obligatoria",
+      "country": "El país es obligatorio",
+      "nationality": "La nacionalidad es obligatoria",
+      "phone": "Introduce un teléfono válido",
+      "email": "Introduce un correo válido",
+      "password": "La contraseña debe tener al menos 6 caracteres",
+      "confirmPassword": "Confirma tu contraseña",
+      "passwordMatch": "Las contraseñas no coinciden"
+    }
   }
 }

@@ -5,6 +5,57 @@
     "subtitle": "The official home of the Global Checkers / Draughts Championship — Atlanta, Georgia, USA, 19–25 July 2027. Live-streamed, fairly judged, and open to every skill level.",
     "ctaPrimary": "Register to Compete",
     "ctaProfile": "Profile",
-    "ctaSecondary": "Watch Highlights"
+    "ctaSecondary": "Watch Highlights",
+    "competitionLabel": "Global Checkers / Draughts Competition",
+    "officialPartners": "Official partners"
+  },
+  "prizes": {
+    "winner": "Winner",
+    "second": "Second Prize",
+    "third": "Third Prize"
+  },
+  "about": {
+    "eyebrow": "About the championship",
+    "title": "What Is Hopeland Global Checkers?",
+    "teaser": "Hopeland Global Checkers is the world's premier checkers championship — a season-long journey from open regional qualifiers to a live-streamed world final. Every match is judged by a certified referee panel, every player has a path to the top board, and every result is public and verifiable.",
+    "divisions": "Open, Masters, and Junior divisions for every skill level",
+    "learnFormat": "Learn about the format"
+  },
+  "stats": {
+    "eyebrow": "By the numbers",
+    "title": "A Championship Built On Real Competition"
+  },
+  "features": {
+    "eyebrow": "Why compete",
+    "title": "Core Attributes Of The Championship",
+    "liveFinals": "Live Finals",
+    "openDivision": "Open Division",
+    "masters": "Masters",
+    "junior": "Junior"
+  },
+  "videos": {
+    "eyebrow": "Media hub",
+    "title": "Watch The Road To The Title"
+  },
+  "dates": {
+    "eyebrow": "Season roadmap",
+    "title": "Key Dates"
+  },
+  "blog": {
+    "eyebrow": "Latest updates",
+    "title": "News From The Championship"
+  },
+  "faq": {
+    "eyebrow": "FAQs",
+    "title": "Answers For Common Questions"
+  },
+  "testimonials": {
+    "eyebrow": "Community",
+    "title": "Join The Fastest Growing Community",
+    "subtitle": "Hear from players and coaches across the Hopeland Global Checkers community."
+  },
+  "cta": {
+    "title": "Atlanta, Georgia, USA — July 19–25, 2027",
+    "subtitle": "Global Checkers / Draughts Championship. Register now — your player profile opens only after Stripe payment succeeds."
   }
 }

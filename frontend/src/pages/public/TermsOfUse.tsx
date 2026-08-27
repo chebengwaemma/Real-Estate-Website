@@ -4,6 +4,7 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
 import { useCmsPage } from '@/hooks/useCms'
 import { defaultCmsPages } from '@/lib/cmsDefaults'
+import { useTranslation } from 'react-i18next'
 
 function renderBody(body: string) {
   const looksHtml = /<\/?[a-z][\s\S]*>/i.test(body)
@@ -14,6 +15,7 @@ function renderBody(body: string) {
 }
 
 export default function TermsOfUse() {
+  const { t } = useTranslation()
   const { data: page, isLoading } = useCmsPage('terms-of-use')
   const fallback = defaultCmsPages.find((p) => p.slug === 'terms-of-use')
   const title = page?.title ?? fallback?.title ?? 'Terms of Use'
@@ -26,7 +28,7 @@ export default function TermsOfUse() {
         <link rel="canonical" href={`${SITE_URL}/terms-of-use`} />
       </Helmet>
 
-      <PageHero eyebrow="LEGAL" title={title} />
+      <PageHero eyebrow={t('pages.terms.eyebrow')} title={title} />
 
       <section className="section-y bg-surface-white">
         <div className="container-page max-w-3xl text-ink/80">

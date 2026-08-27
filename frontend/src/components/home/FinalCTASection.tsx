@@ -3,14 +3,15 @@ import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/common/Button'
 import { useSiteSettings } from '@/hooks/useCms'
+import { cmsOrTranslated } from '@/lib/localizedCms'
+import { useTranslation } from 'react-i18next'
 import { slideFromLeft, slideFromRight, staggerContainer, viewportOnce } from '@/lib/motion'
 
 export function FinalCTASection() {
+  const { t, i18n } = useTranslation(['home', 'common'])
   const { data: settings } = useSiteSettings()
-  const title = settings?.final_cta_title ?? 'Atlanta, Georgia, USA — July 19–25, 2027'
-  const subtitle =
-    settings?.final_cta_subtitle ??
-    'Global Checkers / Draughts Championship. Register now — your player profile opens only after Stripe payment succeeds.'
+  const title = cmsOrTranslated(i18n.language, settings?.final_cta_title, t('cta.title'))
+  const subtitle = cmsOrTranslated(i18n.language, settings?.final_cta_subtitle, t('cta.subtitle'))
 
   return (
     <section className="relative overflow-hidden bg-navy text-white">
@@ -40,12 +41,12 @@ export function FinalCTASection() {
           >
             <Link to="/register" className="min-w-0 sm:flex-none">
               <Button size="lg" icon={<ArrowRight size={18} />} className="w-full sm:w-auto">
-                Register Now
+                {t('buttons.registerNow', { ns: 'common' })}
               </Button>
             </Link>
             <Link to="/about" className="min-w-0 sm:flex-none">
               <Button size="lg" variant="outline" className="w-full border-white/40 text-white sm:w-auto">
-                How It Works
+                {t('buttons.howItWorks', { ns: 'common' })}
               </Button>
             </Link>
           </motion.div>

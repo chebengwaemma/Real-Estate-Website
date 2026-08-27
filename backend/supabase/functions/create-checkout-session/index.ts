@@ -9,6 +9,7 @@ interface RegistrationPayload {
   dateOfBirth: string
   city: string
   country: string
+  nationality?: string
   phone: string
   email: string
 }
@@ -85,7 +86,7 @@ Deno.serve(async (req) => {
       })
     }
 
-    const feeAmount = Number(Deno.env.get('REGISTRATION_FEE_AMOUNT') ?? '1000')
+    const feeAmount = Number(Deno.env.get('REGISTRATION_FEE_AMOUNT') ?? '25000')
     const feeCurrency = (Deno.env.get('REGISTRATION_FEE_CURRENCY') ?? 'usd').toLowerCase()
     if (!Number.isFinite(feeAmount) || feeAmount < 50) {
       return json(500, { error: 'Invalid registration fee configuration.' })
@@ -141,6 +142,7 @@ Deno.serve(async (req) => {
     params.set('metadata[date_of_birth]', body.dateOfBirth)
     params.set('metadata[city]', body.city.trim())
     params.set('metadata[country]', body.country.trim())
+    params.set('metadata[nationality]', (body.nationality || body.country).trim())
     params.set('metadata[phone]', body.phone.trim())
     params.set('metadata[email]', email)
 

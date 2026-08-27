@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { PageHero } from '@/components/layout/PageHero'
 import { BlogCard } from '@/components/cards/BlogCard'
@@ -7,17 +8,20 @@ import { useBlogPosts } from '@/hooks/useBlogPosts'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
 
 export default function Blog() {
+  const { t } = useTranslation()
   const { data: posts, isLoading } = useBlogPosts()
 
   return (
     <>
       <Helmet>
-        <title>Blog — {SITE_NAME}</title>
-        <meta name="description" content="News, updates, and stories from the Hopeland Global Checkers World Championship." />
+        <title>
+          {t('pages.blog.title')} — {SITE_NAME}
+        </title>
+        <meta name="description" content={t('pages.blog.metaDescription')} />
         <link rel="canonical" href={`${SITE_URL}/blog`} />
       </Helmet>
 
-      <PageHero eyebrow="COMMUNITY & NEWS" title="Blog" subtitle="Announcements, player spotlights, and everything happening across the championship season." />
+      <PageHero eyebrow={t('pages.blog.eyebrow')} title={t('pages.blog.title')} subtitle={t('pages.blog.subtitle')} />
 
       <section className="section-y bg-surface-white">
         <div className="container-page">

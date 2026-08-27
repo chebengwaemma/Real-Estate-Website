@@ -1,17 +1,27 @@
 {
   "nav": {
     "home": "首页",
-    "about": "关于我们",
+    "about": "关于",
+    "leadership": "领导委员会",
+    "rules": "规则",
+    "competition2027": "2027 赛事",
     "videos": "视频",
     "blog": "博客",
     "sponsors": "赞助商",
-    "contact": "联系我们"
+    "contact": "联系",
+    "sports": "体育",
+    "register": "报名"
   },
   "header": {
     "registerCta": "立即报名",
+    "dashboard": "控制台",
     "myProfile": "我的资料",
     "signIn": "登录",
-    "account": "账户"
+    "account": "账户",
+    "profile": "资料",
+    "admin": "管理",
+    "openMenu": "打开菜单",
+    "closeMenu": "关闭菜单"
   },
   "mobileNav": {
     "home": "首页",
@@ -19,19 +29,31 @@
     "blog": "博客",
     "sports": "体育",
     "register": "报名",
+    "profile": "资料",
     "menu": "菜单"
   },
   "announcement": {
-    "text": "锦标赛报名现已开放",
-    "cta": "立即抢占名额"
+    "text": "美国佐治亚州亚特兰大 — 2027年7月19–25日",
+    "cta": "立即报名"
   },
   "footer": {
-    "tagline": "国际跳棋锦标赛——参赛、连接，登上最高棋盘。",
+    "tagline": "Hopeland Global Checkers（国际跳棋）联合会 — 2027年7月19–25日于美国佐治亚州亚特兰大举办全球跳棋锦标赛。",
     "sitemapHeading": "网站地图",
     "exploreHeading": "探索",
-    "legalHeading": "法律信息",
+    "legalHeading": "法律",
     "connectHeading": "关注我们",
-    "rights": "版权所有。"
+    "followUs": "关注 Hopeland Checkers",
+    "socialHint": "请在管理后台 → 网站设置中添加 Facebook、X、YouTube 和 Instagram 链接。",
+    "privacy": "隐私政策",
+    "terms": "使用条款",
+    "rights": "版权所有。",
+    "skipToContent": "跳到正文"
+  },
+  "social": {
+    "facebook": "Facebook",
+    "x": "X",
+    "youtube": "YouTube",
+    "instagram": "Instagram"
   },
   "language": {
     "label": "语言"
@@ -39,6 +61,166 @@
   "buttons": {
     "learnMore": "了解更多",
     "watchNow": "立即观看",
-    "readMore": "阅读更多"
+    "readMore": "阅读更多",
+    "getInTouch": "联系我们",
+    "sendMessage": "发送消息",
+    "sending": "发送中…",
+    "registerNow": "立即报名",
+    "howItWorks": "如何运作",
+    "allVideos": "全部视频",
+    "allPosts": "全部文章"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "关于锦标赛",
+      "metaTitle": "关于",
+      "metaDescription": "Learn how the Hopeland Global Checkers World Championship runs, from regional qualifiers to the live-streamed world final.",
+      "subtitle": "Hopeland Global Checkers brings together players from over 120 countries in a transparent, fairly-judged path from local qualifier to world champion.",
+      "formatEyebrow": "The format",
+      "formatTitle": "锦标赛如何进行",
+      "pillarGlobal": "Global Reach",
+      "pillarGlobalText": "Regional qualifiers run across five continents and feed directly into the World Championship bracket.",
+      "pillarFair": "Certified Fair Play",
+      "pillarFairText": "An independent referee panel and digital move-review system protect every result, every round.",
+      "pillarStakes": "Real Stakes",
+      "pillarStakesText": "A growing prize pool is distributed across finalists in the Open, Masters, and Junior divisions.",
+      "pillarOpen": "Open To Everyone",
+      "pillarOpenText": "From first-time club players to federation-rated masters, there is a division built for every skill level.",
+      "division": "Division",
+      "openDivision": "Open Division",
+      "openDivisionText": "Open to all players. Regional qualifiers determine seeding for the World Championship bracket.",
+      "mastersDivision": "Masters Division",
+      "mastersDivisionText": "Reserved for federation-rated players competing for the highest level of recognition.",
+      "juniorDivision": "Junior Division",
+      "juniorDivisionText": "For competitors under 16, with dedicated qualifiers and a standalone Junior world title.",
+      "locationEyebrow": "Location",
+      "addressTitle": "地址"
+    },
+    "videos": {
+      "eyebrow": "Media hub",
+      "title": "视频与精彩集锦",
+      "subtitle": "Keynotes, match replays, and behind-the-scenes coverage from every stage of the championship.",
+      "metaDescription": "Watch highlights, keynotes, and match replays from the Hopeland Global Checkers World Championship."
+    },
+    "blog": {
+      "eyebrow": "Community & news",
+      "title": "博客",
+      "subtitle": "Announcements, player spotlights, and everything happening across the championship season.",
+      "metaDescription": "News, updates, and stories from the Hopeland Global Checkers World Championship.",
+      "empty": "暂无文章。"
+    },
+    "sponsors": {
+      "eyebrow": "Our partners",
+      "title": "赞助商",
+      "subtitle": "The organizations powering every board, broadcast, and prize pool of the championship.",
+      "ctaTitle": "成为锦标赛赞助商",
+      "ctaText": "Reach a global audience of players, coaches, and fans across more than 120 countries.",
+      "metaDescription": "Meet the organizations powering the Hopeland Global Checkers World Championship."
+    },
+    "contact": {
+      "eyebrow": "Get in touch",
+      "title": "联系我们",
+      "subtitle": "Questions about registration, sponsorship, or media? We'd love to hear from you.",
+      "email": "电子邮件",
+      "phone": "电话",
+      "address": "地址",
+      "fullName": "姓名",
+      "emailAddress": "Email Address",
+      "subject": "主题",
+      "message": "留言",
+      "success": "谢谢 — 我们的团队会尽快回复。",
+      "error": "Could not send message.",
+      "metaDescription": "Get in touch with the Hopeland Global Checkers organizing committee."
+    },
+    "register": {
+      "eyebrow": "Join the championship",
+      "title": "立即报名",
+      "subtitle": "Pay the registration fee to confirm your spot. If payment fails, nothing is saved — you can register again.",
+      "included": "包含内容",
+      "perkBracket": "Access to your regional qualifier bracket",
+      "perkStream": "Live-stream credentials for every stage",
+      "perkReferee": "Certified referee panel on every match",
+      "metaDescription": "Register to compete in the Hopeland Global Checkers World Championship."
+    },
+    "login": {
+      "eyebrow": "Player access",
+      "title": "登录",
+      "subtitle": "Use the email and password from your paid registration.",
+      "email": "电子邮件",
+      "password": "密码",
+      "submit": "登录",
+      "noAccount": "No account yet?",
+      "registerLink": "Register now",
+      "metaDescription": "Sign in to your Hopeland Global Checkers player profile."
+    },
+    "leadership": {
+      "eyebrow": "Organization",
+      "fallbackTitle": "领导委员会",
+      "fallbackBody": "<p>Meet the leadership of Hopeland Global Checkers (Draughts) Federation.</p><p>Edit this page in Admin → Pages to add names, roles, and biographies.</p>"
+    },
+    "rules": {
+      "eyebrow": "Fair play",
+      "fallbackTitle": "规则",
+      "fallbackBody": "<p>Championship rules, fair-play standards, and competition format will be published here.</p><p>Edit this page in Admin → Pages to add the official rulebook.</p>"
+    },
+    "competition2027": {
+      "eyebrow": "Atlanta 2027",
+      "fallbackTitle": "2027 赛事",
+      "fallbackBody": "<p>The Global Checkers / Draughts Championship takes place in Atlanta, Georgia, USA, July 19–25, 2027.</p><p>Edit this page in Admin → Pages to add schedule, venues, and competition details.</p>"
+    },
+    "privacy": {
+      "eyebrow": "Legal"
+    },
+    "terms": {
+      "eyebrow": "Legal"
+    },
+    "notFound": {
+      "title": "页面未找到",
+      "subtitle": "The page you are looking for does not exist.",
+      "home": "返回首页"
+    }
+  },
+  "registerForm": {
+    "localMode": "Local payment mode — registration completes here without Stripe Checkout. Your player account opens after this form succeeds.",
+    "payFirst": "Your player account opens only after payment succeeds. If the card is declined, cancelled, or has no balance — no account is created and nothing is saved.",
+    "firstName": "名",
+    "lastName": "姓",
+    "dateOfBirth": "出生日期",
+    "city": "城市",
+    "country": "国家",
+    "nationality": "国籍",
+    "phone": "电话",
+    "email": "电子邮件",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "passwordHint": "Min. 6 characters",
+    "repeatPassword": "Repeat password",
+    "selectCountry": "选择国家",
+    "selectNationality": "选择国籍",
+    "passwordUnlocks": "After payment succeeds, this password unlocks Sign In for your player profile.",
+    "feeLabel": "报名费",
+    "feeHint": "Charged only when payment completes",
+    "feeHintLocal": "Recorded locally for this intermediate build",
+    "submit": "立即报名",
+    "submitLocal": "Complete Registration",
+    "submitting": "Redirecting…",
+    "completing": "Completing…",
+    "secure": "Payments are securely processed by Stripe. Failed payments create no registration.",
+    "secureLocal": "Local payment mode — Stripe Checkout is disabled for this intermediate build.",
+    "error": "Something went wrong. Please try again.",
+    "errors": {
+      "firstName": "First name is too short",
+      "lastName": "Last name is too short",
+      "dobRequired": "Date of birth is required",
+      "dobAge": "Players must be at least 6 years old",
+      "city": "City is required",
+      "country": "Country is required",
+      "nationality": "Nationality is required",
+      "phone": "Enter a valid phone number",
+      "email": "Enter a valid email address",
+      "password": "Password must be at least 6 characters",
+      "confirmPassword": "Confirm your password",
+      "passwordMatch": "Passwords do not match"
+    }
   }
 }

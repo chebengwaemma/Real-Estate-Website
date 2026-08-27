@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
@@ -13,6 +14,7 @@ import { isSupabaseConfigured } from '@/lib/supabaseClient'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
 
 export default function Login() {
+  const { t } = useTranslation()
   const { isAuthenticated, isAdmin, isPaidPlayer, signIn, signOut } = useAuth()
   const navigate = useNavigate()
   const setRegistrantId = useRegistrantStore((s) => s.setRegistrantId)
@@ -76,15 +78,17 @@ export default function Login() {
   return (
     <>
       <Helmet>
-        <title>Sign In — {SITE_NAME}</title>
-        <meta name="description" content="Sign in to your Hopeland Global Checkers player profile." />
+        <title>
+          {t('pages.login.title')} — {SITE_NAME}
+        </title>
+        <meta name="description" content={t('pages.login.metaDescription')} />
         <link rel="canonical" href={`${SITE_URL}/login`} />
       </Helmet>
 
       <PageHero
-        eyebrow="PLAYER ACCESS"
-        title="Sign In"
-        subtitle="Only paid players can sign in. Use the email and password from your successful Register Now payment."
+        eyebrow={t('pages.login.eyebrow')}
+        title={t('pages.login.title')}
+        subtitle={t('pages.login.subtitle')}
       />
 
       <section className="section-y bg-surface-white">
@@ -102,7 +106,7 @@ export default function Login() {
 
             <form onSubmit={onSubmit} className="flex flex-col gap-4">
               <FormField
-                label="Email"
+                label={t('pages.login.email')}
                 type="email"
                 autoComplete="email"
                 required
@@ -110,7 +114,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
               />
               <FormField
-                label="Password"
+                label={t('pages.login.password')}
                 type="password"
                 autoComplete="current-password"
                 required
@@ -125,14 +129,14 @@ export default function Login() {
                 className="mt-2 w-full"
                 icon={submitting ? <Loader2 className="animate-spin" size={18} /> : <LogIn size={18} />}
               >
-                {submitting ? 'Signing in…' : 'Login Now'}
+                {submitting ? t('buttons.sending') : t('pages.login.submit')}
               </Button>
             </form>
 
             <p className="mt-6 text-center text-sm text-muted">
-              Not registered yet?{' '}
+              {t('pages.login.noAccount')}{' '}
               <Link to="/register" className="font-semibold text-primary hover:underline">
-                Register Now
+                {t('pages.login.registerLink')}
               </Link>
             </p>
           </motion.div>

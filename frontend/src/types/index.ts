@@ -53,6 +53,7 @@ export interface RegistrationFormValues {
   dateOfBirth: string
   city: string
   country: string
+  nationality: string
   phone: string
   email: string
 }

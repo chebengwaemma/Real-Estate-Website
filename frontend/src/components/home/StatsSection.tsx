@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { SectionHeading } from '@/components/common/SectionHeading'
 import { StatCard } from '@/components/cards/StatCard'
 import { useSiteStats } from '@/hooks/useCms'
@@ -8,6 +9,7 @@ import { slideByIndex, staggerContainer, viewportOnce } from '@/lib/motion'
 import type { StatItem } from '@/types'
 
 export function StatsSection() {
+  const { t } = useTranslation('home')
   const { data } = useSiteStats()
   const stats: StatItem[] = cmsList(data, defaultSiteStats).map((s) => ({
     id: s.id,
@@ -22,8 +24,8 @@ export function StatsSection() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.12),transparent_45%)]" />
       <div className="container-page relative">
         <SectionHeading
-          eyebrow="BY THE NUMBERS"
-          title="A Championship Built On Real Competition"
+          eyebrow={t('stats.eyebrow')}
+          title={t('stats.title')}
           tone="dark"
         />
         <motion.div

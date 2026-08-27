@@ -10,6 +10,7 @@ function toRow(registration: Registration) {
     'Date of Birth': formatDate(registration.date_of_birth),
     City: registration.city,
     Country: registration.country,
+    Nationality: registration.nationality ?? '',
     Phone: registration.phone,
     Email: registration.email,
     Status: registration.status,

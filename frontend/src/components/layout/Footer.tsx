@@ -1,39 +1,23 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Camera, MessageCircle, Play, Send } from 'lucide-react'
 import { useSiteSettings } from '@/hooks/useCms'
+import { SocialLinks } from '@/components/layout/SocialLinks'
+import { FOOTER_LEGAL, FOOTER_NAV } from '@/config/publicNav'
+import { cmsOrTranslated } from '@/lib/localizedCms'
+import { publicContactEmail } from '@/lib/publicContactEmail'
 
 export function Footer() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { data: settings } = useSiteSettings()
-  const tagline = settings?.footer_tagline || t('footer.tagline')
+  const tagline = cmsOrTranslated(i18n.language, settings?.footer_tagline, t('footer.tagline'))
   const brand = settings?.site_name || 'Hopeland Global Checkers'
   const logoUrl = settings?.logo_url?.trim() || ''
-  const email = settings?.contact_email || ''
+  const email = publicContactEmail(settings?.contact_email)
   const phone = settings?.contact_phone?.trim() || ''
   const address = settings?.contact_address?.trim() || ''
 
-  const sitemapLinks = [
-    { to: '/', label: t('nav.home') },
-    { to: '/about', label: t('nav.about') },
-    { to: '/videos', label: t('nav.videos') },
-    { to: '/blog', label: t('nav.blog') },
-    { to: '/sponsors', label: t('nav.sponsors') },
-    { to: '/register', label: t('header.registerCta') },
-  ]
-
-  const legalLinks = [
-    { to: '/privacy-policy', label: 'Privacy Policy' },
-    { to: '/terms-of-use', label: 'Terms of Use' },
-    { to: '/contact', label: t('nav.contact') },
-  ]
-
-  const socials = [
-    { icon: Send, href: settings?.social_twitter || '#', label: 'X / Twitter' },
-    { icon: Camera, href: settings?.social_instagram || '#', label: 'Instagram' },
-    { icon: MessageCircle, href: settings?.social_facebook || '#', label: 'Facebook' },
-    { icon: Play, href: settings?.social_youtube || '#', label: 'YouTube' },
-  ].filter((s) => s.href && s.href !== '#')
+  const sitemapLinks = FOOTER_NAV.map((item) => ({ to: item.to, label: t(item.labelKey) }))
+  const legalLinks = FOOTER_LEGAL.map((item) => ({ to: item.to, label: t(item.labelKey) }))
 
   return (
     <footer className="bg-navy pb-[calc(5rem+env(safe-area-inset-bottom))] text-white/70 lg:pb-0">
@@ -49,44 +33,26 @@ export function Footer() {
             </p>
           </div>
           <p className="text-body-lg mt-5 text-white/60">{tagline}</p>
-          {(email || phone || address) && (
-            <div className="mt-5 space-y-1 text-sm text-white/55">
-              {email ? (
-                <p>
-                  <a href={`mailto:${email}`} className="hover:text-white">
-                    {email}
-                  </a>
-                </p>
-              ) : null}
-              {phone ? (
-                <p>
-                  <a href={`tel:${phone.replace(/\s+/g, '')}`} className="hover:text-white">
-                    {phone}
-                  </a>
-                </p>
-              ) : null}
-              {address ? <p className="whitespace-pre-line">{address}</p> : null}
-            </div>
-          )}
+          <div className="mt-5 space-y-1 text-sm text-white/55">
+            <p>
+              <a href={`mailto:${email}`} className="hover:text-white">
+                {email}
+              </a>
+            </p>
+            {phone ? (
+              <p>
+                <a href={`tel:${phone.replace(/\s+/g, '')}`} className="hover:text-white">
+                  {phone}
+                </a>
+              </p>
+            ) : null}
+            {address ? <p className="whitespace-pre-line">{address}</p> : null}
+          </div>
+          <p className="mt-6 text-xs font-semibold uppercase tracking-wider text-white/50">{t('footer.followUs')}</p>
+          <SocialLinks className="mt-3" />
           <p className="mt-8 text-xs text-white/40">
             &copy; {new Date().getFullYear()} {brand}
           </p>
-          {socials.length > 0 ? (
-            <div className="mt-6 flex flex-wrap gap-3">
-              {socials.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={s.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-primary hover:text-white"
-                >
-                  <s.icon size={18} />
-                </a>
-              ))}
-            </div>
-          ) : null}
         </div>
 
         <div className="min-w-0 w-full lg:w-auto">

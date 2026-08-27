@@ -19,7 +19,7 @@ export const defaultSiteSettings: SiteSettings = {
   championship_dates_end: '2027-07-25',
   announcement_text: 'Atlanta, Georgia, USA — July 19–25, 2027',
   announcement_cta: 'Register now',
-  contact_email: 'contact@hcheckers.org',
+  contact_email: 'Info@HCheckers.org',
   contact_phone: '',
   contact_address: 'Atlanta, Georgia, USA',
   site_name: 'Hopeland Global Checkers',
@@ -40,7 +40,13 @@ export const defaultSiteSettings: SiteSettings = {
     'Global Checkers / Draughts Championship. Register now — your player profile opens only after Stripe payment succeeds.',
   about_teaser:
     "Hopeland Global Checkers is the world's premier checkers championship — a season-long journey from open regional qualifiers to a live-streamed world final. Every match is judged by a certified referee panel, every player has a path to the top board, and every result is public and verifiable.",
-  extras: {},
+  extras: {
+    prize_first: '25000',
+    prize_second: '10000',
+    prize_third: '5000',
+    registration_from_email: 'Admin@HCheckers.org',
+    registration_admin_email: 'Admin@HCheckers.org',
+  },
   updated_at: new Date().toISOString(),
 }
 
@@ -97,7 +103,7 @@ export const defaultCmsPages: CmsPage[] = [
     id: 'p-privacy',
     slug: 'privacy-policy',
     title: 'Privacy Policy',
-    body: '<p>We collect registration and account information needed to run the championship. Payment details are processed by Stripe and are not stored on our servers.</p><p>Contact us at contact@hcheckers.org with privacy questions.</p>',
+    body: '<p>We collect registration and account information needed to run the championship. Payment details are processed by Stripe and are not stored on our servers.</p><p>Contact us at Info@HCheckers.org with privacy questions.</p>',
     updated_at: '',
   },
   {
@@ -105,6 +111,27 @@ export const defaultCmsPages: CmsPage[] = [
     slug: 'terms-of-use',
     title: 'Terms of Use',
     body: '<p>By registering you agree to championship rules, fair play standards, and the registration fee terms. Fees are refundable only as stated on the registration page.</p>',
+    updated_at: '',
+  },
+  {
+    id: 'p-leadership',
+    slug: 'leadership',
+    title: 'Leadership Board',
+    body: '<p>Meet the leadership of Hopeland Global Checkers (Draughts) Federation.</p><p>Edit this page in Admin → Pages to add names, roles, and biographies.</p>',
+    updated_at: '',
+  },
+  {
+    id: 'p-rules',
+    slug: 'rules',
+    title: 'Rules',
+    body: '<p>Championship rules, fair-play standards, and competition format will be published here.</p><p>Edit this page in Admin → Pages to add the official rulebook.</p>',
+    updated_at: '',
+  },
+  {
+    id: 'p-competition',
+    slug: 'competition-2027',
+    title: '2027 Competition',
+    body: '<p>The Global Checkers / Draughts Championship takes place in Atlanta, Georgia, USA, July 19–25, 2027.</p><p>Edit this page in Admin → Pages to add schedule, venues, and competition details.</p>',
     updated_at: '',
   },
 ]

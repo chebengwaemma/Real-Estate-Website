@@ -6,6 +6,7 @@ import { LanguageSwitcher } from '@/components/common/LanguageSwitcher'
 import { useUiStore } from '@/store/uiStore'
 import { useAuth } from '@/context/AuthContext'
 import { useSiteSettings } from '@/hooks/useCms'
+import { HEADER_NAV } from '@/config/publicNav'
 import { cn } from '@/lib/utils'
 
 export function Header() {
@@ -24,14 +25,7 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const navLinks = [
-    { to: '/about', label: t('nav.about') },
-    { to: '/videos', label: t('nav.videos') },
-    { to: '/blog', label: t('nav.blog') },
-    { to: '/sponsors', label: t('nav.sponsors') },
-    { to: '/contact', label: t('nav.contact') },
-  ]
-
+  const navLinks = HEADER_NAV.map((item) => ({ to: item.to, label: t(item.labelKey) }))
   const ctaTo = isPaidPlayer ? '/account' : '/register'
 
   return (
@@ -60,14 +54,14 @@ export function Header() {
           <span className="relative z-10 truncate pl-9 sm:pl-10 md:pl-12">{brandName}</span>
         </Link>
 
-        <nav className="hidden min-w-0 items-center gap-5 xl:gap-7 lg:flex">
+        <nav className="hidden min-w-0 flex-wrap items-center justify-end gap-x-3 gap-y-1 xl:gap-x-5 2xl:gap-x-7 lg:flex">
           {navLinks.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
               className={({ isActive }) =>
                 cn(
-                  'whitespace-nowrap text-sm font-semibold text-white/90 drop-shadow-sm transition-colors hover:text-white',
+                  'whitespace-nowrap text-[11px] font-semibold text-white/90 drop-shadow-sm transition-colors hover:text-white xl:text-sm',
                   isActive && 'text-white underline decoration-2 underline-offset-8',
                 )
               }
@@ -84,18 +78,18 @@ export function Header() {
               to="/admin"
               className="hidden rounded-xl px-3 py-2 text-sm font-semibold text-white/90 hover:bg-white/10 md:inline"
             >
-              Admin
+              {t('header.admin')}
             </Link>
           )}
           <Link
             to={ctaTo}
             className="inline-flex items-center justify-center rounded-lg bg-[#60a5fa] px-2.5 py-1.5 text-[11px] font-display font-bold text-white shadow-[0_4px_16px_rgba(37,99,235,0.35)] transition-colors hover:bg-[#93c5fd] sm:rounded-2xl sm:px-6 sm:py-2.5 sm:text-base"
           >
-            Dashboard
+            {isPaidPlayer ? t('header.dashboard') : t('header.registerCta')}
           </Link>
           <button
             onClick={toggleMobileMenu}
-            aria-label="Open menu"
+            aria-label={t('header.openMenu')}
             className="rounded-full p-1.5 text-white hover:bg-white/10 sm:p-2 lg:hidden"
           >
             <Menu size={22} />

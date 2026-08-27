@@ -3,12 +3,14 @@ import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { SectionHeading } from '@/components/common/SectionHeading'
 import { Button } from '@/components/common/Button'
+import { useTranslation } from 'react-i18next'
 import { BlogCard } from '@/components/cards/BlogCard'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { useBlogPosts } from '@/hooks/useBlogPosts'
 import { slideByIndex, staggerContainer, viewportOnce } from '@/lib/motion'
 
 export function BlogPreviewSection() {
+  const { t } = useTranslation(['home', 'common'])
   const { data: posts, isLoading } = useBlogPosts()
 
   return (
@@ -16,14 +18,14 @@ export function BlogPreviewSection() {
       <div className="container-page">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <SectionHeading
-            eyebrow="LATEST UPDATES"
-            title="News From The Championship"
+            eyebrow={t('blog.eyebrow')}
+            title={t('blog.title')}
             align="left"
             className="mx-0 text-left"
           />
           <Link to="/blog" className="shrink-0">
             <Button variant="outline" size="sm" icon={<ArrowRight size={16} />}>
-              All posts
+              {t('buttons.allPosts', { ns: 'common' })}
             </Button>
           </Link>
         </div>
