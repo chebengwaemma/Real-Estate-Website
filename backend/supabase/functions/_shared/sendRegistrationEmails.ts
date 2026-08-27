@@ -1,5 +1,6 @@
 import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2'
 import type { RegistrationRow } from './recordPaidSession.ts'
+import { loadSiteConfig } from './loadSiteConfig.ts'
 
 function cleanSecret(raw: string): string {
   return raw
@@ -51,12 +52,12 @@ async function sendViaResend(args: {
   return true
 }
 
-function playerHtml(reg: RegistrationRow, fee: string): string {
+function playerHtml(reg: RegistrationRow, fee: string, org: string, contactEmail: string): string {
   return `
     <div style="font-family:Arial,sans-serif;line-height:1.5;color:#111">
       <h1 style="font-size:20px">Registration confirmed</h1>
       <p>Hello ${reg.first_name},</p>
-      <p>Thank you for registering with <strong>Hopeland Global Checkers</strong>. Your registration fee of <strong>${fee}</strong> has been received.</p>
+      <p>Thank you for registering with <strong>${org}</strong>. Your registration fee of <strong>${fee}</strong> has been received.</p>
       <p>
         Name: ${reg.first_name} ${reg.last_name}<br/>
         Email: ${reg.email}<br/>
@@ -64,8 +65,8 @@ function playerHtml(reg: RegistrationRow, fee: string): string {
         ${reg.nationality ? `Nationality: ${reg.nationality}<br/>` : ''}
       </p>
       <p>You can sign in with this email and the password you created during registration.</p>
-      <p>Questions: <a href="mailto:Info@HCheckers.org">Info@HCheckers.org</a></p>
-      <p>— Hopeland Global Checkers</p>
+      <p>Questions: <a href="mailto:${contactEmail}">${contactEmail}</a></p>
+      <p>— ${org}</p>
     </div>
   `
 }
@@ -111,11 +112,12 @@ export async function sendPaidRegistrationEmails(
     return
   }
 
+  const cfg = await loadSiteConfig(supabase)
   const fromAddress =
-    cleanSecret(Deno.env.get('REGISTRATION_FROM_EMAIL') ?? '') || 'Admin@HCheckers.org'
-  const from = fromAddress.includes('<') ? fromAddress : `Hopeland Checkers <${fromAddress}>`
+    cleanSecret(cfg.fromEmail) || cleanSecret(Deno.env.get('REGISTRATION_FROM_EMAIL') ?? '') || 'Admin@HCheckers.org'
+  const from = fromAddress.includes('<') ? fromAddress : `${cfg.siteName} <${fromAddress}>`
   const adminTo =
-    cleanSecret(Deno.env.get('REGISTRATION_ADMIN_EMAIL') ?? '') || 'Admin@HCheckers.org'
+    cleanSecret(cfg.adminEmail) || cleanSecret(Deno.env.get('REGISTRATION_ADMIN_EMAIL') ?? '') || 'Admin@HCheckers.org'
   const fee = formatUsdCents(reg.fee_amount, reg.fee_currency)
   const playerTo = reg.email.trim().toLowerCase()
 
@@ -123,9 +125,9 @@ export async function sendPaidRegistrationEmails(
     apiKey,
     from,
     to: playerTo,
-    subject: 'Hopeland Global Checkers — registration confirmed',
-    html: playerHtml(reg, fee),
-    replyTo: 'Info@HCheckers.org',
+    subject: `${cfg.siteName} — registration confirmed`,
+    html: playerHtml(reg, fee, cfg.siteName, cfg.contactEmail),
+    replyTo: cfg.contactEmail,
   })
   const adminOk = await sendViaResend({
     apiKey,

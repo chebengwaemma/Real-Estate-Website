@@ -1,6 +1,7 @@
 import { loadStripe, type Stripe } from '@stripe/stripe-js'
 import { publicEnv } from '@/config/publicEnv'
 import { getStripePublishableKey } from '@/lib/stripePublishableKey'
+import { resolveRegistrationFeeCents } from '@/lib/registrationFee'
 
 let stripePromise: Promise<Stripe | null> | null = null
 
@@ -14,11 +15,7 @@ export function getStripe() {
 }
 
 export const registrationFee = {
-  amount: (() => {
-    const n = Number(import.meta.env.VITE_REGISTRATION_FEE_AMOUNT || publicEnv.registrationFeeAmount)
-    if (!Number.isFinite(n) || n < 50 || n === 1000) return 25000
-    return n
-  })(),
+  amount: resolveRegistrationFeeCents(import.meta.env.VITE_REGISTRATION_FEE_AMOUNT || publicEnv.registrationFeeAmount),
   currency: (
     import.meta.env.VITE_REGISTRATION_FEE_CURRENCY || publicEnv.registrationFeeCurrency
   ).toLowerCase(),

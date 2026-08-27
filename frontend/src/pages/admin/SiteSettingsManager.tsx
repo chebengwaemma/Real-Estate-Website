@@ -9,7 +9,14 @@ import { FileUploadDropzone } from '@/components/admin/FileUploadDropzone'
 import { defaultSiteSettings } from '@/lib/cmsDefaults'
 import { cmsErrorMessage } from '@/lib/cmsError'
 import { normalizeSiteSettings } from '@/lib/siteSettings'
-import { SITE_SETTING_FIELDS, SITE_SETTING_SECTIONS, type SiteSettingFieldDef } from '@/lib/siteSettingsFields'
+import { MANAGED_EXTRA_KEYS, SITE_SETTING_FIELDS, SITE_SETTING_SECTIONS, type SiteSettingFieldDef } from '@/lib/siteSettingsFields'
+import { NavLinksEditor } from '@/components/admin/NavLinksEditor'
+import {
+  DEFAULT_FOOTER_EDITABLE,
+  DEFAULT_HEADER_EDITABLE,
+  DEFAULT_LEGAL_EDITABLE,
+  parseNavJson,
+} from '@/lib/navConfig'
 import type { SiteSettings } from '@/types'
 
 export default function SiteSettingsManager() {
@@ -181,15 +188,43 @@ export default function SiteSettingsManager() {
         ))}
 
         <section className="rounded-2xl border border-black/5 bg-white p-6 shadow-card">
+          <h2 className="text-h3 text-ink">Header & Footer</h2>
+          <p className="mt-1 text-sm text-muted">
+            Add, rename, reorder, or remove public links. New CMS page URLs work automatically after you create the page
+            in Admin → Pages.
+          </p>
+          <div className="mt-4 flex flex-col gap-8">
+            <NavLinksEditor
+              title="Header links"
+              hint="Shown in the top menu and mobile drawer."
+              items={parseNavJson(form.extras.header_nav) ?? DEFAULT_HEADER_EDITABLE}
+              onChange={(items) => setExtra('header_nav', JSON.stringify(items))}
+            />
+            <NavLinksEditor
+              title="Footer sitemap"
+              items={parseNavJson(form.extras.footer_nav) ?? DEFAULT_FOOTER_EDITABLE}
+              onChange={(items) => setExtra('footer_nav', JSON.stringify(items))}
+            />
+            <NavLinksEditor
+              title="Footer legal links"
+              items={parseNavJson(form.extras.footer_legal) ?? DEFAULT_LEGAL_EDITABLE}
+              onChange={(items) => setExtra('footer_legal', JSON.stringify(items))}
+            />
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-black/5 bg-white p-6 shadow-card">
           <h2 className="text-h3 text-ink">Custom fields</h2>
           <p className="mt-1 text-sm text-muted">
             Extra keys are stored in <code className="text-xs">extras</code> — no SQL needed. Use them on the frontend via{' '}
             <code className="text-xs">settings.extras.your_key</code>.
           </p>
 
-          {Object.keys(form.extras).length > 0 ? (
+          {Object.entries(form.extras).filter(([key]) => !MANAGED_EXTRA_KEYS.has(key)).length > 0 ? (
             <div className="mt-4 grid gap-3">
-              {Object.entries(form.extras).map(([key, value]) => (
+              {Object.entries(form.extras)
+                .filter(([key]) => !MANAGED_EXTRA_KEYS.has(key))
+                .map(([key, value]) => (
                 <div key={key} className="flex flex-col gap-2 sm:flex-row sm:items-end">
                   <div className="min-w-0 flex-1">
                     <FormField label={key} value={value} onChange={(e) => setExtra(key, e.target.value)} />

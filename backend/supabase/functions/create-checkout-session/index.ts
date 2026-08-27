@@ -3,6 +3,8 @@
 // Secret key: STRIPE_SECRET_KEY Edge secret only — never sent to the browser.
 import { corsHeaders } from '../_shared/cors.ts'
 import { REGISTRATION_FEE_CURRENCY, resolveRegistrationFeeCents } from '../_shared/registrationFee.ts'
+import { loadSiteConfig } from '../_shared/loadSiteConfig.ts'
+import { createClient } from 'jsr:@supabase/supabase-js@2'
 
 interface RegistrationPayload {
   firstName: string
@@ -87,8 +89,21 @@ Deno.serve(async (req) => {
       })
     }
 
-    const feeAmount = resolveRegistrationFeeCents(Deno.env.get('REGISTRATION_FEE_AMOUNT'))
-    const feeCurrency = (Deno.env.get('REGISTRATION_FEE_CURRENCY') ?? REGISTRATION_FEE_CURRENCY).toLowerCase()
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    )
+    let feeAmount = resolveRegistrationFeeCents(Deno.env.get('REGISTRATION_FEE_AMOUNT'))
+    let feeCurrency = (Deno.env.get('REGISTRATION_FEE_CURRENCY') ?? REGISTRATION_FEE_CURRENCY).toLowerCase()
+    let displayName = 'Hopeland Global Checkers (Draughts) Federation'
+    try {
+      const cfg = await loadSiteConfig(supabase)
+      feeAmount = cfg.feeCents
+      feeCurrency = cfg.feeCurrency
+      displayName = cfg.siteName || displayName
+    } catch (err) {
+      console.error('site_settings fee lookup failed, using env/default', err)
+    }
     if (!Number.isFinite(feeAmount) || feeAmount < 50) {
       return json(500, { error: 'Invalid registration fee configuration.' })
     }
@@ -126,13 +141,13 @@ Deno.serve(async (req) => {
     params.set('mode', 'payment')
     params.append('payment_method_types[]', 'card')
     params.set('customer_email', email)
-    params.set('branding_settings[display_name]', 'Hopeland Global Checkers (Draughts) Federation')
+    params.set('branding_settings[display_name]', displayName)
     params.set('line_items[0][quantity]', '1')
     params.set('line_items[0][price_data][currency]', feeCurrency)
     params.set('line_items[0][price_data][unit_amount]', String(feeAmount))
     params.set(
       'line_items[0][price_data][product_data][name]',
-      'Hopeland Global Checkers (Draughts) Federation — Championship Registration',
+      `${displayName} — Championship Registration`,
     )
     params.set(
       'line_items[0][price_data][product_data][description]',

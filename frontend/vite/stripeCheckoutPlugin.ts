@@ -3,12 +3,10 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 
 type EnvMap = Record<string, string>
 
-const DEFAULT_FEE_CENTS = 25000
-const LEGACY_TEN_DOLLAR_CENTS = 1000
-
 function resolveFeeAmount(env: EnvMap): number {
-  const n = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || DEFAULT_FEE_CENTS)
-  if (!Number.isFinite(n) || n < 50 || n === LEGACY_TEN_DOLLAR_CENTS) return DEFAULT_FEE_CENTS
+  const n = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || 25000)
+  if (!Number.isFinite(n) || n <= 0 || n === 1000) return 25000
+  if (n < 500) return Math.round(n * 100)
   return Math.round(n)
 }
 

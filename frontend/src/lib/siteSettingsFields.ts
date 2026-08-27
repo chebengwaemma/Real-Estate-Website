@@ -19,12 +19,14 @@ export type SiteSettingFieldDef = {
 export const SITE_SETTING_SECTIONS = [
   'Website',
   'Contact',
+  'Registration',
   'Social',
   'Prizes',
   'Championship',
   'Announcement',
   'Hero',
   'About & CTA',
+  'Header & Footer',
   'Custom',
 ] as const
 
@@ -40,6 +42,9 @@ export const SITE_SETTING_FIELDS: SiteSettingFieldDef[] = [
   { key: 'registration_from_email', label: 'Registration from-email', section: 'Contact', type: 'email', storage: 'extras', hint: 'Paid players receive confirmation from this address. Default: Admin@HCheckers.org' },
   { key: 'registration_admin_email', label: 'Admin registration notify email', section: 'Contact', type: 'email', storage: 'extras', hint: 'Receives a copy when someone pays and registers. Default: Admin@HCheckers.org' },
 
+  { key: 'registration_fee_usd', label: 'Registration fee (USD)', section: 'Registration', type: 'text', storage: 'extras', hint: 'Shown on Register and charged by Stripe. Example: 250' },
+  { key: 'registration_fee_currency', label: 'Fee currency', section: 'Registration', type: 'text', storage: 'extras', hint: 'Usually usd' },
+
   { key: 'social_twitter', label: 'X (Twitter) URL', section: 'Social', type: 'url', storage: 'column', hint: 'Full profile URL, e.g. https://x.com/yourpage' },
   { key: 'social_instagram', label: 'Instagram URL', section: 'Social', type: 'url', storage: 'column', hint: 'Full profile URL, e.g. https://instagram.com/yourpage' },
   { key: 'social_facebook', label: 'Facebook URL', section: 'Social', type: 'url', storage: 'column', hint: 'Full page URL, e.g. https://facebook.com/yourpage' },
@@ -48,6 +53,9 @@ export const SITE_SETTING_FIELDS: SiteSettingFieldDef[] = [
   { key: 'prize_first', label: 'Winner prize (USD)', section: 'Prizes', type: 'text', storage: 'extras', hint: 'Number only, e.g. 25000. Shown in large type at the top of the homepage.' },
   { key: 'prize_second', label: 'Second prize (USD)', section: 'Prizes', type: 'text', storage: 'extras', hint: 'Number only, e.g. 10000' },
   { key: 'prize_third', label: 'Third prize (USD)', section: 'Prizes', type: 'text', storage: 'extras', hint: 'Number only, e.g. 5000' },
+  { key: 'prize_first_label', label: 'Winner label', section: 'Prizes', type: 'text', storage: 'extras', hint: 'Example: Winner' },
+  { key: 'prize_second_label', label: 'Second-prize label', section: 'Prizes', type: 'text', storage: 'extras', hint: 'Example: Second Prize' },
+  { key: 'prize_third_label', label: 'Third-prize label', section: 'Prizes', type: 'text', storage: 'extras', hint: 'Example: Third Prize' },
 
   { key: 'championship_location', label: 'Location', section: 'Championship', type: 'text', storage: 'column' },
   { key: 'championship_dates', label: 'Dates (display)', section: 'Championship', type: 'text', storage: 'column' },
@@ -70,3 +78,11 @@ export const SITE_SETTING_FIELDS: SiteSettingFieldDef[] = [
 export const SITE_SETTING_COLUMN_KEYS = new Set(
   SITE_SETTING_FIELDS.filter((f) => f.storage === 'column').map((f) => f.key),
 )
+
+export const MANAGED_EXTRA_KEYS = new Set([
+  ...SITE_SETTING_FIELDS.filter((f) => f.storage === 'extras').map((f) => f.key),
+  'header_nav',
+  'footer_nav',
+  'footer_legal',
+  'registration_fee_cents',
+])

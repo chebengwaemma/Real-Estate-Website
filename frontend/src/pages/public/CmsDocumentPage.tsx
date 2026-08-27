@@ -1,11 +1,13 @@
 import { Helmet } from 'react-helmet-async'
+import { useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { PageHero } from '@/components/layout/PageHero'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
 import { useCmsPage } from '@/hooks/useCms'
 import { defaultCmsPages } from '@/lib/cmsDefaults'
-import { useTranslation } from 'react-i18next'
 import { cmsOrTranslated } from '@/lib/localizedCms'
+import NotFound from '@/pages/public/NotFound'
 
 function renderBody(body: string) {
   const looksHtml = /<\/?[a-z][\s\S]*>/i.test(body)
@@ -24,15 +26,16 @@ function CmsSlugPage({
 }: {
   slug: string
   path: string
-  eyebrowKey: string
-  fallbackTitleKey: string
-  fallbackBodyKey: string
+  eyebrowKey?: string
+  fallbackTitleKey?: string
+  fallbackBodyKey?: string
 }) {
   const { t, i18n } = useTranslation()
   const { data: page, isLoading } = useCmsPage(slug)
   const fallback = defaultCmsPages.find((p) => p.slug === slug)
-  const title = cmsOrTranslated(i18n.language, page?.title ?? fallback?.title, t(fallbackTitleKey))
-  const body = page?.body?.trim() || fallback?.body || t(fallbackBodyKey)
+  const translatedTitle = fallbackTitleKey ? t(fallbackTitleKey) : fallback?.title || slug
+  const title = cmsOrTranslated(i18n.language, page?.title ?? fallback?.title, translatedTitle)
+  const body = page?.body?.trim() || fallback?.body || (fallbackBodyKey ? t(fallbackBodyKey) : '')
 
   return (
     <>
@@ -42,7 +45,7 @@ function CmsSlugPage({
         </title>
         <link rel="canonical" href={`${SITE_URL}${path}`} />
       </Helmet>
-      <PageHero eyebrow={t(eyebrowKey)} title={title} />
+      <PageHero eyebrow={eyebrowKey ? t(eyebrowKey) : title} title={title} />
       <section className="section-y bg-surface-white">
         <div className="container-page max-w-3xl text-ink/80">
           {isLoading ? (
@@ -92,4 +95,12 @@ export function Competition2027Page() {
       fallbackBodyKey="pages.competition2027.fallbackBody"
     />
   )
+}
+
+export function CmsCatchAllPage() {
+  const { slug = '' } = useParams()
+  const { data: page, isLoading } = useCmsPage(slug)
+  if (!slug) return <NotFound />
+  if (!isLoading && !page) return <NotFound />
+  return <CmsSlugPage slug={slug} path={`/${slug}`} />
 }
