@@ -13,9 +13,9 @@ export function PrizeBanner() {
   const third = Number(getSiteSetting(settings, 'prize_third', String(DEFAULT_PRIZES.third))) || DEFAULT_PRIZES.third
 
   const items = [
-    { label: t('prizes.winner'), amount: first },
-    { label: t('prizes.second'), amount: second },
-    { label: t('prizes.third'), amount: third },
+    { label: getSiteSetting(settings, 'prize_first_label', t('prizes.winner')), amount: first },
+    { label: getSiteSetting(settings, 'prize_second_label', t('prizes.second')), amount: second },
+    { label: getSiteSetting(settings, 'prize_third_label', t('prizes.third')), amount: third },
   ]
 
   return (

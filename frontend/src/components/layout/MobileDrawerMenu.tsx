@@ -6,7 +6,7 @@ import { X } from 'lucide-react'
 import { useUiStore } from '@/store/uiStore'
 import { useAuth } from '@/context/AuthContext'
 import { Button } from '@/components/common/Button'
-import { HEADER_NAV } from '@/config/publicNav'
+import { usePublicNav } from '@/hooks/usePublicNav'
 import { cn } from '@/lib/utils'
 
 export function MobileDrawerMenu() {
@@ -27,10 +27,8 @@ export function MobileDrawerMenu() {
     }
   }, [mobileMenuOpen, setMobileMenuOpen])
 
-  const navLinks = [
-    { to: '/', label: t('mobileNav.home') },
-    ...HEADER_NAV.map((item) => ({ to: item.to, label: t(item.labelKey) })),
-  ]
+  const { header } = usePublicNav()
+  const navLinks = [{ to: '/', label: t('mobileNav.home') }, ...header.filter((item) => item.to !== '/')]
 
   return (
     <AnimatePresence>

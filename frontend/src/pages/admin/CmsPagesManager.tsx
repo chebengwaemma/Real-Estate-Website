@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { toast } from 'sonner'
-import { useCmsPageMutations, useCmsPages } from '@/hooks/useCms'
+import { useCmsPageMutations, useCmsPages, useSiteSettings, useUpdateSiteSettings } from '@/hooks/useCms'
 import { FormField } from '@/components/forms/FormField'
 import { Button } from '@/components/common/Button'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { RichTextEditor } from '@/components/admin/RichTextEditor'
 import { cn } from '@/lib/utils'
 import type { CmsPage } from '@/types'
+import { DEFAULT_HEADER_EDITABLE, parseNavJson } from '@/lib/navConfig'
 
 export default function CmsPagesManager() {
   const { data, isLoading } = useCmsPages()
+  const { data: settings } = useSiteSettings()
+  const updateSettings = useUpdateSiteSettings()
   const { update, create } = useCmsPageMutations()
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [title, setTitle] = useState('')
@@ -36,16 +39,30 @@ export default function CmsPagesManager() {
     if (!selected) return
     try {
       await update.mutateAsync({ id: selected.id, title, body })
-      toast.success('Page saved. Header and footer links show the live title and body.')
+      toast.success('Page saved. Header and footer show this title when the link uses this page.')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Could not save.')
     }
   }
 
   const addPage = async () => {
+    const slug = newSlug.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '')
     try {
       await create.mutateAsync({ slug: newSlug, title: newTitle })
-      toast.success('Page created. Add a header/footer route in code if you need a new URL.')
+      if (settings) {
+        const items = parseNavJson(settings.extras.header_nav) ?? DEFAULT_HEADER_EDITABLE
+        const to = `/${slug}`
+        if (!items.some((item) => item.to === to)) {
+          await updateSettings.mutateAsync({
+            ...settings,
+            extras: {
+              ...settings.extras,
+              header_nav: JSON.stringify([...items, { to, label: newTitle.trim(), cmsSlug: slug }]),
+            },
+          })
+        }
+      }
+      toast.success(`Page created at /${slug} and added to the header. Save Site Settings if you want it in the footer too.`)
       setNewSlug('')
       setNewTitle('')
     } catch (err) {
@@ -70,9 +87,8 @@ export default function CmsPagesManager() {
 
       <h1 className="text-h2 text-ink">Pages</h1>
       <p className="mt-1 text-sm text-muted">
-        Edit the content behind header and footer links: About, Leadership Board, Rules, 2027 Competition, Privacy
-        Policy, and Terms of Use. Videos, Blog, Sponsors, and Contact have their own admin screens. Social links and
-        contact email are in Site Settings.
+        Edit titles and body for About, Leadership, Rules, 2027 Competition, Privacy, Terms, and any page you create.
+        New pages get a public URL immediately and are added to the header. Reorder or add footer links in Site Settings.
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2">
@@ -107,7 +123,9 @@ export default function CmsPagesManager() {
 
       <div className="mt-8 max-w-3xl rounded-2xl border border-dashed border-black/15 bg-white p-6">
         <h2 className="text-sm font-bold text-ink">Add another editable page</h2>
-        <p className="mt-1 text-xs text-muted">Slug becomes the URL path, e.g. <code>history</code> → /history after a matching route exists.</p>
+        <p className="mt-1 text-xs text-muted">
+          Slug becomes the live URL, e.g. <code>history</code> → https://hcheckers.org/history
+        </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <FormField label="Slug" value={newSlug} onChange={(e) => setNewSlug(e.target.value)} placeholder="history" />
           <FormField label="Title" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Our History" />

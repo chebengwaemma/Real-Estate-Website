@@ -44,8 +44,13 @@ export const defaultSiteSettings: SiteSettings = {
     prize_first: '25000',
     prize_second: '10000',
     prize_third: '5000',
+    prize_first_label: 'Winner',
+    prize_second_label: 'Second Prize',
+    prize_third_label: 'Third Prize',
     registration_from_email: 'Admin@HCheckers.org',
     registration_admin_email: 'Admin@HCheckers.org',
+    registration_fee_usd: '250',
+    registration_fee_currency: 'usd',
   },
   updated_at: new Date().toISOString(),
 }

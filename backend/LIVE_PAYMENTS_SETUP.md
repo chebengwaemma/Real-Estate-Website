@@ -7,7 +7,7 @@ Secret key stays in Supabase Edge secrets only (never in frontend).
 
 - `STRIPE_SECRET_KEY` = `sk_live_…`
 - `SITE_URL` = `https://hcheckers.org`
-- `REGISTRATION_FEE_AMOUNT` = `1000`
+- `REGISTRATION_FEE_AMOUNT` = `25000` ($250.00)
 - `REGISTRATION_FEE_CURRENCY` = `usd`
 - Optional: `STRIPE_WEBHOOK_SECRET` = `whsec_…` (Stripe Dashboard → Webhooks)
 

@@ -293,6 +293,7 @@ export function useCmsPages() {
 export function useCmsPage(slug: string) {
   return useQuery({
     queryKey: ['cms_pages', slug],
+    enabled: Boolean(slug),
     ...CMS_QUERY,
     queryFn: async (): Promise<CmsPage | null> => {
       if (!isSupabaseConfigured) return mockCmsPages.find((p) => p.slug === slug) ?? null

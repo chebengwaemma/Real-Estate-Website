@@ -29,7 +29,7 @@ export function normalizeSiteSettings(row: Partial<SiteSettings> | null | undefi
     site_name: base.site_name || defaultSiteSettings.site_name,
     website_url: base.website_url || defaultSiteSettings.website_url,
     logo_url: base.logo_url ?? '',
-    extras: asStringRecord(base.extras),
+    extras: { ...defaultSiteSettings.extras, ...asStringRecord(base.extras) },
     updated_at: base.updated_at || new Date().toISOString(),
   }
 }

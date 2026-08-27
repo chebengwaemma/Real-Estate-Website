@@ -10,7 +10,7 @@ import { CountrySelect } from '@/components/forms/CountrySelect'
 import { Button } from '@/components/common/Button'
 import { createRegistrationSchema, type RegistrationSchema } from '@/lib/validators'
 import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient'
-import { registrationFee } from '@/lib/stripeClient'
+import { useRegistrationFee } from '@/hooks/useRegistrationFee'
 import { getStripePublishableKey } from '@/lib/stripePublishableKey'
 import { formatCurrency } from '@/lib/utils'
 import { savePendingAuth, clearPendingAuth } from '@/lib/pendingAuth'
@@ -27,6 +27,7 @@ export function RegistrationForm() {
   const [submitting, setSubmitting] = useState(false)
   const createDemoRegistration = useCreateDemoRegistration()
   const setRegistrantId = useRegistrantStore((s) => s.setRegistrantId)
+  const registrationFee = useRegistrationFee()
   const localPayment = isLocalPaymentMode()
   const schema = useMemo(() => createRegistrationSchema((key) => t(key)), [t])
 

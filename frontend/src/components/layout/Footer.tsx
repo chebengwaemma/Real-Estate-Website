@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useSiteSettings } from '@/hooks/useCms'
 import { SocialLinks } from '@/components/layout/SocialLinks'
-import { FOOTER_LEGAL, FOOTER_NAV } from '@/config/publicNav'
 import { cmsOrTranslated } from '@/lib/localizedCms'
 import { publicContactEmail } from '@/lib/publicContactEmail'
+import { usePublicNav } from '@/hooks/usePublicNav'
 
 export function Footer() {
   const { t, i18n } = useTranslation()
@@ -16,8 +16,7 @@ export function Footer() {
   const phone = settings?.contact_phone?.trim() || ''
   const address = settings?.contact_address?.trim() || ''
 
-  const sitemapLinks = FOOTER_NAV.map((item) => ({ to: item.to, label: t(item.labelKey) }))
-  const legalLinks = FOOTER_LEGAL.map((item) => ({ to: item.to, label: t(item.labelKey) }))
+  const { footer: sitemapLinks, legal: legalLinks } = usePublicNav()
 
   return (
     <footer className="bg-navy pb-[calc(5rem+env(safe-area-inset-bottom))] text-white/70 lg:pb-0">

@@ -28,6 +28,9 @@ const RulesPage = lazy(() => import('@/pages/public/CmsDocumentPage').then((m) =
 const Competition2027Page = lazy(() =>
   import('@/pages/public/CmsDocumentPage').then((m) => ({ default: m.Competition2027Page })),
 )
+const CmsCatchAllPage = lazy(() =>
+  import('@/pages/public/CmsDocumentPage').then((m) => ({ default: m.CmsCatchAllPage })),
+)
 const NotFound = lazy(() => import('@/pages/public/NotFound'))
 
 const AdminLogin = lazy(() => import('@/pages/admin/Login'))
@@ -78,6 +81,7 @@ export function AppRoutes() {
           <Route path="contact" element={<Contact />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms-of-use" element={<TermsOfUse />} />
+          <Route path=":slug" element={<CmsCatchAllPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

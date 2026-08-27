@@ -6,7 +6,7 @@ import { LanguageSwitcher } from '@/components/common/LanguageSwitcher'
 import { useUiStore } from '@/store/uiStore'
 import { useAuth } from '@/context/AuthContext'
 import { useSiteSettings } from '@/hooks/useCms'
-import { HEADER_NAV } from '@/config/publicNav'
+import { usePublicNav } from '@/hooks/usePublicNav'
 import { cn } from '@/lib/utils'
 
 export function Header() {
@@ -25,7 +25,7 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const navLinks = HEADER_NAV.map((item) => ({ to: item.to, label: t(item.labelKey) }))
+  const { header: navLinks } = usePublicNav()
   const ctaTo = isPaidPlayer ? '/account' : '/register'
 
   return (
