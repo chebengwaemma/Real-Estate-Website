@@ -2,6 +2,7 @@
 // Creates a Stripe Checkout Session (hosted redirect) via Stripe REST API.
 // Secret key: STRIPE_SECRET_KEY Edge secret only — never sent to the browser.
 import { corsHeaders } from '../_shared/cors.ts'
+import { REGISTRATION_FEE_CURRENCY, resolveRegistrationFeeCents } from '../_shared/registrationFee.ts'
 
 interface RegistrationPayload {
   firstName: string
@@ -86,8 +87,8 @@ Deno.serve(async (req) => {
       })
     }
 
-    const feeAmount = Number(Deno.env.get('REGISTRATION_FEE_AMOUNT') ?? '25000')
-    const feeCurrency = (Deno.env.get('REGISTRATION_FEE_CURRENCY') ?? 'usd').toLowerCase()
+    const feeAmount = resolveRegistrationFeeCents(Deno.env.get('REGISTRATION_FEE_AMOUNT'))
+    const feeCurrency = (Deno.env.get('REGISTRATION_FEE_CURRENCY') ?? REGISTRATION_FEE_CURRENCY).toLowerCase()
     if (!Number.isFinite(feeAmount) || feeAmount < 50) {
       return json(500, { error: 'Invalid registration fee configuration.' })
     }

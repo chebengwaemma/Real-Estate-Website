@@ -3,6 +3,15 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 
 type EnvMap = Record<string, string>
 
+const DEFAULT_FEE_CENTS = 25000
+const LEGACY_TEN_DOLLAR_CENTS = 1000
+
+function resolveFeeAmount(env: EnvMap): number {
+  const n = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || DEFAULT_FEE_CENTS)
+  if (!Number.isFinite(n) || n < 50 || n === LEGACY_TEN_DOLLAR_CENTS) return DEFAULT_FEE_CENTS
+  return Math.round(n)
+}
+
 interface RegistrationPayload {
   firstName: string
   lastName: string
@@ -409,7 +418,7 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
             }
 
             const { url, serviceKey } = supabaseConfig(env)
-            const feeAmount = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || 25000)
+            const feeAmount = resolveFeeAmount(env)
             const feeCurrency = (
               env.VITE_REGISTRATION_FEE_CURRENCY ||
               env.REGISTRATION_FEE_CURRENCY ||
@@ -524,7 +533,7 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
           }
           const body = raw
 
-          const feeAmount = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || 25000)
+          const feeAmount = resolveFeeAmount(env)
           const feeCurrency = (
             env.VITE_REGISTRATION_FEE_CURRENCY ||
             env.REGISTRATION_FEE_CURRENCY ||
