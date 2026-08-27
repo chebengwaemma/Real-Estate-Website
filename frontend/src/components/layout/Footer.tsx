@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useSiteSettings } from '@/hooks/useCms'
 import { SocialLinks } from '@/components/layout/SocialLinks'
-import { CONTACT_EMAIL_DEFAULT, FOOTER_LEGAL, FOOTER_NAV } from '@/config/publicNav'
+import { FOOTER_LEGAL, FOOTER_NAV } from '@/config/publicNav'
 import { cmsOrTranslated } from '@/lib/localizedCms'
+import { publicContactEmail } from '@/lib/publicContactEmail'
 
 export function Footer() {
   const { t, i18n } = useTranslation()
@@ -11,7 +12,7 @@ export function Footer() {
   const tagline = cmsOrTranslated(i18n.language, settings?.footer_tagline, t('footer.tagline'))
   const brand = settings?.site_name || 'Hopeland Global Checkers'
   const logoUrl = settings?.logo_url?.trim() || ''
-  const email = settings?.contact_email?.trim() || CONTACT_EMAIL_DEFAULT
+  const email = publicContactEmail(settings?.contact_email)
   const phone = settings?.contact_phone?.trim() || ''
   const address = settings?.contact_address?.trim() || ''
 

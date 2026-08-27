@@ -9,14 +9,14 @@ import { FormField } from '@/components/forms/FormField'
 import { Button } from '@/components/common/Button'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
 import { useSiteSettings, useSubmitContactMessage } from '@/hooks/useCms'
-import { CONTACT_EMAIL_DEFAULT } from '@/config/publicNav'
+import { publicContactEmail } from '@/lib/publicContactEmail'
 
 export default function Contact() {
   const { t } = useTranslation()
   const [submitting, setSubmitting] = useState(false)
   const { data: settings } = useSiteSettings()
   const submitMessage = useSubmitContactMessage()
-  const email = settings?.contact_email?.trim() || CONTACT_EMAIL_DEFAULT
+  const email = publicContactEmail(settings?.contact_email)
   const phone = settings?.contact_phone?.trim() || ''
   const address = settings?.contact_address?.trim() || settings?.championship_location || 'Atlanta, Georgia, USA'
   const orgName = settings?.site_name || 'Hopeland Global Checkers (Draughts) Federation'

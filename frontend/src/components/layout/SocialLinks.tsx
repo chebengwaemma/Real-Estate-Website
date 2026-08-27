@@ -1,5 +1,5 @@
 import { useSiteSettings } from '@/hooks/useCms'
-import { CONTACT_EMAIL_DEFAULT } from '@/config/publicNav'
+import { publicContactEmail } from '@/lib/publicContactEmail'
 import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
 
@@ -88,7 +88,7 @@ export function SocialLinks({
 
 export function ContactEmailLink({ className }: { className?: string }) {
   const { data: settings } = useSiteSettings()
-  const email = settings?.contact_email?.trim() || CONTACT_EMAIL_DEFAULT
+  const email = publicContactEmail(settings?.contact_email)
   return (
     <a href={`mailto:${email}`} className={className}>
       {email}
