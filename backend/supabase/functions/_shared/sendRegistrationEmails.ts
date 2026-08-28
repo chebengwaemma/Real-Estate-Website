@@ -86,9 +86,32 @@ function adminHtml(reg: RegistrationRow, fee: string): string {
   `
 }
 
+async function sendViaHostingerMailApi(reg: RegistrationRow): Promise<boolean> {
+  const mailApiUrl = cleanSecret(Deno.env.get('MAIL_API_URL') ?? '').replace(/\/$/, '')
+  const mailApiSecret = cleanSecret(Deno.env.get('MAIL_API_SECRET') ?? '')
+  if (!mailApiUrl || !mailApiSecret) return false
+
+  const res = await fetch(`${mailApiUrl}/api/payment/success-email`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${mailApiSecret}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ registration: reg }),
+  })
+
+  if (!res.ok) {
+    const body = await res.text()
+    console.error('Hostinger mail API failed', res.status, body)
+    return false
+  }
+  return true
+}
+
 /**
  * Emails the player from Admin@HCheckers.org and notifies admin.
- * Uses RESEND_API_KEY when set. Does not throw — payment must still succeed.
+ * Prefers Hostinger SMTP mail API (MAIL_API_URL). Falls back to Resend when configured.
+ * Does not throw — payment must still succeed.
  */
 export async function sendPaidRegistrationEmails(
   supabase: SupabaseClient,
@@ -105,9 +128,20 @@ export async function sendPaidRegistrationEmails(
     }
   }
 
+  const hostingerOk = await sendViaHostingerMailApi(reg)
+  if (hostingerOk) {
+    if (reg.id) {
+      await supabase
+        .from('registrations')
+        .update({ confirmation_email_sent_at: new Date().toISOString() } as never)
+        .eq('id', reg.id)
+    }
+    return
+  }
+
   const apiKey = cleanSecret(Deno.env.get('RESEND_API_KEY') ?? '')
   if (!apiKey) {
-    console.warn('RESEND_API_KEY is not set — skipping registration emails.')
+    console.warn('MAIL_API_URL or RESEND_API_KEY is not set — skipping registration emails.')
     return
   }
 

@@ -86,6 +86,12 @@ if (env.REGISTRATION_FROM_EMAIL) {
 if (env.REGISTRATION_ADMIN_EMAIL) {
   pairs.REGISTRATION_ADMIN_EMAIL = env.REGISTRATION_ADMIN_EMAIL
 }
+if (env.MAIL_API_URL) {
+  pairs.MAIL_API_URL = env.MAIL_API_URL.replace(/\/$/, '')
+}
+if (env.MAIL_API_SECRET && !/xxx|your_|change_me/i.test(env.MAIL_API_SECRET)) {
+  pairs.MAIL_API_SECRET = env.MAIL_API_SECRET
+}
 
 const args = ['supabase', 'secrets', 'set', `--project-ref=${projectRef}`]
 for (const [k, v] of Object.entries(pairs)) {

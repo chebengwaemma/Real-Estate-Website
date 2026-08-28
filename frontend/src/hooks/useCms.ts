@@ -501,8 +501,31 @@ export function useSubmitContactMessage() {
         persistContactMessages()
         return
       }
-      const { error } = await supabase.from('contact_messages').insert(input as never)
-      if (error) throwCms(error, 'Database operation failed.')
+
+      const { data, error } = await supabase.functions.invoke<{ ok?: boolean; error?: string }>(
+        'submit-contact-message',
+        { body: input },
+      )
+
+      if (error) {
+        const detail = error.message ?? ''
+        const edgeUnavailable =
+          /failed to send a request|function not found|404|FunctionsFetchError|FunctionsRelayError|Failed to fetch/i.test(
+            detail,
+          )
+
+        if (edgeUnavailable) {
+          const { error: insertError } = await supabase.from('contact_messages').insert(input as never)
+          if (insertError) throwCms(insertError, 'Could not send your message.')
+          return
+        }
+
+        throwCms(error, 'Could not send your message.')
+      }
+
+      if (data?.error) {
+        throw new Error(data.error)
+      }
     },
   })
 }

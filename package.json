@@ -15,6 +15,9 @@
     "generate:nav-cube": "npm run generate:nav-cube --prefix frontend",
     "stripe:sync": "node backend/scripts/sync-stripe-secrets.mjs",
     "functions:deploy": "npm run functions:deploy --prefix backend",
+    "mail:install": "npm install --prefix backend/server",
+    "mail:dev": "npm run dev --prefix backend/server",
+    "mail:start": "npm run start --prefix backend/server",
     "postinstall": "npm install --prefix frontend"
   }
 }
