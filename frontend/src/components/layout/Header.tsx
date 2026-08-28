@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils'
 export function Header() {
   const { t } = useTranslation()
   const { toggleMobileMenu } = useUiStore()
-  const { isPaidPlayer, isAdmin } = useAuth()
+  const { isPaidPlayer, isAdmin, isAuthenticated } = useAuth()
   const { data: settings } = useSiteSettings()
   const [scrolled, setScrolled] = useState(false)
   const logoUrl = settings?.logo_url?.trim() || '/brand/hopeland-mark.svg'
@@ -26,7 +26,8 @@ export function Header() {
   }, [])
 
   const navLinks = HEADER_NAV.map((item) => ({ to: item.to, label: t(item.labelKey) }))
-  const ctaTo = isPaidPlayer ? '/account' : '/register'
+  const showDashboard = isPaidPlayer || isAuthenticated || isAdmin
+  const ctaTo = showDashboard ? (isAdmin ? '/admin' : '/account') : '/register'
 
   return (
     <header
@@ -85,7 +86,7 @@ export function Header() {
             to={ctaTo}
             className="inline-flex items-center justify-center rounded-lg bg-[#60a5fa] px-2.5 py-1.5 text-[11px] font-display font-bold text-white shadow-[0_4px_16px_rgba(37,99,235,0.35)] transition-colors hover:bg-[#93c5fd] sm:rounded-2xl sm:px-6 sm:py-2.5 sm:text-base"
           >
-            {isPaidPlayer ? t('header.dashboard') : t('header.registerCta')}
+            {t('header.dashboard')}
           </Link>
           <button
             onClick={toggleMobileMenu}
