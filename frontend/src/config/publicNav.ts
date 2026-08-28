@@ -12,6 +12,7 @@ export const HEADER_NAV: PublicNavItem[] = [
   { to: '/rules', labelKey: 'nav.rules', cmsSlug: 'rules' },
   { to: '/competition-2027', labelKey: 'nav.competition2027', cmsSlug: 'competition-2027' },
   { to: '/videos', labelKey: 'nav.videos' },
+  { to: '/sports', labelKey: 'nav.sports' },
   { to: '/blog', labelKey: 'nav.blog' },
   { to: '/sponsors', labelKey: 'nav.sponsors' },
   { to: '/contact', labelKey: 'nav.contact' },

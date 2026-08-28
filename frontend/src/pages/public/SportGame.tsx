@@ -6,6 +6,7 @@ import { SITE_NAME, SITE_URL } from '@/lib/seo'
 import { cn } from '@/lib/utils'
 import { GAMES, type GameCard } from '@/data/sportsGames'
 import { useSportsGames } from '@/hooks/useCms'
+import { SportsGameCover } from '@/components/sports/SportsGameCover'
 import type { SportsGameRow } from '@/types'
 
 function toGameCard(row: SportsGameRow): GameCard {
@@ -18,6 +19,7 @@ function toGameCard(row: SportsGameRow): GameCard {
     gradient: row.gradient,
     accent: row.accent ?? undefined,
     badge: row.badge ?? undefined,
+    imageUrl: row.image_url,
   }
 }
 
@@ -67,12 +69,7 @@ function GamePoster({ game }: { game: GameCard }) {
       className="overflow-hidden rounded-2xl border border-white/10"
     >
       <div className="relative aspect-square sm:aspect-[4/5]">
-        <img
-          src={`/games/${game.id}.png`}
-          alt={game.title}
-          className="absolute inset-0 h-full w-full object-cover"
-          draggable={false}
-        />
+        <SportsGameCover game={game} />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 z-10 p-5">
           <p className="text-[10px] font-bold tracking-[0.16em] text-white/50 uppercase">

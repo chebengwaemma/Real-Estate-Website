@@ -145,6 +145,7 @@ export const defaultSportsGames: SportsGameRow[] = GAMES.map((g, i) => ({
   gradient: g.gradient,
   accent: g.accent ?? null,
   badge: g.badge ?? null,
+  image_url: null,
   display_order: i + 1,
   published: true,
   created_at: '',

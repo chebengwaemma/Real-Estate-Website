@@ -1,6 +1,6 @@
 import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient'
 
-export type StorageBucket = 'videos' | 'video-files' | 'sponsor-logos' | 'blog-covers'
+export type StorageBucket = 'videos' | 'video-files' | 'sponsor-logos' | 'blog-covers' | 'sports-games'
 
 const DEMO_MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024
 const EDGE_UPLOAD_MAX_BYTES = 4 * 1024 * 1024

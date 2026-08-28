@@ -1,7 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1'
 import { corsHeaders } from '../_shared/cors.ts'
 
-const ALLOWED_BUCKETS = new Set(['videos', 'video-files', 'sponsor-logos', 'blog-covers'])
+const ALLOWED_BUCKETS = new Set(['videos', 'video-files', 'sponsor-logos', 'blog-covers', 'sports-games'])
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {

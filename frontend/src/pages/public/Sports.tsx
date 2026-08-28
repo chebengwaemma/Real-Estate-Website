@@ -23,6 +23,7 @@ import { SITE_NAME, SITE_URL } from '@/lib/seo'
 import { cn } from '@/lib/utils'
 import { GAMES, type GameCard, type SportsCategoryId as CategoryId } from '@/data/sportsGames'
 import { useSportsGames } from '@/hooks/useCms'
+import { SportsGameCover } from '@/components/sports/SportsGameCover'
 import type { SportsGameRow } from '@/types'
 
 const CATEGORIES: { id: CategoryId; label: string; icon: LucideIcon }[] = [
@@ -71,6 +72,7 @@ function toGameCard(row: SportsGameRow): GameCard {
     gradient: row.gradient,
     accent: row.accent ?? undefined,
     badge: row.badge ?? undefined,
+    imageUrl: row.image_url,
   }
 }
 
@@ -126,7 +128,7 @@ export default function Sports() {
             >
               <ArrowLeft size={18} />
             </Link>
-            <div>
+            <div className="min-w-0 flex-1">
               <h1 className="font-display text-2xl font-extrabold tracking-[0.08em] uppercase sm:text-3xl">
                 Lobby
               </h1>
@@ -136,6 +138,9 @@ export default function Sports() {
               </p>
             </div>
           </div>
+
+          {/* Header game strip — uploaded covers show here */}
+          {games.length > 0 && <SportsHeaderStrip games={games} />}
 
           {/* Category chips */}
           <div className="mb-4 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
@@ -192,6 +197,40 @@ export default function Sports() {
         </div>
       </div>
     </>
+  )
+}
+
+function SportsHeaderStrip({ games }: { games: GameCard[] }) {
+  const featured = games.slice(0, 12)
+
+  return (
+    <div className="mb-6">
+      <p className="mb-2 text-[10px] font-extrabold tracking-[0.18em] text-white/45 uppercase">
+        Featured games
+      </p>
+      <div className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar sm:gap-3">
+        {featured.map((game) => (
+          <Link
+            key={game.id}
+            to={`/sports/${game.id}`}
+            aria-label={`Open ${game.title}`}
+            className="group relative shrink-0 overflow-hidden rounded-xl ring-1 ring-white/10 transition-transform hover:-translate-y-0.5 hover:ring-[#2f6bff]/50"
+          >
+            <div className="relative aspect-[3/4] w-[72px] sm:w-[84px]">
+              <SportsGameCover game={game} />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-2">
+                <p className="truncate text-[8px] font-extrabold tracking-wide text-white uppercase sm:text-[9px]">
+                  {game.title}
+                </p>
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                <Play size={16} fill="currentColor" className="text-white" />
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -270,15 +309,7 @@ function CasinoGameCard({ game }: { game: GameCard }) {
         'hover:-translate-y-0.5 active:scale-[0.98]',
       )}
     >
-      <img
-        src={`/games/${game.id}.png`}
-        alt=""
-        width={isOriginal ? 168 : 148}
-        height={isOriginal ? 168 : 197}
-        className="absolute inset-0 h-full w-full object-cover object-center"
-        loading="lazy"
-        draggable={false}
-      />
+      <SportsGameCover game={game} />
       <div className="absolute inset-x-0 bottom-0 h-[48%] bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
 
       {game.badge && (

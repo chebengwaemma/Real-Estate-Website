@@ -169,6 +169,7 @@ export interface SportsGameRow {
   gradient: string
   accent: string | null
   badge: string | null
+  image_url: string | null
   display_order: number
   published: boolean
   created_at: string

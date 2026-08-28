@@ -384,6 +384,7 @@ export function useSportsGames(admin = false) {
           gradient: input.gradient ?? 'from-[#312e81] to-[#0f172a]',
           accent: input.accent ?? null,
           badge: input.badge ?? null,
+          image_url: input.image_url ?? null,
           display_order: input.display_order ?? mockSportsGames.length + 1,
           published: input.published ?? true,
           created_at: new Date().toISOString(),

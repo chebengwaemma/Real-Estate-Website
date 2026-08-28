@@ -18,6 +18,7 @@ export interface GameCard {
   gradient: string
   accent?: string
   badge?: string
+  imageUrl?: string | null
 }
 
 export const GAMES: GameCard[] = [
