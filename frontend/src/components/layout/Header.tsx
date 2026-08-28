@@ -35,10 +35,10 @@ export function Header() {
         scrolled ? 'bg-[#2563eb]/75' : 'bg-[#3b82f6]/45',
       )}
     >
-      <div className="container-page flex min-h-[3.25rem] min-w-0 items-center justify-between gap-2 py-2 sm:min-h-[4.25rem] sm:gap-3 sm:py-3">
+      <div className="container-page flex min-h-[3.25rem] min-w-0 flex-nowrap items-center justify-between gap-2 py-2 sm:min-h-[4.25rem] sm:gap-3 sm:py-3">
         <Link
           to="/"
-          className="relative flex min-w-0 shrink items-center py-0.5 text-base font-display font-extrabold tracking-tight text-white drop-shadow-sm sm:text-xl md:text-2xl"
+          className="relative flex min-w-0 max-w-[8rem] shrink items-center py-0.5 text-base font-display font-extrabold tracking-tight text-white drop-shadow-sm sm:max-w-[9rem] sm:text-lg md:max-w-[10rem] md:text-xl xl:max-w-none xl:text-2xl"
         >
           <span
             aria-hidden
@@ -54,14 +54,14 @@ export function Header() {
           <span className="relative z-10 truncate pl-9 sm:pl-10 md:pl-12">{brandName}</span>
         </Link>
 
-        <nav className="hidden min-w-0 flex-wrap items-center justify-end gap-x-3 gap-y-1 xl:gap-x-5 2xl:gap-x-7 lg:flex">
+        <nav className="hidden min-w-0 flex-1 flex-nowrap items-center justify-end gap-x-1 lg:flex xl:gap-x-2 2xl:gap-x-4">
           {navLinks.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
               className={({ isActive }) =>
                 cn(
-                  'whitespace-nowrap text-[11px] font-semibold text-white/90 drop-shadow-sm transition-colors hover:text-white xl:text-sm',
+                  'shrink-0 whitespace-nowrap text-[9px] font-semibold tracking-tight text-white/90 drop-shadow-sm transition-colors hover:text-white lg:text-[10px] xl:text-xs 2xl:text-sm',
                   isActive && 'text-white underline decoration-2 underline-offset-8',
                 )
               }
