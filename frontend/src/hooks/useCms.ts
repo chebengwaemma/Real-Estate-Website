@@ -490,7 +490,7 @@ export function useContactMessages() {
 
 export function useSubmitContactMessage() {
   return useMutation({
-    mutationFn: async (input: { name: string; email: string; message: string }) => {
+    mutationFn: async (input: { name: string; email: string; message: string; phone?: string }) => {
       if (!isSupabaseConfigured) {
         mockContactMessages.unshift({
           id: crypto.randomUUID(),

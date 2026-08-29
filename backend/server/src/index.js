@@ -30,11 +30,14 @@ app.use((err, _req, res, _next) => {
 })
 
 app.listen(config.port, async () => {
+  console.log(`Starting mail server on port ${config.port}...`)
+  console.log(`SMTP contact: ${config.smtp.host}:${config.smtp.port} as ${config.smtp.user}`)
+  console.log(`SMTP admin: ${config.adminSmtp.host}:${config.adminSmtp.port} as ${config.adminSmtp.user}`)
+
   try {
     await verifySmtpConnection()
+    console.log('All SMTP transporters verified — Hostinger connection OK')
     console.log(`Mail server listening on port ${config.port}`)
-    console.log(`SMTP contact: ${config.smtp.host}:${config.smtp.port} as ${config.smtp.user}`)
-    console.log(`SMTP admin: ${config.adminSmtp.host}:${config.adminSmtp.port} as ${config.adminSmtp.user}`)
   } catch (err) {
     console.error('SMTP verification failed — check .env (SMTP_*, ADMIN_EMAIL, ADMIN_PASS)')
     console.error(err)

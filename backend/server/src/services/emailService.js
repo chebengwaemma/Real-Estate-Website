@@ -12,38 +12,78 @@ let contactTransporter
 /** Registration / payment SMTP (admin@) */
 let adminTransporter
 
+function createHostingerTransport(smtpConfig) {
+  return nodemailer.createTransport({
+    host: smtpConfig.host,
+    port: smtpConfig.port,
+    secure: smtpConfig.secure,
+    auth: {
+      user: smtpConfig.user,
+      pass: smtpConfig.pass,
+    },
+    logger: true,
+    debug: true,
+  })
+}
+
 function getContactTransporter() {
   if (!contactTransporter) {
-    contactTransporter = nodemailer.createTransport({
-      host: config.smtp.host,
-      port: config.smtp.port,
-      secure: config.smtp.secure,
-      auth: {
-        user: config.smtp.user,
-        pass: config.smtp.pass,
-      },
-    })
+    contactTransporter = createHostingerTransport(config.smtp)
   }
   return contactTransporter
 }
 
 function getAdminTransporter() {
   if (!adminTransporter) {
-    adminTransporter = nodemailer.createTransport({
-      host: config.adminSmtp.host,
-      port: config.adminSmtp.port,
-      secure: config.adminSmtp.secure,
-      auth: {
-        user: config.adminSmtp.user,
-        pass: config.adminSmtp.pass,
-      },
-    })
+    adminTransporter = createHostingerTransport(config.adminSmtp)
   }
   return adminTransporter
 }
 
+async function sendMailWithDebug(transporter, mailOptions) {
+  try {
+    const result = await transporter.sendMail(mailOptions)
+    console.log('Email Result:', result)
+    return result
+  } catch (error) {
+    console.error('Email Error:', error)
+    throw error
+  }
+}
+
 export async function verifySmtpConnection() {
-  await Promise.all([getContactTransporter().verify(), getAdminTransporter().verify()])
+  const contact = getContactTransporter()
+  const admin = getAdminTransporter()
+
+  console.log('Verifying contact SMTP credentials...', {
+    host: config.smtp.host,
+    port: config.smtp.port,
+    secure: config.smtp.secure,
+    user: config.smtp.user,
+  })
+
+  try {
+    await contact.verify()
+    console.log('Contact SMTP verify: connected successfully')
+  } catch (error) {
+    console.error('Contact SMTP verify failed:', error)
+    throw error
+  }
+
+  console.log('Verifying admin SMTP credentials...', {
+    host: config.adminSmtp.host,
+    port: config.adminSmtp.port,
+    secure: config.adminSmtp.secure,
+    user: config.adminSmtp.user,
+  })
+
+  try {
+    await admin.verify()
+    console.log('Admin SMTP verify: connected successfully')
+  } catch (error) {
+    console.error('Admin SMTP verify failed:', error)
+    throw error
+  }
 }
 
 /**
@@ -71,7 +111,7 @@ export async function sendSupportMail(payload) {
     message,
   ].filter(Boolean)
 
-  await getContactTransporter().sendMail({
+  await sendMailWithDebug(getContactTransporter(), {
     from,
     to: config.contactNotifyEmail,
     replyTo: email,
@@ -97,7 +137,7 @@ export async function sendRegistrationMail(registration) {
   const from = formatFrom(config.registrationFromName, config.registrationFromEmail)
   const subject = config.registrationEmailSubject
 
-  await getAdminTransporter().sendMail({
+  await sendMailWithDebug(getAdminTransporter(), {
     from,
     to: playerTo,
     replyTo: config.registrationFromEmail,
@@ -106,7 +146,7 @@ export async function sendRegistrationMail(registration) {
     text: `Hello ${registration.first_name},\n\nYour registration and payment were successful. Your registration fee of ${feeLabel} was received. Thank you for registering with Hopeland Global Checkers.`,
   })
 
-  await getAdminTransporter().sendMail({
+  await sendMailWithDebug(getAdminTransporter(), {
     from,
     to: config.registrationAdminEmail,
     replyTo: playerTo,

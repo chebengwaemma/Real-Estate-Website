@@ -9,30 +9,40 @@ function cleanSecret(raw: string): string {
     .replace(/^["']|["']$/g, '')
 }
 
-async function notifyContactInbox(input: { name: string; email: string; message: string }) {
+async function notifyContactInbox(input: { name: string; email: string; message: string; phone?: string }) {
   const mailApiUrl = cleanSecret(Deno.env.get('MAIL_API_URL') ?? '').replace(/\/$/, '')
   const mailApiSecret = cleanSecret(Deno.env.get('MAIL_API_SECRET') ?? '')
-  if (!mailApiUrl || !mailApiSecret) {
-    console.warn('MAIL_API_URL is not set — contact saved to database only.')
-    return
+
+  const payload = {
+    name: input.name,
+    email: input.email,
+    message: input.message,
+    ...(input.phone ? { phone: input.phone } : {}),
   }
 
-  try {
-    const res = await fetch(`${mailApiUrl}/api/email/contact-notification`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${mailApiSecret}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(input),
-    })
+  if (mailApiUrl) {
+    try {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      if (mailApiSecret) headers.Authorization = `Bearer ${mailApiSecret}`
 
-    if (!res.ok) {
-      const body = await res.text()
-      console.error(`Contact email failed (${res.status}): ${body}`)
+      const secretPath = mailApiSecret ? '/api/email/contact-notification' : '/api/send-email'
+      const res = await fetch(`${mailApiUrl}${secretPath}`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+      })
+
+      if (!res.ok) {
+        const body = await res.text()
+        console.error(`Contact email failed (${res.status}): ${body}`)
+      } else {
+        return
+      }
+    } catch (err) {
+      console.error('Contact email request failed', err)
     }
-  } catch (err) {
-    console.error('Contact email request failed', err)
+  } else {
+    console.warn('MAIL_API_URL is not set — contact saved to database only.')
   }
 }
 
@@ -52,6 +62,7 @@ Deno.serve(async (req) => {
     const body = await req.json()
     const name = String(body?.name ?? '').trim()
     const email = String(body?.email ?? '').trim().toLowerCase()
+    const phone = String(body?.phone ?? '').trim()
     const message = String(body?.message ?? '').trim()
 
     if (!name || !email || !message) {
@@ -71,7 +82,7 @@ Deno.serve(async (req) => {
       throw new Error(error.message)
     }
 
-    await notifyContactInbox({ name, email, message })
+    await notifyContactInbox({ name, email, message, ...(phone ? { phone } : {}) })
 
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,

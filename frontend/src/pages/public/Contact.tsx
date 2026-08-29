@@ -33,19 +33,32 @@ export default function Contact() {
     const subject = String(fd.get('subject') ?? '').trim()
     const messageBody = String(fd.get('message') ?? '').trim()
     const message = subject ? `Subject: ${subject}\n\n${messageBody}` : messageBody
+    const messageWithPhone = phoneValue ? `${message}\n\nPhone: ${phoneValue}` : message
 
     try {
-      await submitContactEmail({
-        name,
-        email: emailValue,
-        phone: phoneValue || undefined,
-        message,
-      })
+      let emailSent = false
 
       try {
-        await saveToInbox.mutateAsync({ name, email: emailValue, message })
-      } catch {
-        // Email already sent — inbox copy is optional
+        await submitContactEmail({
+          name,
+          email: emailValue,
+          phone: phoneValue || undefined,
+          message,
+        })
+        emailSent = true
+      } catch (mailError) {
+        console.warn('Direct mail API unavailable, using Supabase fallback', mailError)
+      }
+
+      try {
+        await saveToInbox.mutateAsync({
+          name,
+          email: emailValue,
+          message: messageWithPhone,
+          phone: phoneValue || undefined,
+        })
+      } catch (inboxError) {
+        if (!emailSent) throw inboxError
       }
 
       toast.success(t('pages.contact.success'))
