@@ -1,5 +1,10 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { corsHeaders } from '../_shared/cors.ts'
+import {
+  contactNotificationHtml,
+  getContactSmtpAuth,
+  sendHostingerHtmlMail,
+} from '../_shared/hostingerSmtp.ts'
 
 function cleanSecret(raw: string): string {
   return raw
@@ -7,6 +12,39 @@ function cleanSecret(raw: string): string {
     .replace(/[\u200B-\u200D\uFEFF]/g, '')
     .trim()
     .replace(/^["']|["']$/g, '')
+}
+
+async function sendViaDirectSmtp(input: { name: string; email: string; message: string; phone?: string }) {
+  const auth = getContactSmtpAuth()
+  if (!auth) {
+    console.warn('SMTP_USER/SMTP_PASS not configured — skipping direct contact email.')
+    return false
+  }
+
+  const fromName = cleanSecret(Deno.env.get('CONTACT_FROM_NAME') ?? '') || 'Website Contact Form'
+  const fromEmail = cleanSecret(Deno.env.get('CONTACT_FROM_EMAIL') ?? '') || auth.user
+  const notifyTo = cleanSecret(Deno.env.get('CONTACT_NOTIFY_EMAIL') ?? '') || auth.user
+
+  return sendHostingerHtmlMail({
+    auth,
+    fromName,
+    fromEmail,
+    to: notifyTo,
+    replyTo: input.email,
+    subject: `Website contact — ${input.name}`,
+    html: contactNotificationHtml(input),
+    text: [
+      'New website contact message',
+      '',
+      `Name: ${input.name}`,
+      `Email: ${input.email}`,
+      input.phone ? `Phone: ${input.phone}` : null,
+      '',
+      input.message,
+    ]
+      .filter(Boolean)
+      .join('\n'),
+  })
 }
 
 async function notifyContactInbox(input: { name: string; email: string; message: string; phone?: string }) {
@@ -20,7 +58,7 @@ async function notifyContactInbox(input: { name: string; email: string; message:
     ...(input.phone ? { phone: input.phone } : {}),
   }
 
-  if (mailApiUrl) {
+  if (mailApiUrl && !/localhost|127\.0\.0\.1/i.test(mailApiUrl)) {
     try {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' }
       if (mailApiSecret) headers.Authorization = `Bearer ${mailApiSecret}`
@@ -32,17 +70,17 @@ async function notifyContactInbox(input: { name: string; email: string; message:
         body: JSON.stringify(payload),
       })
 
-      if (!res.ok) {
-        const body = await res.text()
-        console.error(`Contact email failed (${res.status}): ${body}`)
-      } else {
-        return
-      }
+      if (res.ok) return
+      const body = await res.text()
+      console.error(`Contact mail API failed (${res.status}): ${body}`)
     } catch (err) {
-      console.error('Contact email request failed', err)
+      console.error('Contact mail API request failed', err)
     }
-  } else {
-    console.warn('MAIL_API_URL is not set — contact saved to database only.')
+  }
+
+  const smtpOk = await sendViaDirectSmtp(input)
+  if (!smtpOk) {
+    console.warn('Contact message saved, but email could not be sent.')
   }
 }
 

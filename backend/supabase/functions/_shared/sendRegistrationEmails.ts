@@ -1,24 +1,12 @@
 import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2'
 import type { RegistrationRow } from './recordPaidSession.ts'
-
-function cleanSecret(raw: string): string {
-  return raw
-    .replace(/^\uFEFF/, '')
-    .replace(/[\u200B-\u200D\uFEFF]/g, '')
-    .trim()
-    .replace(/^["']|["']$/g, '')
-}
-
-function formatUsdCents(amount: number, currency: string): string {
-  try {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: (currency || 'usd').toUpperCase(),
-    }).format(amount / 100)
-  } catch {
-    return `$${(amount / 100).toFixed(2)}`
-  }
-}
+import {
+  adminRegistrationNotifyHtml,
+  formatUsdCents,
+  getAdminSmtpAuth,
+  registrationConfirmationHtml,
+  sendHostingerHtmlMail,
+} from './hostingerSmtp.ts'
 
 async function sendViaResend(args: {
   apiKey: string
@@ -51,45 +39,55 @@ async function sendViaResend(args: {
   return true
 }
 
-function playerHtml(reg: RegistrationRow, fee: string): string {
-  return `
-    <div style="font-family:Arial,sans-serif;line-height:1.5;color:#111">
-      <h1 style="font-size:20px">Registration confirmed</h1>
-      <p>Hello ${reg.first_name},</p>
-      <p>Thank you for registering with <strong>Hopeland Global Checkers</strong>. Your registration fee of <strong>${fee}</strong> has been received.</p>
-      <p>
-        Name: ${reg.first_name} ${reg.last_name}<br/>
-        Email: ${reg.email}<br/>
-        Country: ${reg.country}<br/>
-        ${reg.nationality ? `Nationality: ${reg.nationality}<br/>` : ''}
-      </p>
-      <p>You can sign in with this email and the password you created during registration.</p>
-      <p>Questions: <a href="mailto:Info@HCheckers.org">Info@HCheckers.org</a></p>
-      <p>— Hopeland Global Checkers</p>
-    </div>
-  `
+async function sendViaHostingerSmtpDirect(reg: RegistrationRow): Promise<boolean> {
+  const auth = getAdminSmtpAuth()
+  if (!auth) return false
+
+  const fromName = cleanSecret(Deno.env.get('REGISTRATION_FROM_NAME') ?? '') || 'HCheckers Admin'
+  const fromEmail = cleanSecret(Deno.env.get('ADMIN_EMAIL') ?? Deno.env.get('REGISTRATION_FROM_EMAIL') ?? '') || auth.user
+  const adminTo =
+    cleanSecret(Deno.env.get('REGISTRATION_ADMIN_EMAIL') ?? '') || auth.user
+  const fee = formatUsdCents(reg.fee_amount, reg.fee_currency)
+  const playerTo = reg.email.trim().toLowerCase()
+  const subject = cleanSecret(Deno.env.get('REGISTRATION_EMAIL_SUBJECT') ?? '') || 'Payment Successful - Registration Confirmed'
+
+  const playerOk = await sendHostingerHtmlMail({
+    auth,
+    fromName,
+    fromEmail,
+    to: playerTo,
+    replyTo: fromEmail,
+    subject,
+    html: registrationConfirmationHtml(reg, fee),
+    text: `Hello ${reg.first_name},\n\nYour registration and payment were successful. Fee: ${fee}.`,
+  })
+
+  const adminOk = await sendHostingerHtmlMail({
+    auth,
+    fromName,
+    fromEmail,
+    to: adminTo,
+    replyTo: playerTo,
+    subject: `New paid registration: ${reg.first_name} ${reg.last_name}`,
+    html: adminRegistrationNotifyHtml(reg, fee),
+    text: `New paid registration from ${reg.first_name} ${reg.last_name} (${playerTo}). Fee: ${fee}`,
+  })
+
+  return playerOk && adminOk
 }
 
-function adminHtml(reg: RegistrationRow, fee: string): string {
-  return `
-    <div style="font-family:Arial,sans-serif;line-height:1.5;color:#111">
-      <h1 style="font-size:20px">New paid registration</h1>
-      <p>${reg.first_name} ${reg.last_name} paid the registration fee (${fee}).</p>
-      <p>
-        Email: ${reg.email}<br/>
-        Phone: ${reg.phone}<br/>
-        City: ${reg.city}<br/>
-        Country: ${reg.country}<br/>
-        ${reg.nationality ? `Nationality: ${reg.nationality}<br/>` : ''}
-      </p>
-    </div>
-  `
+function cleanSecret(raw: string): string {
+  return raw
+    .replace(/^\uFEFF/, '')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .trim()
+    .replace(/^["']|["']$/g, '')
 }
 
 async function sendViaHostingerMailApi(reg: RegistrationRow): Promise<boolean> {
   const mailApiUrl = cleanSecret(Deno.env.get('MAIL_API_URL') ?? '').replace(/\/$/, '')
   const mailApiSecret = cleanSecret(Deno.env.get('MAIL_API_SECRET') ?? '')
-  if (!mailApiUrl || !mailApiSecret) return false
+  if (!mailApiUrl || !mailApiSecret || /localhost|127\.0\.0\.1/i.test(mailApiUrl)) return false
 
   const res = await fetch(`${mailApiUrl}/api/payment/success-email`, {
     method: 'POST',
@@ -139,9 +137,20 @@ export async function sendPaidRegistrationEmails(
     return
   }
 
+  const smtpOk = await sendViaHostingerSmtpDirect(reg)
+  if (smtpOk) {
+    if (reg.id) {
+      await supabase
+        .from('registrations')
+        .update({ confirmation_email_sent_at: new Date().toISOString() } as never)
+        .eq('id', reg.id)
+    }
+    return
+  }
+
   const apiKey = cleanSecret(Deno.env.get('RESEND_API_KEY') ?? '')
   if (!apiKey) {
-    console.warn('MAIL_API_URL or RESEND_API_KEY is not set — skipping registration emails.')
+    console.warn('Mail API, Hostinger SMTP, and Resend are unavailable — skipping registration emails.')
     return
   }
 
@@ -158,15 +167,15 @@ export async function sendPaidRegistrationEmails(
     from,
     to: playerTo,
     subject: 'Payment Successful - Registration Confirmed',
-    html: playerHtml(reg, fee),
-    replyTo: 'Info@HCheckers.org',
+    html: registrationConfirmationHtml(reg, fee),
+    replyTo: 'info@hcheckers.org',
   })
   const adminOk = await sendViaResend({
     apiKey,
     from,
     to: adminTo,
     subject: `New paid registration: ${reg.first_name} ${reg.last_name}`,
-    html: adminHtml(reg, fee),
+    html: adminRegistrationNotifyHtml(reg, fee),
     replyTo: playerTo,
   })
 

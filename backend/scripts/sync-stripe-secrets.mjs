@@ -25,23 +25,45 @@ function findEnvFile() {
   return candidates.find((p) => fs.existsSync(p)) ?? null
 }
 
+function loadEnvFile(filePath) {
+  return Object.fromEntries(
+    fs
+      .readFileSync(filePath, 'utf8')
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith('#') && line.includes('='))
+      .map((line) => {
+        const i = line.indexOf('=')
+        const key = line.slice(0, i).trim()
+        let value = line.slice(i + 1).trim()
+        if (
+          (value.startsWith("'") && value.endsWith("'")) ||
+          (value.startsWith('"') && value.endsWith('"'))
+        ) {
+          value = value.slice(1, -1)
+        }
+        return [key, value]
+      }),
+  )
+}
+
+function mergeEnvFiles(...files) {
+  const merged = {}
+  for (const file of files) {
+    if (!file || !fs.existsSync(file)) continue
+    Object.assign(merged, loadEnvFile(file))
+  }
+  return merged
+}
+
 const envPath = findEnvFile()
-if (!envPath) {
+const mailEnvPath = path.join(backendRoot, 'server', '.env')
+if (!envPath && !fs.existsSync(mailEnvPath)) {
   console.error('Missing .env — copy frontend/.env.example to frontend/.env and fill keys first.')
   process.exit(1)
 }
 
-const env = Object.fromEntries(
-  fs
-    .readFileSync(envPath, 'utf8')
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith('#') && line.includes('='))
-    .map((line) => {
-      const i = line.indexOf('=')
-      return [line.slice(0, i).trim(), line.slice(i + 1).trim()]
-    }),
-)
+const env = mergeEnvFiles(envPath, fs.existsSync(mailEnvPath) ? mailEnvPath : null)
 
 const secret = env.STRIPE_SECRET_KEY
 if (!secret || /xxx|your_|change_me/i.test(secret)) {
@@ -93,12 +115,36 @@ if (env.MAIL_API_SECRET && !/xxx|your_|change_me/i.test(env.MAIL_API_SECRET)) {
   pairs.MAIL_API_SECRET = env.MAIL_API_SECRET
 }
 
-const args = ['supabase', 'secrets', 'set', `--project-ref=${projectRef}`]
-for (const [k, v] of Object.entries(pairs)) {
-  args.push(`${k}=${v}`)
+const mailKeys = [
+  'SMTP_HOST',
+  'SMTP_PORT',
+  'SMTP_SECURE',
+  'SMTP_USER',
+  'SMTP_PASS',
+  'ADMIN_EMAIL',
+  'ADMIN_PASS',
+  'CONTACT_FROM_NAME',
+  'CONTACT_FROM_EMAIL',
+  'CONTACT_NOTIFY_EMAIL',
+  'REGISTRATION_FROM_NAME',
+  'REGISTRATION_ADMIN_EMAIL',
+  'REGISTRATION_EMAIL_SUBJECT',
+]
+
+for (const key of mailKeys) {
+  const value = env[key]
+  if (value && !/xxx|your_|password/i.test(value)) {
+    pairs[key] = value
+  }
 }
 
-console.log(`Using env file: ${envPath}`)
+const args = ['supabase', 'secrets', 'set', `--project-ref=${projectRef}`]
+for (const [k, v] of Object.entries(pairs)) {
+  const escaped = String(v).replace(/"/g, '\\"')
+  args.push(`${k}="${escaped}"`)
+}
+
+console.log(`Using env files: ${[envPath, fs.existsSync(mailEnvPath) ? mailEnvPath : null].filter(Boolean).join(', ')}`)
 console.log(`Syncing Stripe secrets to project ${projectRef}…`)
 const result = spawnSync('npx', args, { stdio: 'inherit', shell: true, env: process.env, cwd: backendRoot })
 if (result.status !== 0) process.exit(result.status ?? 1)
