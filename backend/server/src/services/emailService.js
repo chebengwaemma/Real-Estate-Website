@@ -6,12 +6,15 @@ import {
   registrationConfirmationHtml,
 } from '../mail/templates.js'
 
-/** Hostinger SMTP transporter — credentials live only in `.env`. */
-let transporter
+/** Contact form SMTP (info@) — credentials live only in `.env`. */
+let contactTransporter
 
-function getTransporter() {
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
+/** Registration / payment SMTP (admin@) */
+let adminTransporter
+
+function getContactTransporter() {
+  if (!contactTransporter) {
+    contactTransporter = nodemailer.createTransport({
       host: config.smtp.host,
       port: config.smtp.port,
       secure: config.smtp.secure,
@@ -21,11 +24,26 @@ function getTransporter() {
       },
     })
   }
-  return transporter
+  return contactTransporter
+}
+
+function getAdminTransporter() {
+  if (!adminTransporter) {
+    adminTransporter = nodemailer.createTransport({
+      host: config.adminSmtp.host,
+      port: config.adminSmtp.port,
+      secure: config.adminSmtp.secure,
+      auth: {
+        user: config.adminSmtp.user,
+        pass: config.adminSmtp.pass,
+      },
+    })
+  }
+  return adminTransporter
 }
 
 export async function verifySmtpConnection() {
-  await getTransporter().verify()
+  await Promise.all([getContactTransporter().verify(), getAdminTransporter().verify()])
 }
 
 /**
@@ -42,7 +60,7 @@ export async function sendSupportMail(payload) {
     throw new Error('Name, email, and message are required.')
   }
 
-  const from = formatFrom(config.registrationFromName, config.registrationFromEmail)
+  const from = formatFrom(config.contactFromName, config.contactFromEmail)
   const textLines = [
     'New website contact message',
     '',
@@ -53,7 +71,7 @@ export async function sendSupportMail(payload) {
     message,
   ].filter(Boolean)
 
-  await getTransporter().sendMail({
+  await getContactTransporter().sendMail({
     from,
     to: config.contactNotifyEmail,
     replyTo: email,
@@ -66,7 +84,7 @@ export async function sendSupportMail(payload) {
 }
 
 /**
- * Trigger 2 — Payment success → HTML registration email from Admin@HCheckers.org
+ * Trigger 2 — Payment success → HTML registration email from admin@hcheckers.org
  * @param {object} registration — paid registration row from database
  */
 export async function sendRegistrationMail(registration) {
@@ -77,17 +95,18 @@ export async function sendRegistrationMail(registration) {
   const feeLabel = formatUsdCents(registration.fee_amount ?? 25000, registration.fee_currency ?? 'usd')
   const playerTo = String(registration.email).trim().toLowerCase()
   const from = formatFrom(config.registrationFromName, config.registrationFromEmail)
+  const subject = config.registrationEmailSubject
 
-  await getTransporter().sendMail({
+  await getAdminTransporter().sendMail({
     from,
     to: playerTo,
-    replyTo: config.contactNotifyEmail,
-    subject: 'Hopeland Global Checkers — registration confirmed',
+    replyTo: config.registrationFromEmail,
+    subject,
     html: registrationConfirmationHtml(registration, feeLabel),
-    text: `Hello ${registration.first_name},\n\nYour registration fee of ${feeLabel} was received. Thank you for registering with Hopeland Global Checkers.`,
+    text: `Hello ${registration.first_name},\n\nYour registration and payment were successful. Your registration fee of ${feeLabel} was received. Thank you for registering with Hopeland Global Checkers.`,
   })
 
-  await getTransporter().sendMail({
+  await getAdminTransporter().sendMail({
     from,
     to: config.registrationAdminEmail,
     replyTo: playerTo,

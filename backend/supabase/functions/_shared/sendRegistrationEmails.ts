@@ -157,7 +157,7 @@ export async function sendPaidRegistrationEmails(
     apiKey,
     from,
     to: playerTo,
-    subject: 'Hopeland Global Checkers — registration confirmed',
+    subject: 'Payment Successful - Registration Confirmed',
     html: playerHtml(reg, fee),
     replyTo: 'Info@HCheckers.org',
   })

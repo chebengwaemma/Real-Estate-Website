@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import rateLimit from 'express-rate-limit'
 import { requireMailApiSecret } from '../middleware/auth.js'
-import { sendPaymentSuccessEmail, submitContact } from '../controllers/mailController.js'
+import { sendPaymentSuccessEmail, sendContactEmail, submitContact } from '../controllers/mailController.js'
 
 const router = Router()
 
@@ -12,7 +12,10 @@ const contactLimiter = rateLimit({
   legacyHeaders: false,
 })
 
-/** Trigger 1 — contact / SMS-style message → Info@HCheckers.org */
+/** Contact form — POST /api/send-email (React Contact page) */
+router.post('/send-email', contactLimiter, sendContactEmail)
+
+/** Trigger 1 — contact / SMS-style message → info@hcheckers.org */
 router.post('/contact', contactLimiter, submitContact)
 
 /** Trigger 2 — payment success hook → registration HTML email */

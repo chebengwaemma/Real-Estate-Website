@@ -75,8 +75,9 @@ export function registrationConfirmationHtml(reg, feeLabel) {
   const bodyHtml = `
     <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#334155;">Hello <strong>${firstName}</strong>,</p>
     <p style="margin:0 0 20px;font-size:16px;line-height:1.7;color:#334155;">
-      Thank you for registering for the <strong>Hopeland Global Checkers World Championship</strong>.
-      Your payment of <strong style="color:#2563eb;">${escapeHtml(feeLabel)}</strong> was received successfully.
+      Great news — your <strong>registration and payment were successful</strong>.
+      Thank you for joining the <strong>Hopeland Global Checkers World Championship</strong>.
+      We received your payment of <strong style="color:#2563eb;">${escapeHtml(feeLabel)}</strong> and your registration is now confirmed.
     </p>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;margin:0 0 20px;">
       <tr>
@@ -97,8 +98,8 @@ export function registrationConfirmationHtml(reg, feeLabel) {
   `
 
   return layout({
-    preheader: `Registration confirmed — ${feeLabel} received.`,
-    title: 'Registration confirmed',
+    preheader: `Payment successful — registration confirmed (${feeLabel}).`,
+    title: 'Payment Successful — Registration Confirmed',
     bodyHtml,
     ctaHref: `${config.siteUrl}/account`,
     ctaLabel: 'View my account',

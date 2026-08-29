@@ -15,13 +15,26 @@ export const config = {
     host: process.env.SMTP_HOST || 'smtp.hostinger.com',
     port: Number(process.env.SMTP_PORT || 465),
     secure: process.env.SMTP_SECURE !== 'false',
-    user: required('SMTP_USER', 'Admin@HCheckers.org'),
+    user: required('SMTP_USER', 'info@hcheckers.org'),
     pass: required('SMTP_PASS'),
   },
-  registrationFromEmail: process.env.REGISTRATION_FROM_EMAIL || 'Admin@HCheckers.org',
-  registrationFromName: process.env.REGISTRATION_FROM_NAME || 'Hopeland Global Checkers',
-  contactNotifyEmail: process.env.CONTACT_NOTIFY_EMAIL || 'Info@HCheckers.org',
-  registrationAdminEmail: process.env.REGISTRATION_ADMIN_EMAIL || 'Admin@HCheckers.org',
+  contactFromName: process.env.CONTACT_FROM_NAME || 'Website Contact Form',
+  contactFromEmail: process.env.CONTACT_FROM_EMAIL || process.env.SMTP_USER || 'info@hcheckers.org',
+  contactNotifyEmail: process.env.CONTACT_NOTIFY_EMAIL || 'info@hcheckers.org',
+  adminSmtp: {
+    host: process.env.SMTP_HOST || 'smtp.hostinger.com',
+    port: Number(process.env.SMTP_PORT || 465),
+    secure: process.env.SMTP_SECURE !== 'false',
+    user: required('ADMIN_EMAIL', 'admin@hcheckers.org'),
+    pass: required('ADMIN_PASS'),
+  },
+  registrationFromEmail:
+    process.env.ADMIN_EMAIL || process.env.REGISTRATION_FROM_EMAIL || 'admin@hcheckers.org',
+  registrationFromName: process.env.REGISTRATION_FROM_NAME || 'HCheckers Admin',
+  registrationAdminEmail:
+    process.env.REGISTRATION_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'admin@hcheckers.org',
+  registrationEmailSubject:
+    process.env.REGISTRATION_EMAIL_SUBJECT || 'Payment Successful - Registration Confirmed',
 }
 
 export function formatFrom(name, email) {

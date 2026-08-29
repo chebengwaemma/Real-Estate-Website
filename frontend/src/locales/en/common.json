@@ -126,6 +126,7 @@
       "address": "Address",
       "fullName": "Full Name",
       "emailAddress": "Email Address",
+      "phoneNumber": "Phone Number",
       "subject": "Subject",
       "message": "Message",
       "success": "Thanks — our team will get back to you shortly.",

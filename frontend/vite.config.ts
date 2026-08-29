@@ -17,6 +17,12 @@ export default defineConfig(({ mode }) => {
       host: true,
       port: 5173,
       strictPort: true,
+      proxy: {
+        '/api': {
+          target: env.MAIL_API_URL?.replace(/\/$/, '') || 'http://localhost:3001',
+          changeOrigin: true,
+        },
+      },
     },
     resolve: {
       alias: {

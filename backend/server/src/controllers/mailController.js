@@ -1,29 +1,38 @@
 import { sendRegistrationMail, sendSupportMail } from '../services/emailService.js'
 
-/** POST /api/contact — public contact form from React */
-export async function submitContact(req, res) {
+/** POST /api/send-email — public contact form (Hostinger SMTP) */
+export async function sendContactEmail(req, res) {
   try {
-    const { name, email, message, phone } = req.body ?? {}
-    await sendSupportMail({ name, email, message, phone })
-    return res.json({ ok: true })
+    const { name, email, phone, message } = req.body ?? {}
+    await sendSupportMail({ name, email, phone, message })
+    return res.status(200).json({
+      success: true,
+      message: 'Your message was sent successfully.',
+    })
   } catch (err) {
-    console.error('submitContact failed', err)
-    const message = err instanceof Error ? err.message : 'Could not send contact email.'
-    const status = /required|invalid/i.test(message) ? 400 : 500
-    return res.status(status).json({ error: message })
+    console.error('sendContactEmail failed', err)
+    const detail = err instanceof Error ? err.message : 'Could not send contact email.'
+    const status = /required|invalid/i.test(detail) ? 400 : 500
+    return res.status(status).json({ success: false, error: detail })
   }
 }
 
+/** POST /api/contact — alias */
+export async function submitContact(req, res) {
+  return sendContactEmail(req, res)
+}
+
 /** POST /api/payment/success-email — called after DB status = paid (Stripe webhook path) */
-export async function sendPaymentSuccessEmail(req, res) {
-  try {
-    const registration = req.body?.registration
-    await sendRegistrationMail(registration)
-    return res.json({ ok: true })
-  } catch (err) {
-    console.error('sendPaymentSuccessEmail failed', err)
-    const message = err instanceof Error ? err.message : 'Could not send registration email.'
-    const status = /invalid/i.test(message) ? 400 : 500
-    return res.status(status).json({ error: message })
+export function sendPaymentSuccessEmail(req, res) {
+  const registration = req.body?.registration
+
+  if (!registration?.email || !registration?.first_name || !registration?.last_name) {
+    return res.status(400).json({ error: 'Invalid registration payload.' })
   }
+
+  res.json({ ok: true, queued: true })
+
+  sendRegistrationMail(registration).catch((err) => {
+    console.error('sendPaymentSuccessEmail background failed', err)
+  })
 }

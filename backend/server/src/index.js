@@ -33,9 +33,10 @@ app.listen(config.port, async () => {
   try {
     await verifySmtpConnection()
     console.log(`Mail server listening on port ${config.port}`)
-    console.log(`SMTP: ${config.smtp.host}:${config.smtp.port} as ${config.smtp.user}`)
+    console.log(`SMTP contact: ${config.smtp.host}:${config.smtp.port} as ${config.smtp.user}`)
+    console.log(`SMTP admin: ${config.adminSmtp.host}:${config.adminSmtp.port} as ${config.adminSmtp.user}`)
   } catch (err) {
-    console.error('SMTP verification failed — check .env (SMTP_HOST, SMTP_USER, SMTP_PASS)')
+    console.error('SMTP verification failed — check .env (SMTP_*, ADMIN_EMAIL, ADMIN_PASS)')
     console.error(err)
     process.exit(1)
   }

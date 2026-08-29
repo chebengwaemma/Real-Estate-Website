@@ -31,7 +31,7 @@ Info@HCheckers.org inbox
 
 ---
 
-## Trigger 2 — Payment success → Admin@HCheckers.org → User
+## Trigger 2 — Payment success → admin@hcheckers.org → User
 
 ```
 User pays (Stripe Checkout)
@@ -39,14 +39,15 @@ User pays (Stripe Checkout)
 Stripe webhook OR finalize-paid-registration
     ↓
 Database: registrations.status = paid
-    ↓ (next line)
+    ↓ (async — does not block payment response)
 sendPaidRegistrationEmails()
     ↓ POST /api/payment/success-email
-Express mailController.sendPaymentSuccessEmail()
-    ↓
+Express mailController.sendPaymentSuccessEmail()  → responds immediately { ok: true, queued: true }
+    ↓ background
 emailService.sendRegistrationMail()
-    ↓ Hostinger SMTP as Admin@HCheckers.org
-User email (HTML confirmation) + Admin@ copy
+    ↓ Hostinger SMTP as admin@hcheckers.org (ADMIN_EMAIL / ADMIN_PASS)
+User email — subject: "Payment Successful - Registration Confirmed"
+    + admin copy notification
 ```
 
 ---
@@ -62,12 +63,15 @@ cp .env.example .env
 SMTP_HOST=smtp.hostinger.com
 SMTP_PORT=465
 SMTP_SECURE=true
-SMTP_USER=Admin@HCheckers.org
-SMTP_PASS=your_mailbox_password
+SMTP_USER=info@hcheckers.org
+SMTP_PASS=your_info_mailbox_password
 
-CONTACT_NOTIFY_EMAIL=Info@HCheckers.org
-REGISTRATION_FROM_EMAIL=Admin@HCheckers.org
-REGISTRATION_ADMIN_EMAIL=Admin@HCheckers.org
+ADMIN_EMAIL=admin@hcheckers.org
+ADMIN_PASS=your_admin_mailbox_password
+REGISTRATION_FROM_NAME=HCheckers Admin
+REGISTRATION_ADMIN_EMAIL=admin@hcheckers.org
+
+CONTACT_NOTIFY_EMAIL=info@hcheckers.org
 
 MAIL_API_SECRET=long_random_secret
 SITE_URL=https://hcheckers.org

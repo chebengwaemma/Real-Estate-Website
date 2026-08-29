@@ -9,13 +9,14 @@ import { FormField } from '@/components/forms/FormField'
 import { Button } from '@/components/common/Button'
 import { SITE_NAME, SITE_URL } from '@/lib/seo'
 import { useSiteSettings, useSubmitContactMessage } from '@/hooks/useCms'
+import { submitContactEmail } from '@/lib/contactEmail'
 import { publicContactEmail } from '@/lib/publicContactEmail'
 
 export default function Contact() {
   const { t } = useTranslation()
   const [submitting, setSubmitting] = useState(false)
   const { data: settings } = useSiteSettings()
-  const submitMessage = useSubmitContactMessage()
+  const saveToInbox = useSubmitContactMessage()
   const email = publicContactEmail(settings?.contact_email)
   const phone = settings?.contact_phone?.trim() || ''
   const address = settings?.contact_address?.trim() || settings?.championship_location || 'Atlanta, Georgia, USA'
@@ -28,11 +29,25 @@ export default function Contact() {
     const fd = new FormData(form)
     const name = String(fd.get('name') ?? '').trim()
     const emailValue = String(fd.get('email') ?? '').trim()
+    const phoneValue = String(fd.get('phone') ?? '').trim()
     const subject = String(fd.get('subject') ?? '').trim()
-    const message = String(fd.get('message') ?? '').trim()
-    const body = subject ? `Subject: ${subject}\n\n${message}` : message
+    const messageBody = String(fd.get('message') ?? '').trim()
+    const message = subject ? `Subject: ${subject}\n\n${messageBody}` : messageBody
+
     try {
-      await submitMessage.mutateAsync({ name, email: emailValue, message: body })
+      await submitContactEmail({
+        name,
+        email: emailValue,
+        phone: phoneValue || undefined,
+        message,
+      })
+
+      try {
+        await saveToInbox.mutateAsync({ name, email: emailValue, message })
+      } catch {
+        // Email already sent — inbox copy is optional
+      }
+
       toast.success(t('pages.contact.success'))
       form.reset()
     } catch (err) {
@@ -112,6 +127,12 @@ export default function Contact() {
                 required
               />
             </div>
+            <FormField
+              label={t('pages.contact.phoneNumber')}
+              name="phone"
+              type="tel"
+              placeholder="+1 555 000 0000"
+            />
             <FormField label={t('pages.contact.subject')} name="subject" placeholder="Sponsorship inquiry" required />
             <div className="flex flex-col gap-1.5">
               <label htmlFor="message" className="text-sm font-bold text-ink">
