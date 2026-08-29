@@ -74,7 +74,7 @@ npm run stripe:sync
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
 - `SITE_URL`
-- `REGISTRATION_FEE_AMOUNT`
+- `REGISTRATION_FEE_AMOUNT` (`25000` = $250.00 — do not leave this at `1000`)
 - `REGISTRATION_FEE_CURRENCY`
 
 ## Step 6 — Stripe Webhook
