@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Video, Trophy, Menu, Award, type LucideIcon } from 'lucide-react'
+import { Video, BookOpen, Menu, Award, type LucideIcon } from 'lucide-react'
 import { useUiStore } from '@/store/uiStore'
 import { cn } from '@/lib/utils'
 
@@ -12,7 +12,7 @@ interface BottomNavItem {
 
 /**
  * Mobile bottom nav — center Home uses animated GIF (BlockDAG-style).
- * Layout: Videos · Sports · Home · Sponsors · Menu
+ * Layout: Videos · Blog · Home · Sponsors · Menu
  */
 export function MobileBottomNav() {
   const { t } = useTranslation()
@@ -20,7 +20,7 @@ export function MobileBottomNav() {
 
   const leftItems: BottomNavItem[] = [
     { to: '/videos', icon: Video, label: t('mobileNav.videos') },
-    { to: '/sports', icon: Trophy, label: t('mobileNav.sports') },
+    { to: '/blog', icon: BookOpen, label: t('nav.blog') },
   ]
 
   if (mobileMenuOpen) return null

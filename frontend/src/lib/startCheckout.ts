@@ -1,6 +1,6 @@
 import { FunctionsFetchError, FunctionsHttpError, FunctionsRelayError } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabaseClient'
-import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/env'
+import { getSupabaseAnonKey, getSupabaseUrl, isLocalHost } from '@/lib/env'
 
 export type CheckoutStartResult =
   | { clientSecret: string; url?: undefined }
@@ -100,6 +100,34 @@ async function invokeCreateCheckout(
   throw new Error(message ?? 'Could not start checkout. Please try again.')
 }
 
+async function invokeLocalCheckout(
+  body: CheckoutRegistrationFields & { uiMode: 'hosted'; siteUrl: string },
+): Promise<CheckoutApiResponse | null> {
+  if (!isLocalHost()) return null
+
+  try {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    const contentType = res.headers.get('content-type') ?? ''
+    if (!contentType.includes('application/json')) return null
+
+    const data = (await res.json()) as CheckoutApiResponse
+    if (!res.ok) {
+      if (data.error) throw new Error(data.error)
+      return null
+    }
+    return data
+  } catch (err) {
+    if (err instanceof Error && err.message && !/Failed to fetch|NetworkError/i.test(err.message)) {
+      throw err
+    }
+    return null
+  }
+}
+
 /**
  * Starts hosted Stripe Checkout via Supabase Edge Function only.
  * Does NOT call Hostinger PHP or same-origin /api/* payment endpoints.
@@ -110,6 +138,10 @@ export async function startRegistrationCheckout(
 ): Promise<CheckoutStartResult> {
   const siteUrl = typeof window !== 'undefined' ? window.location.origin.replace(/\/$/, '') : ''
   const payload = { ...fields, siteUrl, uiMode: 'hosted' as const }
+
+  const local = await invokeLocalCheckout(payload)
+  if (local?.url) return { url: local.url }
+  if (local?.error) throw new Error(local.error)
 
   const remote = await invokeCreateCheckout(payload)
   if (remote.url) return { url: remote.url }

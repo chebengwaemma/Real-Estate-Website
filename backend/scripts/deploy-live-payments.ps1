@@ -25,7 +25,7 @@ Write-Host "Setting Edge secrets on $ref ..."
 npx --yes supabase secrets set --project-ref $ref `
   "STRIPE_SECRET_KEY=$sk" `
   "SITE_URL=https://hcheckers.org" `
-  "REGISTRATION_FEE_AMOUNT=1000" `
+  "REGISTRATION_FEE_AMOUNT=25000" `
   "REGISTRATION_FEE_CURRENCY=usd"
 
 $fns = @(
@@ -36,7 +36,7 @@ $fns = @(
   "get-registration",
   "get-my-registration",
   "update-registration-profile",
-  "admin-upload-media"
+  "submit-contact-message"
 )
 
 foreach ($fn in $fns) {

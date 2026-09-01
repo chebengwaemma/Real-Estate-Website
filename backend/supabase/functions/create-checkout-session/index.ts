@@ -125,7 +125,6 @@ Deno.serve(async (req) => {
     params.set('mode', 'payment')
     params.append('payment_method_types[]', 'card')
     params.set('customer_email', email)
-    params.set('branding_settings[display_name]', 'Hopeland Global Checkers (Draughts) Federation')
     params.set('line_items[0][quantity]', '1')
     params.set('line_items[0][price_data][currency]', feeCurrency)
     params.set('line_items[0][price_data][unit_amount]', String(feeAmount))
@@ -159,7 +158,7 @@ Deno.serve(async (req) => {
       headers: {
         Authorization: `Bearer ${stripeSecretKey}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Stripe-Version': '2026-03-25.dahlia',
+        'Stripe-Version': '2024-06-20',
       },
       body: params.toString(),
     })
