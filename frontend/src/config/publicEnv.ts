@@ -10,7 +10,7 @@ export const publicEnv = {
   supabaseAnonKey:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5ZGxpdWxmZmRtYWNkZm5rcXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTA2MjQsImV4cCI6MjEwMzE2NjYyNH0.Q5-H304jlappnhmMRSJ7pv3LS84YQaZFE-wxQ1cfwsk',
   stripePublishableKey:
-    'pk_live_51KxzXWDFK01peQeTfqPjp7xTSfug4oo5UHS0X1nWlRVN54yK9NZ88aZmkg0oN4LQq92BlZDxCCdCbCdiBGorNr4c00b6org7P1',
+    'pk_live_51UAxYLEJx0A9C80JHMN53t7lBRtvhcpOM5W7fSkMqYp0NmG07qF0BBgFz0ox7fRcu2EeGP619E4fS6g7DBaZlvdn00BS5Z0QwL',
   registrationFeeAmount: '100',
   registrationFeeCurrency: 'usd',
   geoLookupUrl: 'https://ipapi.co/json/',

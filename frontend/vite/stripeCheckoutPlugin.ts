@@ -567,6 +567,8 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
           params.set('metadata[nationality]', (body.nationality || body.country).trim())
           params.set('metadata[phone]', body.phone.trim())
           params.set('metadata[email]', email)
+          params.set('payment_intent_data[statement_descriptor]', 'HOPeland Registration')
+          params.set('payment_intent_data[capture_method]', 'automatic')
 
           if (uiMode === 'embedded') {
             params.set('ui_mode', 'embedded_page')
