@@ -435,7 +435,7 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
             }
 
             const { url, serviceKey } = supabaseConfig(env)
-            const feeAmount = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || 25000)
+            const feeAmount = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || 50)
             const feeCurrency = (
               env.VITE_REGISTRATION_FEE_CURRENCY ||
               env.REGISTRATION_FEE_CURRENCY ||
@@ -554,7 +554,7 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
           }
           const body = raw
 
-          const feeAmount = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || 25000)
+          const feeAmount = Number(env.VITE_REGISTRATION_FEE_AMOUNT || env.REGISTRATION_FEE_AMOUNT || 50)
           const feeCurrency = (
             env.VITE_REGISTRATION_FEE_CURRENCY ||
             env.REGISTRATION_FEE_CURRENCY ||

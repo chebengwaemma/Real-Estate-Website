@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
       })
     }
 
-    const feeAmount = Number(Deno.env.get('REGISTRATION_FEE_AMOUNT') ?? '25000')
+    const feeAmount = Number(Deno.env.get('REGISTRATION_FEE_AMOUNT') ?? '50')
     const feeCurrency = (Deno.env.get('REGISTRATION_FEE_CURRENCY') ?? 'usd').toLowerCase()
     if (!Number.isFinite(feeAmount) || feeAmount < 50) {
       return json(500, { error: 'Invalid registration fee configuration.' })

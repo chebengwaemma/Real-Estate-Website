@@ -23,7 +23,7 @@ When you receive the backend package and Supabase is set up, put these in `.env`
 VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key
 VITE_STRIPE_PUBLISHABLE_KEY=pk_test_or_live_key
-VITE_REGISTRATION_FEE_AMOUNT=25000
+VITE_REGISTRATION_FEE_AMOUNT=50
 VITE_REGISTRATION_FEE_CURRENCY=usd
 ```
 
