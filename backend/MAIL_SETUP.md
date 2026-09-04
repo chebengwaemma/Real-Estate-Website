@@ -39,15 +39,16 @@ User pays (Stripe Checkout)
 Stripe webhook OR finalize-paid-registration
     ↓
 Database: registrations.status = paid
-    ↓ (async — does not block payment response)
+    ↓ (awaited — must finish before the function returns)
 sendPaidRegistrationEmails()
-    ↓ POST /api/payment/success-email
-Express mailController.sendPaymentSuccessEmail()  → responds immediately { ok: true, queued: true }
-    ↓ background
+    ↓ POST /api/payment/success-email  (or direct Hostinger SMTP)
+Express mailController.sendPaymentSuccessEmail()
+    ↓
 emailService.sendRegistrationMail()
-    ↓ Hostinger SMTP as admin@hcheckers.org (ADMIN_EMAIL / ADMIN_PASS)
-User email — subject: "Payment Successful - Registration Confirmed"
-    + admin copy notification
+    ↓ Hostinger SMTP as admin@hcheckers.org
+1) Player inbox — subject: "Thank you for registering with Hopeland Global Checkers"
+2) admin@hcheckers.org — subject: "New paid registration: First Last"
+   (player mail is also BCC'd to admin)
 ```
 
 ---

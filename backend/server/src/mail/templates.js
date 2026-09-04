@@ -50,7 +50,7 @@ function layout({ preheader, title, bodyHtml, ctaHref, ctaLabel }) {
           <tr>
             <td style="padding:0 32px 28px;">
               <p style="margin:0;font-size:12px;line-height:1.6;color:#64748b;">
-                Questions? Email <a href="mailto:Info@HCheckers.org" style="color:#2563eb;">Info@HCheckers.org</a><br />
+    Questions? Email <a href="mailto:admin@hcheckers.org" style="color:#2563eb;">admin@hcheckers.org</a><br />
                 Atlanta, Georgia, USA — July 19–25, 2027
               </p>
             </td>
@@ -73,43 +73,75 @@ export function registrationConfirmationHtml(reg, feeLabel) {
   const city = reg.city ? escapeHtml(reg.city) : ''
 
   const bodyHtml = `
-    <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#334155;">Hello <strong>${firstName}</strong>,</p>
-    <p style="margin:0 0 20px;font-size:16px;line-height:1.7;color:#334155;">
-      Great news — your <strong>registration and payment were successful</strong>.
-      Thank you for joining the <strong>Hopeland Global Checkers World Championship</strong>.
-      We received your payment of <strong style="color:#2563eb;">${escapeHtml(feeLabel)}</strong> and your registration is now confirmed.
+    <p style="margin:0 0 16px;font-size:16px;line-height:1.8;color:#334155;">Dear <strong>${firstName} ${lastName}</strong>,</p>
+    <p style="margin:0 0 16px;font-size:16px;line-height:1.8;color:#334155;">
+      Thank you for registering with <strong>Hopeland Global Checkers</strong>. We are genuinely glad to welcome you
+      into the championship community. Completing your registration is an important first step, and we appreciate
+      the time and trust you have placed in us.
+    </p>
+    <p style="margin:0 0 16px;font-size:16px;line-height:1.8;color:#334155;">
+      Your place in the Hopeland Global Checkers World Championship has been received. Please do not worry about
+      next steps just yet. <strong>Hopeland Checkers Admin will contact you</strong> directly from
+      <a href="mailto:admin@hcheckers.org" style="color:#2563eb;">admin@hcheckers.org</a>
+      with the information you need, including how we will stay in touch, what to expect before Atlanta, and any
+      details we still need from you.
+    </p>
+    <p style="margin:0 0 16px;font-size:16px;line-height:1.8;color:#334155;">
+      Until then, keep this email for your records. Below is a short summary of the registration we have on file.
+      If anything looks incorrect, reply to this message or write to us at
+      <a href="mailto:admin@hcheckers.org" style="color:#2563eb;">admin@hcheckers.org</a> and we will correct it.
     </p>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;margin:0 0 20px;">
       <tr>
         <td style="padding:20px 22px;">
-          <p style="margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#64748b;">Registration summary</p>
+          <p style="margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#64748b;">Registration on file</p>
           <p style="margin:0 0 8px;font-size:15px;line-height:1.6;color:#0f172a;"><strong>Name:</strong> ${firstName} ${lastName}</p>
           <p style="margin:0 0 8px;font-size:15px;line-height:1.6;color:#0f172a;"><strong>Email:</strong> ${email}</p>
           ${city ? `<p style="margin:0 0 8px;font-size:15px;line-height:1.6;color:#0f172a;"><strong>City:</strong> ${city}</p>` : ''}
           <p style="margin:0 0 8px;font-size:15px;line-height:1.6;color:#0f172a;"><strong>Country:</strong> ${country}</p>
-          ${nationality ? `<p style="margin:0;font-size:15px;line-height:1.6;color:#0f172a;"><strong>Nationality:</strong> ${nationality}</p>` : ''}
+          ${nationality ? `<p style="margin:0 0 8px;font-size:15px;line-height:1.6;color:#0f172a;"><strong>Nationality:</strong> ${nationality}</p>` : ''}
+          <p style="margin:0;font-size:15px;line-height:1.6;color:#0f172a;"><strong>Registration fee received:</strong> ${escapeHtml(feeLabel)}</p>
         </td>
       </tr>
     </table>
-    <p style="margin:0;font-size:15px;line-height:1.7;color:#334155;">
-      You can sign in with this email and the password you created during registration.
-      We look forward to seeing you on the championship board.
+    <p style="margin:0 0 16px;font-size:16px;line-height:1.8;color:#334155;">
+      The championship will take place in <strong>Atlanta, Georgia, USA, July 19–25, 2027</strong>. In the coming
+      days and weeks, Hopeland Checkers Admin will reach out with guidance so you know exactly what comes next.
+      Please watch your inbox (and your spam or promotions folder) for messages from
+      <strong>admin@hcheckers.org</strong>.
+    </p>
+    <p style="margin:0 0 16px;font-size:16px;line-height:1.8;color:#334155;">
+      If you created a password during registration, you may sign in on our website with this same email address
+      whenever you are ready. There is no rush. Our team will contact you personally.
+    </p>
+    <p style="margin:0 0 16px;font-size:16px;line-height:1.8;color:#334155;">
+      Once again, thank you for registering. We are honoured to have you with us, and we look forward to being in
+      touch soon.
+    </p>
+    <p style="margin:0;font-size:16px;line-height:1.8;color:#334155;">
+      With appreciation,<br />
+      <strong>Hopeland Checkers Admin</strong><br />
+      Hopeland Global Checkers (Draughts) Federation<br />
+      <a href="mailto:admin@hcheckers.org" style="color:#2563eb;">admin@hcheckers.org</a>
     </p>
   `
 
   return layout({
-    preheader: `Payment successful — registration confirmed (${feeLabel}).`,
-    title: 'Payment Successful — Registration Confirmed',
+    preheader: `Thank you for registering. Hopeland Checkers Admin will contact you soon.`,
+    title: 'Thank you for registering',
     bodyHtml,
     ctaHref: `${config.siteUrl}/account`,
-    ctaLabel: 'View my account',
+    ctaLabel: 'Open my account',
   })
 }
 
 export function adminRegistrationNotifyHtml(reg, feeLabel) {
   const bodyHtml = `
     <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#334155;">
-      A new paid registration was completed for <strong>${escapeHtml(reg.first_name)} ${escapeHtml(reg.last_name)}</strong>.
+      Someone just completed registration. Please follow up from <strong>admin@hcheckers.org</strong> so they hear from Hopeland Checkers Admin on time.
+    </p>
+    <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#334155;">
+      <strong>${escapeHtml(reg.first_name)} ${escapeHtml(reg.last_name)}</strong> is now on file. A thank-you email was sent to the player from this same mailbox.
     </p>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;">
       <tr>

@@ -22,17 +22,20 @@ export async function submitContact(req, res) {
   return sendContactEmail(req, res)
 }
 
-/** POST /api/payment/success-email — called after DB status = paid (Stripe webhook path) */
-export function sendPaymentSuccessEmail(req, res) {
+/** POST /api/payment/success-email — called after DB status = paid */
+export async function sendPaymentSuccessEmail(req, res) {
   const registration = req.body?.registration
 
   if (!registration?.email || !registration?.first_name || !registration?.last_name) {
     return res.status(400).json({ error: 'Invalid registration payload.' })
   }
 
-  res.json({ ok: true, queued: true })
-
-  sendRegistrationMail(registration).catch((err) => {
-    console.error('sendPaymentSuccessEmail background failed', err)
-  })
+  try {
+    await sendRegistrationMail(registration)
+    return res.json({ ok: true })
+  } catch (err) {
+    console.error('sendPaymentSuccessEmail failed', err)
+    const detail = err instanceof Error ? err.message : 'Could not send registration emails.'
+    return res.status(500).json({ error: detail })
+  }
 }

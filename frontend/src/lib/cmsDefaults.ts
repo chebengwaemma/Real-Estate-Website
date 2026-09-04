@@ -44,8 +44,8 @@ export const defaultSiteSettings: SiteSettings = {
     prize_first: '25000',
     prize_second: '10000',
     prize_third: '5000',
-    registration_from_email: 'chebengwaemma@gmail.com',
-    registration_admin_email: 'chebengwaemma@gmail.com',
+    registration_from_email: 'admin@hcheckers.org',
+    registration_admin_email: 'admin@hcheckers.org',
   },
   updated_at: new Date().toISOString(),
 }

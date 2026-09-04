@@ -137,23 +137,48 @@ export async function sendRegistrationMail(registration) {
   const from = formatFrom(config.registrationFromName, config.registrationFromEmail)
   const subject = config.registrationEmailSubject
 
-  await sendMailWithDebug(getAdminTransporter(), {
+  const adminTo = String(config.registrationAdminEmail).trim().toLowerCase()
+  const bccAdmin = adminTo && adminTo !== playerTo ? adminTo : undefined
+
+  const playerResult = await sendMailWithDebug(getAdminTransporter(), {
     from,
     to: playerTo,
+    bcc: bccAdmin,
     replyTo: config.registrationFromEmail,
     subject,
     html: registrationConfirmationHtml(registration, feeLabel),
-    text: `Hello ${registration.first_name},\n\nYour registration and payment were successful. Your registration fee of ${feeLabel} was received. Thank you for registering with Hopeland Global Checkers.`,
+    text: `Dear ${registration.first_name} ${registration.last_name},
+
+Thank you for registering with Hopeland Global Checkers. We are glad to welcome you into the championship community.
+
+Your registration has been received. Hopeland Checkers Admin will contact you from admin@hcheckers.org with the next steps. Please watch your inbox (and spam folder) for that message.
+
+Until then, keep this email for your records:
+
+Name: ${registration.first_name} ${registration.last_name}
+Email: ${playerTo}
+Fee received: ${feeLabel}
+
+The championship is in Atlanta, Georgia, USA, July 19–25, 2027. There is no rush — our team will reach out to you personally.
+
+Thank you again for registering.
+
+Hopeland Checkers Admin
+Hopeland Global Checkers (Draughts) Federation
+admin@hcheckers.org`,
   })
 
-  await sendMailWithDebug(getAdminTransporter(), {
-    from,
-    to: config.registrationAdminEmail,
-    replyTo: playerTo,
-    subject: `New paid registration: ${registration.first_name} ${registration.last_name}`,
-    html: adminRegistrationNotifyHtml(registration, feeLabel),
-    text: `New paid registration from ${registration.first_name} ${registration.last_name} (${playerTo}). Fee: ${feeLabel}`,
-  })
+  let adminResult = null
+  if (adminTo && adminTo !== playerTo) {
+    adminResult = await sendMailWithDebug(getAdminTransporter(), {
+      from,
+      to: adminTo,
+      replyTo: playerTo,
+      subject: `New paid registration: ${registration.first_name} ${registration.last_name}`,
+      html: adminRegistrationNotifyHtml(registration, feeLabel),
+      text: `New paid registration from ${registration.first_name} ${registration.last_name} (${playerTo}). Fee: ${feeLabel}`,
+    })
+  }
 
-  return { ok: true }
+  return { ok: true, playerMessageId: playerResult?.messageId, adminMessageId: adminResult?.messageId }
 }

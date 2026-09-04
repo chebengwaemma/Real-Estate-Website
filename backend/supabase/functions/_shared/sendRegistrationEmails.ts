@@ -12,6 +12,7 @@ async function sendViaResend(args: {
   apiKey: string
   from: string
   to: string | string[]
+  bcc?: string | string[]
   subject: string
   html: string
   replyTo?: string
@@ -26,6 +27,7 @@ async function sendViaResend(args: {
     body: JSON.stringify({
       from: args.from,
       to,
+      ...(args.bcc ? { bcc: Array.isArray(args.bcc) ? args.bcc : [args.bcc] } : {}),
       subject: args.subject,
       html: args.html,
       reply_to: args.replyTo,
@@ -44,36 +46,72 @@ async function sendViaHostingerSmtpDirect(reg: RegistrationRow): Promise<boolean
   if (!auth) return false
 
   const fromName = cleanSecret(Deno.env.get('REGISTRATION_FROM_NAME') ?? '') || 'HCheckers Admin'
-  const fromEmail = cleanSecret(Deno.env.get('ADMIN_EMAIL') ?? Deno.env.get('REGISTRATION_FROM_EMAIL') ?? '') || auth.user
+  const fromEmail =
+    cleanSecret(Deno.env.get('ADMIN_EMAIL') ?? Deno.env.get('REGISTRATION_FROM_EMAIL') ?? '') ||
+    auth.user ||
+    'admin@hcheckers.org'
   const adminTo =
-    cleanSecret(Deno.env.get('REGISTRATION_ADMIN_EMAIL') ?? '') || auth.user
+    cleanSecret(Deno.env.get('REGISTRATION_ADMIN_EMAIL') ?? Deno.env.get('ADMIN_EMAIL') ?? '') ||
+    'admin@hcheckers.org'
   const fee = formatUsdCents(reg.fee_amount, reg.fee_currency)
   const playerTo = reg.email.trim().toLowerCase()
-  const subject = cleanSecret(Deno.env.get('REGISTRATION_EMAIL_SUBJECT') ?? '') || 'Payment Successful - Registration Confirmed'
+  const subject = cleanSecret(Deno.env.get('REGISTRATION_EMAIL_SUBJECT') ?? '') || 'Thank you for registering with Hopeland Global Checkers'
+  const bccAdmin = adminTo && adminTo.toLowerCase() !== playerTo ? adminTo : undefined
+  const playerText = playerThankYouText(reg, fee, playerTo)
 
   const playerOk = await sendHostingerHtmlMail({
     auth,
     fromName,
     fromEmail,
     to: playerTo,
+    bcc: bccAdmin,
     replyTo: fromEmail,
     subject,
     html: registrationConfirmationHtml(reg, fee),
-    text: `Hello ${reg.first_name},\n\nYour registration and payment were successful. Fee: ${fee}.`,
+    text: playerText,
   })
 
-  const adminOk = await sendHostingerHtmlMail({
-    auth,
-    fromName,
-    fromEmail,
-    to: adminTo,
-    replyTo: playerTo,
-    subject: `New paid registration: ${reg.first_name} ${reg.last_name}`,
-    html: adminRegistrationNotifyHtml(reg, fee),
-    text: `New paid registration from ${reg.first_name} ${reg.last_name} (${playerTo}). Fee: ${fee}`,
-  })
+  let adminOk = true
+  if (adminTo && adminTo.toLowerCase() !== playerTo) {
+    adminOk = await sendHostingerHtmlMail({
+      auth,
+      fromName,
+      fromEmail,
+      to: adminTo,
+      replyTo: playerTo,
+      subject: `New paid registration: ${reg.first_name} ${reg.last_name}`,
+      html: adminRegistrationNotifyHtml(reg, fee),
+      text: `New paid registration from ${reg.first_name} ${reg.last_name} (${playerTo}). Fee: ${fee}`,
+    })
+  }
 
   return playerOk && adminOk
+}
+
+function playerThankYouText(
+  reg: { first_name: string; last_name: string },
+  fee: string,
+  playerTo: string,
+): string {
+  return `Dear ${reg.first_name} ${reg.last_name},
+
+Thank you for registering with Hopeland Global Checkers. We are glad to welcome you into the championship community.
+
+Your registration has been received. Hopeland Checkers Admin will contact you from admin@hcheckers.org with the next steps. Please watch your inbox (and spam folder) for that message.
+
+Until then, keep this email for your records:
+
+Name: ${reg.first_name} ${reg.last_name}
+Email: ${playerTo}
+Fee received: ${fee}
+
+The championship is in Atlanta, Georgia, USA, July 19–25, 2027. There is no rush — our team will reach out to you personally.
+
+Thank you again for registering.
+
+Hopeland Checkers Admin
+Hopeland Global Checkers (Draughts) Federation
+admin@hcheckers.org`
 }
 
 function cleanSecret(raw: string): string {
@@ -155,29 +193,36 @@ export async function sendPaidRegistrationEmails(
   }
 
   const fromAddress =
-    cleanSecret(Deno.env.get('REGISTRATION_FROM_EMAIL') ?? '') || 'Admin@HCheckers.org'
-  const from = fromAddress.includes('<') ? fromAddress : `Hopeland Checkers <${fromAddress}>`
+    cleanSecret(Deno.env.get('ADMIN_EMAIL') ?? Deno.env.get('REGISTRATION_FROM_EMAIL') ?? '') ||
+    'admin@hcheckers.org'
+  const from = fromAddress.includes('<') ? fromAddress : `HCheckers Admin <${fromAddress}>`
   const adminTo =
-    cleanSecret(Deno.env.get('REGISTRATION_ADMIN_EMAIL') ?? '') || 'Admin@HCheckers.org'
+    cleanSecret(Deno.env.get('REGISTRATION_ADMIN_EMAIL') ?? Deno.env.get('ADMIN_EMAIL') ?? '') ||
+    'admin@hcheckers.org'
   const fee = formatUsdCents(reg.fee_amount, reg.fee_currency)
   const playerTo = reg.email.trim().toLowerCase()
+  const bccAdmin = adminTo.toLowerCase() !== playerTo ? adminTo : undefined
 
   const playerOk = await sendViaResend({
     apiKey,
     from,
     to: playerTo,
-    subject: 'Payment Successful - Registration Confirmed',
+    bcc: bccAdmin,
+    subject: cleanSecret(Deno.env.get('REGISTRATION_EMAIL_SUBJECT') ?? '') || 'Thank you for registering with Hopeland Global Checkers',
     html: registrationConfirmationHtml(reg, fee),
-    replyTo: 'info@hcheckers.org',
+    replyTo: fromAddress,
   })
-  const adminOk = await sendViaResend({
-    apiKey,
-    from,
-    to: adminTo,
-    subject: `New paid registration: ${reg.first_name} ${reg.last_name}`,
-    html: adminRegistrationNotifyHtml(reg, fee),
-    replyTo: playerTo,
-  })
+  let adminOk = true
+  if (adminTo.toLowerCase() !== playerTo) {
+    adminOk = await sendViaResend({
+      apiKey,
+      from,
+      to: adminTo,
+      subject: `New paid registration: ${reg.first_name} ${reg.last_name}`,
+      html: adminRegistrationNotifyHtml(reg, fee),
+      replyTo: playerTo,
+    })
+  }
 
   if (!playerOk || !adminOk) {
     console.error('Registration email send incomplete', { playerOk, adminOk, email: playerTo })

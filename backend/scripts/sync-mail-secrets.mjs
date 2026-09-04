@@ -65,6 +65,7 @@ const keys = [
   'REGISTRATION_ADMIN_EMAIL',
   'REGISTRATION_EMAIL_SUBJECT',
   'MAIL_API_SECRET',
+  'MAIL_API_URL',
 ]
 
 const pairs = {

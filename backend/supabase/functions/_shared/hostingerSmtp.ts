@@ -22,6 +22,7 @@ type SendHtmlMailInput = {
   fromName: string
   fromEmail: string
   to: string | string[]
+  bcc?: string | string[]
   subject: string
   html: string
   text?: string
@@ -64,6 +65,7 @@ export async function sendHostingerHtmlMail(input: SendHtmlMailInput): Promise<b
     await transporter.sendMail({
       from: formatFrom(input.fromName, input.fromEmail),
       to: input.to,
+      bcc: input.bcc,
       replyTo: input.replyTo,
       subject: input.subject,
       html: input.html,
@@ -119,23 +121,55 @@ export function registrationConfirmationHtml(
   },
   feeLabel: string,
 ): string {
+  const first = escapeHtml(reg.first_name)
+  const last = escapeHtml(reg.last_name)
   return `
-    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a;max-width:620px">
-      <h1 style="font-size:22px">Payment Successful — Registration Confirmed</h1>
-      <p>Hello <strong>${escapeHtml(reg.first_name)}</strong>,</p>
+    <div style="font-family:Arial,sans-serif;line-height:1.8;color:#0f172a;max-width:620px">
+      <h1 style="font-size:22px;line-height:1.3">Thank you for registering</h1>
+      <p>Dear <strong>${first} ${last}</strong>,</p>
       <p>
-        Great news — your <strong>registration and payment were successful</strong>.
-        We received your payment of <strong>${escapeHtml(feeLabel)}</strong> and your registration is now confirmed.
+        Thank you for registering with <strong>Hopeland Global Checkers</strong>. We are genuinely glad to welcome you
+        into the championship community. Completing your registration is an important first step, and we appreciate
+        the time and trust you have placed in us.
       </p>
       <p>
-        <strong>Name:</strong> ${escapeHtml(reg.first_name)} ${escapeHtml(reg.last_name)}<br/>
+        Your place in the Hopeland Global Checkers World Championship has been received. Please do not worry about
+        next steps just yet. <strong>Hopeland Checkers Admin will contact you</strong> directly from
+        <a href="mailto:admin@hcheckers.org">admin@hcheckers.org</a>
+        with the information you need, including how we will stay in touch, what to expect before Atlanta, and any
+        details we still need from you.
+      </p>
+      <p>
+        Until then, keep this email for your records. If anything below looks incorrect, reply to this message
+        or write to <a href="mailto:admin@hcheckers.org">admin@hcheckers.org</a>.
+      </p>
+      <p>
+        <strong>Name:</strong> ${first} ${last}<br/>
         <strong>Email:</strong> ${escapeHtml(reg.email)}<br/>
         ${reg.city ? `<strong>City:</strong> ${escapeHtml(reg.city)}<br/>` : ''}
         ${reg.country ? `<strong>Country:</strong> ${escapeHtml(reg.country)}<br/>` : ''}
         ${reg.nationality ? `<strong>Nationality:</strong> ${escapeHtml(reg.nationality)}<br/>` : ''}
+        <strong>Registration fee received:</strong> ${escapeHtml(feeLabel)}
       </p>
-      <p>You can sign in with this email and the password you created during registration.</p>
-      <p>Questions? Email <a href="mailto:info@hcheckers.org">info@hcheckers.org</a></p>
+      <p>
+        The championship will take place in <strong>Atlanta, Georgia, USA, July 19–25, 2027</strong>.
+        Please watch your inbox (and your spam or promotions folder) for messages from
+        <strong>admin@hcheckers.org</strong>.
+      </p>
+      <p>
+        If you created a password during registration, you may sign in on our website with this same email
+        whenever you are ready. There is no rush. Our team will contact you personally.
+      </p>
+      <p>
+        Once again, thank you for registering. We are honoured to have you with us, and we look forward to being
+        in touch soon.
+      </p>
+      <p>
+        With appreciation,<br/>
+        <strong>Hopeland Checkers Admin</strong><br/>
+        Hopeland Global Checkers (Draughts) Federation<br/>
+        <a href="mailto:admin@hcheckers.org">admin@hcheckers.org</a>
+      </p>
     </div>
   `
 }
@@ -153,8 +187,12 @@ export function adminRegistrationNotifyHtml(
 ): string {
   return `
     <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a;max-width:620px">
-      <h1 style="font-size:22px">New paid registration</h1>
-      <p>${escapeHtml(reg.first_name)} ${escapeHtml(reg.last_name)} paid ${escapeHtml(feeLabel)}.</p>
+      <h1 style="font-size:22px">New registration — please follow up</h1>
+      <p>
+        Someone just completed registration. Follow up from <strong>admin@hcheckers.org</strong>
+        so they hear from Hopeland Checkers Admin on time.
+      </p>
+      <p>${escapeHtml(reg.first_name)} ${escapeHtml(reg.last_name)} paid ${escapeHtml(feeLabel)}. A thank-you email was sent to the player from this mailbox.</p>
       <p>
         <strong>Email:</strong> ${escapeHtml(reg.email)}<br/>
         <strong>Phone:</strong> ${escapeHtml(reg.phone || '—')}<br/>

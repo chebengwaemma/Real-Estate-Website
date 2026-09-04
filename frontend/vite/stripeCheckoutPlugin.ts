@@ -279,6 +279,30 @@ async function createAuthUser(
   return { error: null as string | null }
 }
 
+async function notifyPaidRegistrationEmails(env: EnvMap, registration: unknown) {
+  const mailApiUrl = (env.MAIL_API_URL || 'http://127.0.0.1:3001').replace(/\/$/, '')
+  const secret = env.MAIL_API_SECRET?.trim()
+  if (!secret) {
+    console.warn('[mail] MAIL_API_SECRET missing — skipped registration emails. Set it in frontend/.env or backend/server/.env')
+    return
+  }
+  try {
+    const res = await fetch(`${mailApiUrl}/api/payment/success-email`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${secret}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ registration }),
+    })
+    if (!res.ok) {
+      console.error('[mail] registration email API failed', res.status, await res.text().catch(() => ''))
+    }
+  } catch (err) {
+    console.error('[mail] registration email API unreachable — start the Hostinger mail server (npm run mail:dev)', err)
+  }
+}
+
 /**
  * Local/dev Stripe endpoints so `.env` STRIPE_SECRET_KEY works without
  * waiting on Edge Function deploy. Production still uses Supabase functions.
@@ -369,6 +393,8 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
               accountError = auth.error
             }
 
+            await notifyPaidRegistrationEmails(env, recorded.registration)
+
             json(res, 200, {
               paid: true,
               registration: recorded.registration,
@@ -418,27 +444,29 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
             const localSessionId = `local_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
 
             if (!url || !serviceKey) {
+              const localOnlyRegistration = {
+                id: crypto.randomUUID(),
+                first_name: body.firstName.trim(),
+                last_name: body.lastName.trim(),
+                date_of_birth: body.dateOfBirth,
+                city: body.city.trim(),
+                country: body.country.trim(),
+                nationality: (body.nationality || '').trim() || null,
+                phone: body.phone.trim(),
+                email: body.email.trim().toLowerCase(),
+                status: 'paid',
+                fee_amount: feeAmount,
+                fee_currency: feeCurrency,
+                stripe_session_id: localSessionId,
+                stripe_payment_intent: null,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+              }
+              await notifyPaidRegistrationEmails(env, localOnlyRegistration)
               json(res, 200, {
                 paid: true,
                 localOnly: true,
-                registration: {
-                  id: crypto.randomUUID(),
-                  first_name: body.firstName.trim(),
-                  last_name: body.lastName.trim(),
-                  date_of_birth: body.dateOfBirth,
-                  city: body.city.trim(),
-                  country: body.country.trim(),
-                  nationality: (body.nationality || '').trim() || null,
-                  phone: body.phone.trim(),
-                  email: body.email.trim().toLowerCase(),
-                  status: 'paid',
-                  fee_amount: feeAmount,
-                  fee_currency: feeCurrency,
-                  stripe_session_id: localSessionId,
-                  stripe_payment_intent: null,
-                  created_at: new Date().toISOString(),
-                  updated_at: new Date().toISOString(),
-                },
+                registration: localOnlyRegistration,
               })
               return
             }
@@ -474,6 +502,8 @@ export function stripeCheckoutPlugin(env: EnvMap): Plugin {
               },
               password,
             )
+
+            await notifyPaidRegistrationEmails(env, recorded.registration)
 
             json(res, 200, {
               paid: true,

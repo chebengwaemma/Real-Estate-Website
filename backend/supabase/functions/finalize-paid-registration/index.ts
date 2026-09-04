@@ -55,9 +55,11 @@ Deno.serve(async (req) => {
       })
     }
 
-    void sendPaidRegistrationEmails(supabase, recorded.registration).catch((emailError) => {
+    try {
+      await sendPaidRegistrationEmails(supabase, recorded.registration)
+    } catch (emailError) {
       console.error('finalize-paid-registration email failed', emailError)
-    })
+    }
 
     let accountError: string | null = null
     if (password.length >= 6) {

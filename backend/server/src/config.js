@@ -12,29 +12,29 @@ export const config = {
   corsOrigin: process.env.CORS_ORIGIN || '*',
   mailApiSecret: process.env.MAIL_API_SECRET || '',
   smtp: {
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: process.env.SMTP_SECURE === 'true',
-    user: required('SMTP_USER', 'chebengwaemma@gmail.com'),
+    host: process.env.SMTP_HOST || 'smtp.hostinger.com',
+    port: Number(process.env.SMTP_PORT || 465),
+    secure: (process.env.SMTP_SECURE ?? 'true') !== 'false',
+    user: required('SMTP_USER', 'info@hcheckers.org'),
     pass: required('SMTP_PASS'),
   },
   contactFromName: process.env.CONTACT_FROM_NAME || 'Website Contact Form',
-  contactFromEmail: process.env.CONTACT_FROM_EMAIL || process.env.SMTP_USER || 'chebengwaemma@gmail.com',
-  contactNotifyEmail: process.env.CONTACT_NOTIFY_EMAIL || 'chebengwaemma@gmail.com',
+  contactFromEmail: process.env.CONTACT_FROM_EMAIL || process.env.SMTP_USER || 'info@hcheckers.org',
+  contactNotifyEmail: process.env.CONTACT_NOTIFY_EMAIL || 'info@hcheckers.org',
   adminSmtp: {
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: process.env.SMTP_SECURE === 'true',
-    user: required('ADMIN_EMAIL', 'chebengwaemma@gmail.com'),
+    host: process.env.SMTP_HOST || 'smtp.hostinger.com',
+    port: Number(process.env.SMTP_PORT || 465),
+    secure: (process.env.SMTP_SECURE ?? 'true') !== 'false',
+    user: required('ADMIN_EMAIL', 'admin@hcheckers.org'),
     pass: required('ADMIN_PASS'),
   },
   registrationFromEmail:
-    process.env.ADMIN_EMAIL || process.env.REGISTRATION_FROM_EMAIL || 'chebengwaemma@gmail.com',
+    process.env.ADMIN_EMAIL || process.env.REGISTRATION_FROM_EMAIL || 'admin@hcheckers.org',
   registrationFromName: process.env.REGISTRATION_FROM_NAME || 'HCheckers Admin',
   registrationAdminEmail:
-    process.env.REGISTRATION_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'chebengwaemma@gmail.com',
+    process.env.REGISTRATION_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'admin@hcheckers.org',
   registrationEmailSubject:
-    process.env.REGISTRATION_EMAIL_SUBJECT || 'Payment Successful - Registration Confirmed',
+    process.env.REGISTRATION_EMAIL_SUBJECT || 'Thank you for registering with Hopeland Global Checkers',
 }
 
 export function formatFrom(name, email) {

@@ -66,9 +66,11 @@ Deno.serve(async (req) => {
         console.error('stripe-webhook record paid failed', recorded.error)
         return new Response('Webhook processing error.', { status: 500 })
       }
-      void sendPaidRegistrationEmails(supabase, recorded.registration).catch((emailError) => {
+      try {
+        await sendPaidRegistrationEmails(supabase, recorded.registration)
+      } catch (emailError) {
         console.error('stripe-webhook registration email failed', emailError)
-      })
+      }
     }
 
     if (

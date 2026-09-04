@@ -34,7 +34,7 @@ export const FOOTER_LEGAL: PublicNavItem[] = [
 ]
 
 export const CONTACT_EMAIL_DEFAULT = 'chebengwaemma@gmail.com'
-export const ADMIN_NOTIFY_EMAIL_DEFAULT = 'chebengwaemma@gmail.com'
+export const ADMIN_NOTIFY_EMAIL_DEFAULT = 'admin@hcheckers.org'
 
 export const DEFAULT_PRIZES = {
   first: 25000,
