@@ -132,7 +132,7 @@ export async function sendRegistrationMail(registration) {
     throw new Error('Invalid registration payload.')
   }
 
-  const feeLabel = formatUsdCents(registration.fee_amount ?? 50, registration.fee_currency ?? 'usd')
+  const feeLabel = formatUsdCents(registration.fee_amount ?? 25000, registration.fee_currency ?? 'usd')
   const playerTo = String(registration.email).trim().toLowerCase()
   const from = formatFrom(config.registrationFromName, config.registrationFromEmail)
   const subject = config.registrationEmailSubject
